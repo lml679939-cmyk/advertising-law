@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>廣告法規期中考</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    background: #f0f3f8;
+    color: #2c3e50;
+    padding: 20px;
+    line-height: 1.8;
+  }
+
+  /* ── Mode Toggle ── */
+  .mode-toggle-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .mode-toggle {
+    display: inline-flex;
+    background: #dce3ed;
+    border-radius: 30px;
+    padding: 4px;
+    gap: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  }
+  .mode-btn {
+    padding: 9px 24px;
+    border-radius: 26px;
+    border: none;
+    background: transparent;
+    font-size: 0.95em;
+    font-weight: bold;
+    cursor: pointer;
+    color: #5a6a7e;
+    transition: all 0.22s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .mode-btn.active {
+    background: white;
+    color: #1a3c6e;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  }
+  .mode-desc {
+    text-align: center;
+    font-size: 0.82em;
+    color: #7f8c8d;
+    margin-bottom: 16px;
+    min-height: 1.4em;
+  }
+
+  /* ── Header ── */
+  .exam-header {
+    background: linear-gradient(135deg, #1a3c6e, #2e6da4);
+    color: white;
+    border-radius: 14px;
+    padding: 26px 32px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+    text-align: center;
+  }
+  .exam-header h1 { font-size: 1.75em; letter-spacing: 4px; margin-bottom: 6px; }
+  .exam-header p  { font-size: 0.9em; opacity: 0.88; margin-top: 4px; }
+
+  /* ── Sticky bar ── */
+  .sticky-bar {
+    background: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: sticky;
+    top: 8px;
+    z-index: 100;
+  }
+  .bar-left { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .bar-score { font-size: 1em; font-weight: bold; color: #2c3e50; }
+  .bar-score span { color: #2e6da4; font-size: 1.3em; }
+  .bar-correct  { color: #27ae60; font-weight: bold; font-size: 0.9em; }
+  .bar-wrong    { color: #e74c3c; font-weight: bold; font-size: 0.9em; }
+  .bar-guessed  { color: #f0a500; font-weight: bold; font-size: 0.9em; display:none; }
+  .progress-wrap {
+    height: 6px; background: #ecf0f1; border-radius: 3px;
+    overflow: hidden; width: 140px; margin-top: 5px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+    border-radius: 3px;
+    transition: width 0.35s;
+    width: 0%;
+  }
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn-check {
+    background: linear-gradient(135deg, #27ae60, #1e8449);
+    color: white; border: none;
+    padding: 9px 22px; border-radius: 8px;
+    font-size: 0.95em; cursor: pointer; font-weight: bold;
+    box-shadow: 0 2px 8px rgba(39,174,96,0.3);
+    transition: transform 0.1s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .btn-check:hover { transform: translateY(-1px); }
+  .btn-reset {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white; border: none;
+    padding: 8px 18px; border-radius: 8px;
+    font-size: 0.9em; cursor: pointer; font-weight: bold;
+    transition: transform 0.1s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .btn-reset:hover { transform: translateY(-1px); }
+
+  /* ── Card ── */
+  .question-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border-left: 5px solid #bdc3c7;
+    transition: border-color 0.25s, background 0.25s;
+  }
+  .question-card.correct-card  { border-left-color: #27ae60; background: #f2fff6; }
+  .question-card.wrong-card    { border-left-color: #e74c3c; background: #fff4f4; }
+  .question-card.unanswered    { border-left-color: #f39c12; }
+  .question-card.guessed-card  { background: #fffdf0; }
+  .question-card.guessed-card.correct-card { background: #f2fff6; }
+  .question-card.guessed-card.wrong-card   { background: #fff4f4; }
+
+  .question-top { display: flex; align-items: flex-start; gap: 10px; }
+  .q-num {
+    background: #2e6da4; color: white;
+    border-radius: 50%; width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 0.82em;
+    flex-shrink: 0; margin-top: 3px;
+  }
+  .q-num.answered-correct { background: #27ae60; }
+  .q-num.answered-wrong   { background: #e74c3c; }
+  .q-text { font-size: 0.96em; flex: 1; }
+
+  /* ── Choices row ── */
+  .choices-row {
+    display: flex; align-items: center;
+    gap: 10px; margin-top: 12px; margin-left: 40px; flex-wrap: wrap;
+  }
+  .choice-btn {
+    padding: 8px 26px; border-radius: 9px;
+    border: 2px solid #c8d0dc; background: white;
+    font-size: 1.05em; font-weight: bold;
+    cursor: pointer; transition: all 0.18s; color: #555;
+    min-width: 100px; text-align: center;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: #2e6da4; color: #2e6da4; background: #eaf3fb; }
+  .choice-btn:disabled { cursor: default; }
+  /* 傳統模式選中狀態 */
+  .choice-btn.selected-O { border-color: #2e6da4; background: #2e6da4; color: white; }
+  .choice-btn.selected-X { border-color: #e74c3c; background: #e74c3c; color: white; }
+  /* 學習模式結果狀態 */
+  .choice-btn.selected-correct { border-color: #27ae60; background: #27ae60; color: white; }
+  .choice-btn.selected-wrong   { border-color: #e74c3c; background: #e74c3c; color: white; }
+  .choice-btn.show-correct     { border-color: #27ae60; background: #e8f8ee; color: #27ae60; font-weight: bold; }
+
+  /* ── Guess btn ── */
+  .guess-btn {
+    padding: 6px 13px; border-radius: 8px;
+    border: 2px solid #f0a500; background: white;
+    color: #f0a500; font-size: 0.83em; font-weight: bold;
+    cursor: pointer; transition: all 0.18s; white-space: nowrap;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .guess-btn:hover:not(:disabled) { background: #fff3cd; }
+  .guess-btn.active { background: #f0a500; color: white; }
+  .guess-btn:disabled { cursor: default; }
+  .guess-label {
+    display: none; font-size: 0.78em; color: #856404;
+    background: #fff3cd; border: 1px solid #ffc107;
+    border-radius: 5px; padding: 2px 9px; font-weight: bold;
+  }
+  .guess-label.show { display: inline-block; }
+
+  /* ── Result row (學習模式 instant feedback) ── */
+  .result-row {
+    display: none;
+    align-items: center; gap: 10px;
+    margin-top: 10px; margin-left: 40px; flex-wrap: wrap;
+  }
+  .result-row.show { display: flex; }
+
+  /* ── Result badge ── */
+  .result-badge {
+    display: none;
+    font-weight: bold; font-size: 0.93em;
+    padding: 5px 14px; border-radius: 7px;
+  }
+  .result-badge.show { display: inline-block; }
+  .result-badge.correct-badge { background: #d4efdf; color: #1a7a3c; animation: popIn 0.25s ease; }
+  .result-badge.wrong-badge   { background: #fadbd8; color: #b03030; animation: popIn 0.25s ease; }
+  @keyframes popIn {
+    0%   { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1);   opacity: 1; }
+  }
+
+  /* ── Explanation ── */
+  .explanation {
+    display: none;
+    margin-top: 12px; margin-left: 40px;
+    background: #f5f7fa;
+    border-left: 4px solid #2e6da4;
+    padding: 12px 16px;
+    border-radius: 0 9px 9px 0;
+    font-size: 0.88em; color: #34495e; line-height: 1.9;
+    animation: fadeSlide 0.3s ease;
+  }
+  .explanation.show { display: block; }
+  @keyframes fadeSlide {
+    0%   { opacity: 0; transform: translateY(-6px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .explanation strong { color: #1a3c6e; }
+  .explanation .law-ref {
+    display: inline-block; background: #eaf3fb; color: #2e6da4;
+    padding: 1px 8px; border-radius: 4px;
+    font-size: 0.87em; font-weight: bold; margin-right: 4px;
+  }
+
+  /* ── Note ── */
+  .note-toggle {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-left: 40px; margin-top: 10px;
+    font-size: 0.81em; color: #95a5a6;
+    cursor: pointer; user-select: none; transition: color 0.15s;
+  }
+  .note-toggle:hover { color: #2e6da4; }
+  .note-toggle .arrow { font-size: 0.75em; transition: transform 0.2s; display: inline-block; }
+  .note-toggle.open .arrow { transform: rotate(90deg); }
+  .note-area { display: none; margin-top: 8px; margin-left: 40px; }
+  .note-area.show { display: block; }
+  .note-textarea {
+    width: 100%; min-height: 68px;
+    border: 1.5px solid #d0d7e3; border-radius: 8px;
+    padding: 9px 12px; font-size: 0.87em; resize: vertical; outline: none;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    color: #34495e; background: #fafcff; line-height: 1.7;
+    transition: border-color 0.2s;
+  }
+  .note-textarea:focus { border-color: #2e6da4; background: #fff; }
+  .note-textarea::placeholder { color: #b0bec5; }
+  .note-saved { font-size: 0.75em; color: #2e6da4; margin-top: 3px; display: none; }
+  .note-saved.show { display: block; }
+
+  /* ── Final summary ── */
+  .final-box {
+    display: none;
+    text-align: center;
+    padding: 28px 24px;
+    background: linear-gradient(135deg, #1a3c6e, #2e6da4);
+    color: white; border-radius: 14px; margin-top: 24px;
+  }
+  .final-box h2  { font-size: 2.2em; margin-bottom: 10px; }
+  .final-box p   { font-size: 0.95em; opacity: 0.9; margin-top: 6px; }
+  .final-stats {
+    display: flex; justify-content: center; gap: 28px;
+    margin: 16px 0; flex-wrap: wrap;
+  }
+  .final-stat { background: rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 20px; }
+  .final-stat .num { font-size: 2em; font-weight: bold; display: block; }
+  .final-stat .lbl { font-size: 0.8em; opacity: 0.85; }
+
+  @media (max-width: 600px) {
+    .choices-row, .note-toggle, .note-area, .result-row, .explanation { margin-left: 0; }
+    .progress-wrap { width: 100px; }
+    .mode-btn { padding: 8px 14px; font-size: 0.88em; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 模式切換 -->
+<div class="mode-toggle-wrap">
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="btn-mode-learn" onclick="switchMode('learn')">📖 學習模式</button>
+    <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
+  </div>
+</div>
+<div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
+
+<div class="exam-header">
+  <h1>廣告法規期中考</h1>
+  <p>本試卷共 45 題，每題 1 分。估學期總成績 45%。</p>
+  <p id="header-sub">選擇答案後，<strong>立即顯示對錯與詳解</strong>・不確定可標記「🎲 猜的」・每題可新增個人筆記</p>
+</div>
+
+<div class="sticky-bar">
+  <div class="bar-left">
+    <div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+        <div class="bar-score">進度 <span id="answered-count">0</span> / 45</div>
+        <div class="bar-correct" id="correct-stat">✅ <span id="correct-count">0</span></div>
+        <div class="bar-wrong" id="wrong-stat">❌ <span id="wrong-count">0</span></div>
+        <div class="bar-guessed" id="guess-chip">🎲 猜的：<span id="guess-count">0</span></div>
+      </div>
+      <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+  </div>
+  <div class="btn-group">
+    <button class="btn-check" id="btn-check-all" onclick="checkAll()" style="display:none">✅ 對答案 &amp; 看詳解</button>
+    <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+  </div>
+</div>
+
+<div id="quiz-container"></div>
+
+<div class="final-box" id="final-box">
+  <h2 id="final-score-text"></h2>
+  <div class="final-stats">
+    <div class="final-stat"><span class="num" id="fs-correct">0</span><span class="lbl">答對</span></div>
+    <div class="final-stat"><span class="num" id="fs-wrong">0</span><span class="lbl">答錯</span></div>
+    <div class="final-stat" id="fs-guess-wrap"><span class="num" id="fs-guess">0</span><span class="lbl">猜對（共猜 <span id="fs-guessed-total">0</span> 題）</span></div>
+  </div>
+  <p id="final-msg"></p>
+  <p style="margin-top:14px;font-size:0.85em;opacity:0.75;" id="final-hint"></p>
+</div>
+
+<script>
+/* ─── 題目資料 ─── */
+const questions = [
+  { q: "1. 藥事法第66-1條第一項規定，藥物廣告，經中央或直轄市衛生主管機關核准者，其有效期間為一年，自核發證明文件之日起算。期滿仍需繼續廣告者，得申請原核准之衛生主管機關核定展延之；每次展延之期間，不得超過一年。", ans: "O", exp: "<span class='law-ref'>藥事法第66-1條第1項</span>規定：藥物廣告核准有效期間<strong>為一年</strong>，自核發證明文件之日起算。期滿仍需廣告者，得申請<strong>核定展延</strong>，每次不得超過<strong>一年</strong>。本題敘述符合法條，故為<strong>○（正確）</strong>。" },
+  { q: "2. 廣播電視法第3條規定：「廣播、電視事業之主管機關為國家通訊傳播委員會，獨立超然行使職權。」", ans: "O", exp: "<span class='law-ref'>廣播電視法第3條</span>明文規定廣播電視事業主管機關為<strong>國家通訊傳播委員會（NCC）</strong>，並明示<strong>獨立超然行使職權</strong>。NCC為獨立機關，不受政治干預。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "3. 中華民國憲法第172條規定：「法律與憲法或命令抵觸者無效。」", ans: "X", exp: "<span class='law-ref'>憲法第172條</span>原文為：「<strong>命令與憲法或法律抵觸者無效</strong>。」本題將主詞「命令」誤寫為「法律」，邏輯完全相反。位階較低的「命令」違反「憲法或法律」時才無效。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "4. 廣播電視法第34條規定，廣播電視事業播送依法應經目的事業主管機關核定之廣告內容時，應先取得目的事業主管機關核定之證明文件，始得播送。", ans: "X", exp: "<span class='law-ref'>廣播電視法第34條</span>規定，應先取得目的事業主管機關<strong>核准</strong>之證明文件，始得播送。本題將「核准」誤改為「核定」，兩者行政程序意義不同。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "5. 比例原則下分為三個子原則：適當性原則、必要性原則與衡平性原則；其中必要性原則是指手段必須能有助於目的之達成，亦即，行政行為必須能有助於行政目的之達成。", ans: "X", exp: "比例原則三子原則：<br>①&nbsp;<strong>適當性原則</strong>：手段能<strong>有助於目的達成</strong>（本題描述的其實是這個）<br>②&nbsp;<strong>必要性原則</strong>：選擇<strong>對人民侵害最小的手段</strong>（最小手段原則）<br>③&nbsp;<strong>衡平性原則</strong>：手段與目的保持適當比例<br>本題將「必要性」與「適當性」定義混淆，故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "6. 有線廣播電視法第33條第一項「系統經營者應同時轉播依法設立無線電視台之節目及廣告，不得變更其形式、內容及頻道，並應列為基本頻道。但經中央主管機關許可者，得變更頻道。」此為法律強制規定。", ans: "O", exp: "<span class='law-ref'>有線廣播電視法第33條第1項</span>確實要求系統經營者<strong>強制同時轉播無線電視台節目及廣告</strong>（Must-carry義務），不得變更形式、內容及頻道，應列為基本頻道。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "7. 廣播電視法第25條規定：「電臺播送之節目，主管機關均得審查；其辦法由主管機關定之。」", ans: "X", exp: "<span class='law-ref'>廣播電視法第25條</span>規定：「電臺播送之節目，<strong>除新聞節目外</strong>，主管機關均得審查。」本題漏掉關鍵但書「<strong>除新聞節目外</strong>」，新聞節目受新聞自由保障，主管機關不得審查。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "8. 廣播節目廣告區隔與置入性行銷及贊助管理辦法第16條規定：「廣播事業於節目接受贊助或冠名贊助，應於該節目播送前、後明顯揭露贊助事業、機關（構）、團體或個人之名稱或商標，其揭露不計入廣告時間。前項揭露贊助者之訊息，不得含有廣告內容，且其時間不得超過四十秒。」", ans: "X", exp: "<span class='law-ref'>廣播節目廣告區隔辦法第16條</span>規定，揭露贊助者訊息時間上限為<strong>二十秒（20秒）</strong>，非四十秒。<br>📌&nbsp;易混淆比較：<strong>贊助揭露</strong>（第16條）上限&nbsp;<strong>20秒</strong>；<strong>置入性行銷揭露</strong>（第11條）上限&nbsp;<strong>45秒</strong>。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "9. 廣播電視法第27條規定，電台應將其節目時間表，事前檢送主管機關核定；變更節目時亦同。", ans: "X", exp: "<span class='law-ref'>廣播電視法施行細則第20條</span>規定，電台節目時間表應於播送<strong>五日前</strong>，依主管機關所定格式，<strong>登載於指定資料庫</strong>，並非「檢送主管機關核定」。「登載資料庫」為備查性質，無需等待核定。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "10. 有線廣播電視法第36條第一項規定：「系統經營者播送之頻道節目及廣告，得依著作權法或其他相關法規取得合法授權」。", ans: "X", exp: "<span class='law-ref'>有線廣播電視法第36條第1項</span>規定，系統經營者播送之頻道節目及廣告，<strong>應依著作權法</strong>取得合法授權（強制義務）。本題將「<strong>應</strong>」誤寫為「<strong>得</strong>」（裁量），意義截然不同。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "11. 電視節目分級處理辦法第10條第一項規定：「電視事業播送節目，應於該節目開始及每段節目開始時，以疊印或插播卡方式，至少標示分級標識十秒鐘，其大小應與螢幕上電視事業之識別標識相當。」", ans: "O", exp: "<span class='law-ref'>電視節目分級處理辦法第10條第1項</span>確實規定以<strong>疊印或插播卡</strong>方式，於節目開始時至少標示分級標識<strong>十秒鐘</strong>，大小與識別標識相當。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "12. 藥事法第66條第一項規定，藥商刊播藥物廣告時，應於刊播前將所有文字、圖畫或言詞，申請中央或直轄市衛生主管機關核准，並向傳播業者送驗核准文件。違反第66條第一項者依同法第92條處新台幣一萬元以上五萬元以下罰鍰，其經衛生主管機關通知限期停止而仍繼續刊播者，處新台幣六萬元以上三十萬元以下罰鍰，並得按次連續處罰，至其停止刊播為止。", ans: "X", exp: "<span class='law-ref'>藥事法第92條</span>正確罰鍰：<br>・違反第66條第1項（初次）→ <strong>新台幣二十萬元以上五百萬元以下</strong><br>・通知後仍繼續刊播 → <strong>新台幣六十萬元以上二千五百萬元以下</strong><br>本題金額（一萬至五萬、六萬至三十萬）明顯偏低，與法條不符。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "13. 廣播電視法第2條第一項第9款規定，「置入性行銷：指為事業機關（構）、團體或個人行銷或宣傳，基於有償或對價關係，於節目中呈現特定觀念、商品、商標、服務或其相關資訊、特徵等之行為。」", ans: "O", exp: "<span class='law-ref'>廣播電視法第2條第1項第9款</span>對「置入性行銷」的完整定義：為機關（構）、團體或個人<strong>行銷或宣傳</strong>，基於<strong>有償或對價關係</strong>，於節目中呈現<strong>特定觀念、商品、商標、服務或相關資訊、特徵</strong>等之行為。本題引述正確，故為<strong>○（正確）</strong>。" },
+  { q: "14. 藥事法第66條第二項規定，藥物廣告在核准登載、宣播期間如有必要變更原核准事項。", ans: "X", exp: "<span class='law-ref'>藥事法第66條第2項</span>規定：藥物廣告在核准登載、宣播期間，<strong>不得變更原核准事項</strong>。本題省略了核心禁止義務「<strong>不得</strong>」，意思完全相反。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "15. 廣播電視法第24條規定，廣播、電視評論涉及他人或機關、團體，致損害其權益時，被評論者，如要求給予相對之答辯機會，不得拒絕。廣播、電視事業如有前述情況，將予以警告處分。此為對利害關係人權益之保障。", ans: "X", exp: "<span class='law-ref'>廣播電視法第24條</span>規定的是<strong>媒體近用權</strong>中的「答辯權」，保障<strong>被評論者</strong>要求答辯的機會，並非泛指所有「利害關係人」的廣泛保障。本題定性不精確，故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "16. 有線廣播電視法第39條規定：「有線廣播電視系統經營者可使用插播式字幕播送公共服務資訊。」", ans: "O", exp: "<span class='law-ref'>有線廣播電視法第39條</span>確實授權系統經營者使用<strong>插播式字幕</strong>播送<strong>公共服務資訊</strong>（如緊急通知、天災警報等）。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "17. 廣播電視法第31條為對播送廣告時間與方式之規定，廣播、電視事業如有違反情況，將依第42條予以警告處分。", ans: "O", exp: "<span class='law-ref'>廣播電視法第31條</span>規定廣告播送時間與方式；<span class='law-ref'>第42條</span>為罰則，違反者依第42條予以警告或罰鍰。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "18. 廣播電視法第31條第一項規定，電臺播送廣告，不得超過播送總時間百分之十五。", ans: "O", exp: "<span class='law-ref'>廣播電視法第31條第1項</span>規定：電臺播送廣告，不得超過播送總時間<strong>百分之十五（15%）</strong>。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "19. 廣播電視法施行細則第19條規定：「電臺播送之節目，應自行審查。播送後之影音檔案、節目文稿或其他有關資料，應保存二十日，以備查考。」", ans: "O", exp: "<span class='law-ref'>廣播電視法施行細則第19條</span>規定電臺節目須<strong>自行審查</strong>，播送後資料<strong>應保存二十日</strong>備查。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "20. 廣播電視法第16條規定，我國廣播、電視節目分為四類，同法第17條規定，其中教育文化節目、公共服務節目及大眾娛樂節目之播放時間所占每週總時間，廣播電臺不得少於百分之四十五。", ans: "X", exp: "<span class='law-ref'>廣播電視法第17條第1項</span>規定，<strong>新聞及政令宣導節目、教育文化節目及公共服務節目</strong>不得少於每週總時間<strong>45%</strong>。本題錯誤地將「新聞及政令宣導節目」換成「大眾娛樂節目」，大眾娛樂節目並無最低比例要求。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "21. 無線電視事業播送本國自製節目管理辦法第7條第一項規定：「第二條所稱新播，指該節目在國內所有無線電視頻道第一次播出。同條第二項：「不同無線電視事業合製同一節目，出資比率達百分之二十以上者，於其所屬頻道第一次播出時，視為新播。」", ans: "X", exp: "<span class='law-ref'>無線電視事業播送本國自製節目管理辦法第7條第2項</span>規定，合製節目出資比率達<strong>百分之三十（30%）以上</strong>者方視為新播。本題誤稱「20%」。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "22. 藥事法第91條第一項規定，違反第66條或第80條第一項第一款至第三款規定之一者，處新台幣二十萬元以上六百萬元以下罰鍰。", ans: "X", exp: "藥事法各條罰則金額需依條文確認：違反第66條（藥物廣告核准）依<span class='law-ref'>第92條</span>處罰，第91條規範的違規行為及金額與本題所述有出入。各罰則金額切勿混用，故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "23. 藥事法第4條所稱藥物，係指原料藥、製劑及醫療器材。", ans: "X", exp: "2020年台灣施行<strong>《醫療器材管理法》</strong>，醫療器材已從藥事法獨立出來。現行<span class='law-ref'>藥事法第4條</span>所稱「<strong>藥物</strong>」，係指<strong>藥品</strong>（含原料藥及製劑），<strong>不再包含醫療器材</strong>。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "24. 廣播電視法施行細則第18條規定，具有特種任務或為專業性之電台所播送特種或專業節目之時間，應占百分之七十以上。", ans: "X", exp: "<span class='law-ref'>廣播電視法施行細則第18條</span>規定，具特種任務或專業性電臺之特種或專業節目時間，應占<strong>百分之六十（60%）以上</strong>，非七十。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "25. 藥事法第95條第一項規定，傳播業者違反第66條第三項規定者，處新台幣二十萬元以上六百萬元以下罰鍰。", ans: "X", exp: "<span class='law-ref'>藥事法第95條第1項</span>規定，傳播業者違反第66條第3項者，罰鍰為<strong>新台幣六萬元以上三十萬元以下</strong>，非二十萬至六百萬。藥商與傳播業者的罰則金額不同，應注意區別。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "26. 廣播電視法第34-3條第一項規定，「置入性行銷及揭露贊助者之時間，不計入廣告時間」。", ans: "O", exp: "<span class='law-ref'>廣播電視法第34-3條第1項</span>明定：置入性行銷及揭露贊助者之時間，<strong>不計入廣告時間</strong>。此規定鼓勵透明揭露，不受廣告時間上限限制。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "27. 廣播電視法第23條第一項規定，對於電台之報導，利害關係人認為錯誤，於播送之日起，十五日內要求更正時，電臺應於接到要求後五日內，在原節目或原節目同一時間之節目中，加以更正。", ans: "X", exp: "<span class='law-ref'>廣播電視法第23條第1項</span>規定，電臺應於接到要求後<strong>七日內</strong>（非五日）更正。本題將「七日」誤為「五日」。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "28. 廣播電視法第19條第一項規定，廣播、電視中之本國自製節目，不得少於百分之七十。", ans: "O", exp: "<span class='law-ref'>廣播電視法第19條第1項</span>規定本國自製節目<strong>不得少於70%</strong>，保護本土文化產業。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "29. 廣播電視法第17條第2項規定：「大眾娛樂節目，應以發揚中華文化，闡揚倫理、民主、科學及富有教育意義之內容為準。」屬訓示規定。", ans: "O", exp: "<span class='law-ref'>廣播電視法第17條第2項</span>確實為<strong>訓示規定</strong>（宣示方向性原則，無直接罰則）。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "30. 有線廣播電視法第42條第一項規定：「頻道供應商應至少劃一個以上地方頻道，提供符合中央主管機關指定區域內民眾利益及需求之節目。」", ans: "X", exp: "<span class='law-ref'>有線廣播電視法第42條第1項</span>設置地方頻道的義務主體為<strong>系統經營者</strong>，非「頻道供應商」。兩者為不同主體，故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "31. 廣播電視法第31條第三項規定，廣告應於節目前後播出，不得於節目中間插播；但節目時間達半小時者，得插播一次或二次。", ans: "O", exp: "<span class='law-ref'>廣播電視法第31條第3項</span>規定：廣告應於節目<strong>前後</strong>播出，不得中間插播；節目時間達<strong>半小時</strong>者，得插播<strong>一次或二次</strong>。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "32. 電視節目廣告區隔與置入性行銷及贊助管理辦法第12條第三項規定：「電視事業於每日晚間六時至十一時播送之非本國自製節目，不得接受冠名贊助。」", ans: "X", exp: "<span class='law-ref'>電視節目廣告區隔辦法第12條第3項</span>規定的時段為<strong>每日晚間十九時至二十三時（19:00～23:00）</strong>，本題誤寫為「六時至十一時（18:00～23:00）」，起始時間錯誤。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "33. 藥事法施行細則第44條規定：登載或宣播藥物廣告，應由領有藥物許可證之藥商，填具申請書，連同藥物許可證影本、核定之標籤、仿單或包裝影本、廣告內容及審查費，申請中央或直轄市衛生主管機關核准後為之。", ans: "X", exp: "<span class='law-ref'>藥事法施行細則第44條</span>規定申請登載或宣播藥物廣告之程序，申請主體為<strong>領有藥物許可證之藥商</strong>。本題所述流程與實際條文細節有出入，故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "34. 有線廣播電視法第25條第三項規定，節目由系統經營者及其關係企業提供者，不得超過可利用頻道之四分之一。", ans: "O", exp: "<span class='law-ref'>有線廣播電視法第25條第3項</span>規定：節目由系統經營者及其<strong>關係企業</strong>提供者，不得超過可利用頻道之<strong>四分之一（1/4）</strong>，以防垂直整合過度。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "35. 廣播電視法施行細則第20條規定：「電台節目時間表應於播送五日前，依本會所定之項目及格式，登載於指定之資料庫。」", ans: "X", exp: "<span class='law-ref'>廣播電視法施行細則第20條</span>規定，電臺節目時間表應於播送<strong>五日前</strong>登載（本考題原題所述時間「十日前」與法條不符）。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "36. 廣播電視法第30條為對播送廣告之許可之規定。廣播、電視事業違反第44條第四項規定擅播廣告者，除處三萬元以上、四十萬以下罰鍰外，並得予以五日以上、三個月以下之停播處分。", ans: "X", exp: "依廣播電視法相關罰則，本題所引罰鍰金額（三萬至四十萬）及停播期間（五日以上、三個月以下）均與實際法條規定不符。法條數字務必依原文記憶。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "37. 有線廣播電視法第27條規定：「系統經營者播送依法應鎖碼之特定節目者，應將其鎖碼方式報請中央主管機關核定。」", ans: "X", exp: "<span class='law-ref'>有線廣播電視法第27條</span>規定，應鎖碼節目的鎖碼方式應<strong>報請中央主管機關備查</strong>，而非「核定」。<br>📌&nbsp;區別：<strong>備查</strong>陳報知悉即生效；<strong>核定</strong>需主管機關作成決定後方生效。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "38. 無線電視事業播送本國自製節目管理辦法第二條規定：「電視節目中之本國自製節目，不得少於百分之七十；主要時段播出之本國自製戲劇節目不得少於同類型節目之百分之五十，其新播比率不得低於百分之四十。」", ans: "O", exp: "<span class='law-ref'>無線電視事業播送本國自製節目管理辦法第2條</span>規定：①本國自製節目整體：<strong>不得少於70%</strong>；②主要時段本國自製戲劇：<strong>不得少於同類型節目50%</strong>；③新播比率：<strong>不得低於40%</strong>。本題引述正確，故為<strong>○（正確）</strong>。" },
+  { q: "39. 廣播節目廣告區隔與置入性行銷及贊助管理辦法第11條第一項規定：「廣播事業於節目為置入性行銷時，應於該節目播送前、後明顯揭露置入人者之名稱或商標，其揭露不計入廣告時間。前項揭露置入人者之訊息，不得含有廣告內容，且其時間不得超過四十五秒。」", ans: "O", exp: "<span class='law-ref'>廣播節目廣告區隔辦法第11條第1項</span>規定，置入性行銷揭露時間上限為<strong>四十五秒（45秒）</strong>（與贊助揭露的<strong>二十秒</strong>上限對照記憶）。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "40. 廣播電視廣告播送方式與數量分配辦法第2條規定：「節目播送時間達三十分鐘者，得播送廣告二次；達四十五分鐘者，得播送廣告三次；達六十分鐘者，得播送廣告四次。」", ans: "O", exp: "<span class='law-ref'>廣播電視廣告播送方式與數量分配辦法第2條</span>規定廣告播送次數（依考卷標示答案為○）。本辦法依節目播送時間長短規定可插播廣告之次數。請以最新版法規條文數字為準核實。" },
+  { q: "41. 藥事法第70條規定：「採訪、報導或廣告，其內容暗示或影射醫療效能者，視為藥物廣告」。", ans: "X", exp: "<span class='law-ref'>藥事法第70條</span>原文：「<strong>採訪、報導或宣傳</strong>，其內容暗示或影射醫療效能者，視為藥物廣告。」本題將「<strong>宣傳</strong>」誤寫為「<strong>廣告</strong>」。此條立意是防止以採訪、報導等非廣告形式規避藥物廣告管制。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "42. 有線廣播電視法施行細則第十四條所稱公用頻道，指頻道供應業者獨立於其他頻道所設置之頻道，專供民眾、政府機關、學校及團體登記使用，播送具公益、藝文或社教性質之節目。", ans: "X", exp: "<span class='law-ref'>有線廣播電視法施行細則第14條</span>所稱公用頻道，設置義務主體為<strong>系統經營者</strong>，而非「頻道供應業者」。公用頻道是系統經營者回饋地方社區的機制。故答案為<strong>✕（錯誤）</strong>。" },
+  { q: "43. 廣播電視法施行細則第22條規定：「廣播電臺每次播音開始、結束及節目更換時，應播報臺名、呼號及頻率；其於節目進行中，並應斟酌情況，每半小時簡報臺名一次，以資辨認。」", ans: "O", exp: "<span class='law-ref'>廣播電視法施行細則第22條</span>確實規定：播音開始、結束及節目更換時應播報<strong>臺名、呼號及頻率</strong>；節目進行中每<strong>半小時</strong>簡報臺名一次。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "44. 電視節目廣告區隔與置入性行銷及贊助管理辦法第7條規定：「電視事業播送之節目，除下列節目類型外，得為置入性行銷：一、新聞節目。二、兒童節目。」", ans: "O", exp: "<span class='law-ref'>電視節目廣告區隔辦法第7條</span>規定，電視節目除<strong>新聞節目</strong>（保障新聞獨立）及<strong>兒童節目</strong>（保護兒童）外，得為置入性行銷。本題正確，故為<strong>○（正確）</strong>。" },
+  { q: "45. 人民因行政機關違法或不當的行為，以致於權利或利益受到損害的時候，有權向國家請求申訴來解決，其中包括請願、訴願、刑事訴訟、國家賠償等。", ans: "X", exp: "行政救濟途徑應包括：請願、訴願、<strong>行政訴訟</strong>、國家賠償等。本題將「<strong>行政訴訟</strong>」誤寫為「<strong>刑事訴訟</strong>」。刑事訴訟針對犯罪行為，並非對抗行政機關違法行為的救濟途徑，應提起<strong>行政訴訟</strong>（行政法院管轄）。故答案為<strong>✕（錯誤）</strong>。" }
+];
+
+/* ─── 模式狀態 ─── */
+let currentMode = 'learn'; // 'learn' | 'classic'
+let userAnswers = Array(questions.length).fill(null);
+let guessFlags  = Array(questions.length).fill(false);
+let correctCount = 0, wrongCount = 0;
+let classicChecked = false;
+const TOTAL = questions.length;
+
+/* ─── 切換模式 ─── */
+function switchMode(mode) {
+  if (currentMode === mode) return;
+  currentMode = mode;
+  document.getElementById('btn-mode-learn').classList.toggle('active', mode === 'learn');
+  document.getElementById('btn-mode-classic').classList.toggle('active', mode === 'classic');
+
+  const desc = document.getElementById('mode-desc');
+  const headerSub = document.getElementById('header-sub');
+  const btnCheck = document.getElementById('btn-check-all');
+
+  if (mode === 'learn') {
+    desc.textContent = '答題後立即顯示對錯與詳解，隨時掌握學習進度';
+    headerSub.innerHTML = '選擇答案後，<strong>立即顯示對錯與詳解</strong>・不確定可標記「🎲 猜的」・每題可新增個人筆記';
+    btnCheck.style.display = 'none';
+    document.getElementById('correct-stat').style.display = '';
+    document.getElementById('wrong-stat').style.display = '';
+  } else {
+    desc.textContent = '作答完所有題目後，點「對答案」一次看完所有結果與詳解';
+    headerSub.innerHTML = '選擇 ○（正確）或 ✕（錯誤）・不確定時可點「🎲 猜的」標記・作答後點<strong>「✅ 對答案」</strong>查看結果';
+    btnCheck.style.display = '';
+    document.getElementById('correct-stat').style.display = 'none';
+    document.getElementById('wrong-stat').style.display = 'none';
+  }
+  resetAll();
+}
+
+/* ─── 建立題目 ─── */
+function buildQuiz() {
+  const c = document.getElementById('quiz-container');
+  c.innerHTML = '';
+  questions.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = 'card-' + i;
+    card.innerHTML = `
+      <div class="question-top">
+        <div class="q-num" id="qnum-${i}">${i + 1}</div>
+        <div class="q-text">${q.q}</div>
+      </div>
+      <div class="choices-row">
+        <button class="choice-btn" id="btn-O-${i}" onclick="handleAnswer(${i},'O')">○ 正確</button>
+        <button class="choice-btn" id="btn-X-${i}" onclick="handleAnswer(${i},'X')">✕ 錯誤</button>
+        <button class="guess-btn"  id="gbtn-${i}"  onclick="toggleGuess(${i})">🎲 猜的</button>
+        <span  class="guess-label" id="glabel-${i}">⚠️ 我猜的</span>
+      </div>
+      <div class="result-row" id="rrow-${i}">
+        <div class="result-badge" id="rbadge-${i}"></div>
+      </div>
+      <div class="explanation" id="exp-${i}">${q.exp}</div>
+      <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
+        <span class="arrow">▶</span>
+        <span id="ntxt-${i}">✏️ 新增筆記</span>
+      </div>
+      <div class="note-area" id="narea-${i}">
+        <textarea class="note-textarea" id="note-${i}"
+          placeholder="記憶口訣、易混淆點、任何筆記…"
+          oninput="saveNote(${i})"></textarea>
+        <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
+      </div>
+    `;
+    c.appendChild(card);
+  });
+}
+
+/* ─── 答題處理（依模式分流）─── */
+function handleAnswer(idx, chosen) {
+  if (currentMode === 'learn') {
+    answerLearn(idx, chosen);
+  } else {
+    answerClassic(idx, chosen);
+  }
+}
+
+/* ─── 學習模式：即時回饋 ─── */
+function answerLearn(idx, chosen) {
+  if (userAnswers[idx] !== null) return;
+  userAnswers[idx] = chosen;
+  const q = questions[idx];
+  const correct = chosen === q.ans;
+
+  const btnO = document.getElementById('btn-O-' + idx);
+  const btnX = document.getElementById('btn-X-' + idx);
+  btnO.disabled = btnX.disabled = true;
+
+  if (correct) {
+    document.getElementById('btn-' + chosen + '-' + idx).className = 'choice-btn selected-correct';
+  } else {
+    document.getElementById('btn-' + chosen + '-' + idx).className = 'choice-btn selected-wrong';
+    document.getElementById('btn-' + q.ans + '-' + idx).className = 'choice-btn show-correct';
+  }
+
+  const rbadge = document.getElementById('rbadge-' + idx);
+  const isGuess = guessFlags[idx];
+  const guessTag = isGuess ? ' <span style="font-size:0.82em;opacity:0.8;">🎲 猜的</span>' : '';
+  if (correct) {
+    rbadge.className = 'result-badge correct-badge show';
+    rbadge.innerHTML = '✅ 答對了！' + guessTag;
+    correctCount++;
+  } else {
+    rbadge.className = 'result-badge wrong-badge show';
+    rbadge.innerHTML = `❌ 答錯了，正確答案是「${q.ans === 'O' ? '○ 正確' : '✕ 錯誤'}」` + guessTag;
+    wrongCount++;
+  }
+  document.getElementById('rrow-' + idx).classList.add('show');
+  document.getElementById('exp-' + idx).classList.add('show');
+
+  const card = document.getElementById('card-' + idx);
+  card.classList.remove('guessed-card');
+  card.classList.add(correct ? 'correct-card' : 'wrong-card');
+  document.getElementById('qnum-' + idx).classList.add(correct ? 'answered-correct' : 'answered-wrong');
+  document.getElementById('gbtn-' + idx).disabled = true;
+
+  updateBar();
+  if (userAnswers.filter(a => a !== null).length === TOTAL) showFinal();
+}
+
+/* ─── 傳統模式：選擇不立即批改 ─── */
+function answerClassic(idx, chosen) {
+  if (classicChecked) return;
+  userAnswers[idx] = chosen;
+  document.getElementById('btn-O-' + idx).className = 'choice-btn' + (chosen === 'O' ? ' selected-O' : '');
+  document.getElementById('btn-X-' + idx).className = 'choice-btn' + (chosen === 'X' ? ' selected-X' : '');
+  updateBar();
+}
+
+/* ─── 傳統模式：對答案 ─── */
+function checkAll() {
+  if (currentMode !== 'classic') return;
+  classicChecked = true;
+  let score = 0, guessCorrect = 0, guessWrong = 0;
+
+  questions.forEach((q, i) => {
+    const card = document.getElementById('card-' + i);
+    const rbadge = document.getElementById('rbadge-' + i);
+    const isGuess = guessFlags[i];
+    ['btn-O-' + i, 'btn-X-' + i, 'gbtn-' + i].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.style.cursor = 'default'; el.style.pointerEvents = 'none'; }
+    });
+    const guessTag = isGuess ? ' <span style="font-size:0.82em;opacity:0.85;">🎲 猜的</span>' : '';
+    card.classList.remove('guessed-card');
+
+    if (userAnswers[i] === null) {
+      card.classList.add('unanswered');
+      rbadge.className = 'result-badge wrong-badge show';
+      rbadge.innerHTML = `⚠️ 未作答，正確答案：${q.ans === 'O' ? '○ 正確' : '✕ 錯誤'}${guessTag}`;
+    } else if (userAnswers[i] === q.ans) {
+      score++;
+      if (isGuess) guessCorrect++;
+      card.classList.add('correct-card');
+      rbadge.className = 'result-badge correct-badge show';
+      rbadge.innerHTML = `✅ 答對了！${guessTag}`;
+    } else {
+      if (isGuess) guessWrong++;
+      card.classList.add('wrong-card');
+      rbadge.className = 'result-badge wrong-badge show';
+      rbadge.innerHTML = `❌ 答錯了，正確答案：${q.ans === 'O' ? '○ 正確' : '✕ 錯誤'}${guessTag}`;
+    }
+    document.getElementById('rrow-' + i).classList.add('show');
+    document.getElementById('exp-' + i).classList.add('show');
+  });
+
+  correctCount = score;
+  wrongCount = TOTAL - score;
+
+  const totalGuess = guessFlags.filter(Boolean).length;
+  document.getElementById('fs-guess-wrap').style.display = totalGuess > 0 ? '' : 'none';
+  document.getElementById('fs-guess').textContent = guessCorrect;
+  document.getElementById('fs-guessed-total').textContent = totalGuess;
+  document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+  showFinal();
+}
+
+/* ─── 猜題標記 ─── */
+function toggleGuess(idx) {
+  if (userAnswers[idx] !== null) return;
+  if (currentMode === 'classic' && classicChecked) return;
+  guessFlags[idx] = !guessFlags[idx];
+  document.getElementById('gbtn-' + idx).classList.toggle('active', guessFlags[idx]);
+  document.getElementById('glabel-' + idx).classList.toggle('show', guessFlags[idx]);
+  document.getElementById('card-' + idx).classList.toggle('guessed-card', guessFlags[idx]);
+  updateBar();
+}
+
+/* ─── 筆記 ─── */
+function toggleNote(idx) {
+  const area = document.getElementById('narea-' + idx);
+  const toggle = document.getElementById('ntoggle-' + idx);
+  const open = area.classList.contains('show');
+  area.classList.toggle('show', !open);
+  toggle.classList.toggle('open', !open);
+  if (!open) setTimeout(() => document.getElementById('note-' + idx).focus(), 80);
+}
+function saveNote(idx) {
+  const v = document.getElementById('note-' + idx).value;
+  const has = v.trim().length > 0;
+  document.getElementById('nsaved-' + idx).classList.toggle('show', has);
+  document.getElementById('ntxt-' + idx).textContent = has ? '✏️ 我的筆記（已記錄）' : '✏️ 新增筆記';
+}
+
+/* ─── 進度條 ─── */
+function updateBar() {
+  const answered = userAnswers.filter(a => a !== null).length;
+  const gCount = guessFlags.filter(Boolean).length;
+  document.getElementById('answered-count').textContent = answered;
+  document.getElementById('correct-count').textContent = correctCount;
+  document.getElementById('wrong-count').textContent = wrongCount;
+  document.getElementById('progress-fill').style.width = (answered / TOTAL * 100) + '%';
+  const chip = document.getElementById('guess-chip');
+  chip.style.display = gCount > 0 ? 'inline' : 'none';
+  document.getElementById('guess-count').textContent = gCount;
+}
+
+/* ─── 最終結果 ─── */
+function showFinal() {
+  const totalGuess = guessFlags.filter(Boolean).length;
+  const guessCorrect = questions.reduce((n, q, i) => n + (guessFlags[i] && userAnswers[i] === q.ans ? 1 : 0), 0);
+
+  document.getElementById('final-score-text').textContent = `得分：${correctCount} / ${TOTAL}`;
+  document.getElementById('fs-correct').textContent = correctCount;
+  document.getElementById('fs-wrong').textContent = wrongCount;
+  if (currentMode === 'learn') {
+    document.getElementById('fs-guess-wrap').style.display = totalGuess > 0 ? '' : 'none';
+    document.getElementById('fs-guess').textContent = guessCorrect;
+    document.getElementById('fs-guessed-total').textContent = totalGuess;
+    document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+  }
+
+  const msg = correctCount >= 40 ? '🏆 優秀！廣告法規熟悉度極高！'
+            : correctCount >= 33 ? '🎯 良好！繼續加強幾個易混淆條文就更完美了！'
+            : correctCount >= 25 ? '📖 尚可！建議重點複習罰則金額與定義條文。'
+            : '💪 加油！多多複習法條原文，尤其注意數字與主詞。';
+  document.getElementById('final-msg').textContent = msg;
+
+  const fb = document.getElementById('final-box');
+  fb.style.display = 'block';
+  fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+/* ─── 重置 ─── */
+function resetAll() {
+  userAnswers  = Array(TOTAL).fill(null);
+  guessFlags   = Array(TOTAL).fill(false);
+  correctCount = 0; wrongCount = 0;
+  classicChecked = false;
+  document.getElementById('final-box').style.display = 'none';
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('correct-count').textContent  = '0';
+  document.getElementById('wrong-count').textContent    = '0';
+  document.getElementById('progress-fill').style.width  = '0%';
+  document.getElementById('guess-chip').style.display   = 'none';
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ─── 初始化 ─── */
+switchMode('learn');
+buildQuiz();
+</script>
+</body>
+</html>
