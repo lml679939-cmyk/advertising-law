@@ -119,6 +119,16 @@
     font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
   }
   .btn-reset:hover { transform: translateY(-1px); }
+  .btn-shuffle {
+    background: white;
+    color: #7f8c8d; border: 2px solid #bdc3c7;
+    padding: 7px 16px; border-radius: 8px;
+    font-size: 0.9em; cursor: pointer; font-weight: bold;
+    transition: all 0.18s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .btn-shuffle:hover { border-color: #8e44ad; color: #8e44ad; }
+  .btn-shuffle.active { background: #8e44ad; color: white; border-color: #8e44ad; }
 
   /* ── Card ── */
   .question-card {
@@ -315,6 +325,7 @@
     </div>
   </div>
   <div class="btn-group">
+    <button class="btn-shuffle" id="btn-shuffle" onclick="toggleShuffle()">🔀 隨機排序</button>
     <button class="btn-check" id="btn-check-all" onclick="checkAll()" style="display:none">✅ 對答案 &amp; 看詳解</button>
     <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
   </div>
@@ -389,7 +400,23 @@ let userAnswers = Array(questions.length).fill(null);
 let guessFlags  = Array(questions.length).fill(false);
 let correctCount = 0, wrongCount = 0;
 let classicChecked = false;
+let shuffleEnabled = false;
+let displayQuestions = [...questions];
 const TOTAL = questions.length;
+
+/* ─── 隨機排序 ─── */
+function toggleShuffle() {
+  shuffleEnabled = !shuffleEnabled;
+  document.getElementById('btn-shuffle').classList.toggle('active', shuffleEnabled);
+  resetAll();
+}
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 /* ─── 切換模式 ─── */
 function switchMode(mode) {
@@ -422,7 +449,7 @@ function switchMode(mode) {
 function buildQuiz() {
   const c = document.getElementById('quiz-container');
   c.innerHTML = '';
-  questions.forEach((q, i) => {
+  displayQuestions.forEach((q, i) => {
     const card = document.createElement('div');
     card.className = 'question-card';
     card.id = 'card-' + i;
@@ -465,17 +492,24 @@ function handleAnswer(idx, chosen) {
   }
 }
 
-/* ─── 學習模式：即時回饋 ─── */
+/* ─── 學習模式：即時回饋（可改答） ─── */
 function answerLearn(idx, chosen) {
-  if (userAnswers[idx] !== null) return;
+  const q = displayQuestions[idx];
+  const prev = userAnswers[idx];
+  if (prev === chosen) return; // 點同一個不動
+
+  // 調整計數（如果之前有答過）
+  if (prev !== null) {
+    if (prev === q.ans) correctCount--;
+    else wrongCount--;
+  }
+
   userAnswers[idx] = chosen;
-  const q = questions[idx];
   const correct = chosen === q.ans;
 
-  const btnO = document.getElementById('btn-O-' + idx);
-  const btnX = document.getElementById('btn-X-' + idx);
-  btnO.disabled = btnX.disabled = true;
-
+  // 重設按鈕樣式（不 disable，讓使用者可以改答）
+  document.getElementById('btn-O-' + idx).className = 'choice-btn';
+  document.getElementById('btn-X-' + idx).className = 'choice-btn';
   if (correct) {
     document.getElementById('btn-' + chosen + '-' + idx).className = 'choice-btn selected-correct';
   } else {
@@ -499,10 +533,11 @@ function answerLearn(idx, chosen) {
   document.getElementById('exp-' + idx).classList.add('show');
 
   const card = document.getElementById('card-' + idx);
-  card.classList.remove('guessed-card');
+  card.classList.remove('correct-card', 'wrong-card');
   card.classList.add(correct ? 'correct-card' : 'wrong-card');
-  document.getElementById('qnum-' + idx).classList.add(correct ? 'answered-correct' : 'answered-wrong');
-  document.getElementById('gbtn-' + idx).disabled = true;
+  const qnum = document.getElementById('qnum-' + idx);
+  qnum.classList.remove('answered-correct', 'answered-wrong');
+  qnum.classList.add(correct ? 'answered-correct' : 'answered-wrong');
 
   updateBar();
   if (userAnswers.filter(a => a !== null).length === TOTAL) showFinal();
@@ -523,7 +558,7 @@ function checkAll() {
   classicChecked = true;
   let score = 0, guessCorrect = 0, guessWrong = 0;
 
-  questions.forEach((q, i) => {
+  displayQuestions.forEach((q, i) => {
     const card = document.getElementById('card-' + i);
     const rbadge = document.getElementById('rbadge-' + i);
     const isGuess = guessFlags[i];
@@ -567,8 +602,10 @@ function checkAll() {
 
 /* ─── 猜題標記 ─── */
 function toggleGuess(idx) {
-  if (userAnswers[idx] !== null) return;
-  if (currentMode === 'classic' && classicChecked) return;
+  // 傳統模式：答題後或對答案後不能改；學習模式：任何時候都可以標記
+  if (currentMode === 'classic') {
+    if (userAnswers[idx] !== null || classicChecked) return;
+  }
   guessFlags[idx] = !guessFlags[idx];
   document.getElementById('gbtn-' + idx).classList.toggle('active', guessFlags[idx]);
   document.getElementById('glabel-' + idx).classList.toggle('show', guessFlags[idx]);
@@ -608,7 +645,7 @@ function updateBar() {
 /* ─── 最終結果 ─── */
 function showFinal() {
   const totalGuess = guessFlags.filter(Boolean).length;
-  const guessCorrect = questions.reduce((n, q, i) => n + (guessFlags[i] && userAnswers[i] === q.ans ? 1 : 0), 0);
+  const guessCorrect = displayQuestions.reduce((n, q, i) => n + (guessFlags[i] && userAnswers[i] === q.ans ? 1 : 0), 0);
 
   document.getElementById('final-score-text').textContent = `得分：${correctCount} / ${TOTAL}`;
   document.getElementById('fs-correct').textContent = correctCount;
@@ -633,6 +670,7 @@ function showFinal() {
 
 /* ─── 重置 ─── */
 function resetAll() {
+  displayQuestions = shuffleEnabled ? shuffleArray([...questions]) : [...questions];
   userAnswers  = Array(TOTAL).fill(null);
   guessFlags   = Array(TOTAL).fill(false);
   correctCount = 0; wrongCount = 0;
