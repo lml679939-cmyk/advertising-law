@@ -130,6 +130,39 @@
   .btn-shuffle:hover { border-color: #8e44ad; color: #8e44ad; }
   .btn-shuffle.active { background: #8e44ad; color: white; border-color: #8e44ad; }
 
+  /* ── MC Options ── */
+  .mc-options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px; margin-left: 40px;
+  }
+  .mc-option-btn {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 14px; border-radius: 9px;
+    border: 2px solid #c8d0dc; background: white;
+    font-size: 0.9em; cursor: pointer; transition: all 0.18s;
+    color: #34495e; text-align: left; line-height: 1.6;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .mc-option-btn:hover { border-color: #2e6da4; background: #eaf3fb; }
+  .mc-label {
+    background: #95a5a6; color: white; border-radius: 50%;
+    width: 22px; height: 22px; min-width: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78em; font-weight: bold; flex-shrink: 0; margin-top: 2px;
+  }
+  .mc-option-btn:hover .mc-label { background: #2e6da4; }
+  .mc-option-btn.mc-correct { border-color: #27ae60; background: #eafaf1; }
+  .mc-option-btn.mc-correct .mc-label { background: #27ae60; }
+  .mc-option-btn.mc-wrong { border-color: #e74c3c; background: #fdf0f0; }
+  .mc-option-btn.mc-wrong .mc-label { background: #e74c3c; }
+  .mc-option-btn.mc-show-correct { border-color: #27ae60; background: #eafaf1; }
+  .mc-option-btn.mc-show-correct .mc-label { background: #27ae60; }
+  @media (max-width: 620px) {
+    .mc-options-grid { grid-template-columns: 1fr; margin-left: 0; }
+  }
+
   /* ── Card ── */
   .question-card {
     background: white;
@@ -302,6 +335,7 @@
   <div class="mode-toggle">
     <button class="mode-btn active" id="btn-mode-learn" onclick="switchMode('learn')">📖 學習模式</button>
     <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
+    <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
   </div>
 </div>
 <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
@@ -316,7 +350,7 @@
   <div class="bar-left">
     <div>
       <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
-        <div class="bar-score">進度 <span id="answered-count">0</span> / 45</div>
+        <div class="bar-score">進度 <span id="answered-count">0</span> / <span id="total-count">45</span></div>
         <div class="bar-correct" id="correct-stat">✅ <span id="correct-count">0</span></div>
         <div class="bar-wrong" id="wrong-stat">❌ <span id="wrong-count">0</span></div>
         <div class="bar-guessed" id="guess-chip">🎲 猜的：<span id="guess-count">0</span></div>
@@ -394,6 +428,85 @@ const questions = [
   { q: "45. 人民因行政機關違法或不當的行為，以致於權利或利益受到損害的時候，有權向國家請求申訴來解決，其中包括請願、訴願、刑事訴訟、國家賠償等。", ans: "X", exp: "行政救濟途徑應包括：請願、訴願、<strong>行政訴訟</strong>、國家賠償等。本題將「<strong>行政訴訟</strong>」誤寫為「<strong>刑事訴訟</strong>」。刑事訴訟針對犯罪行為，並非對抗行政機關違法行為的救濟途徑，應提起<strong>行政訴訟</strong>（行政法院管轄）。故答案為<strong>✕（錯誤）</strong>。" }
 ];
 
+/* ─── 選擇題資料（25題）─── */
+const mcQuestions = [
+  { q: "依藥事法第66-1條，藥物廣告經主管機關核准後的有效期間，以及每次展延的上限各為何？",
+    options: ["有效期間2年，展延每次不超過2年","有效期間1年，展延每次不超過1年","有效期間1年，展延每次不超過6個月","有效期間2年，展延每次不超過1年"],
+    ans: 1, exp: "<span class='law-ref'>藥事法第66-1條第1項</span>：藥物廣告核准有效期間<strong>為一年</strong>，期滿仍需廣告者得申請展延，每次展延不得超過<strong>一年</strong>。四個選項中只有B同時答對兩個數字。" },
+  { q: "廣播電視法第31條規定，電臺播送廣告不得超過播送總時間的多少比例？",
+    options: ["10%","20%","15%","25%"],
+    ans: 2, exp: "<span class='law-ref'>廣播電視法第31條第1項</span>：電臺播送廣告，不得超過播送總時間<strong>百分之十五（15%）</strong>。" },
+  { q: "廣播節目廣告區隔辦法規定，揭露「贊助者」訊息的時間上限為何？",
+    options: ["15秒","20秒","30秒","45秒"],
+    ans: 1, exp: "<span class='law-ref'>廣播節目廣告區隔辦法第16條</span>：揭露贊助者訊息時間上限<strong>二十秒（20秒）</strong>。易混淆比較：置入性行銷揭露上限為<strong>45秒</strong>（第11條）。" },
+  { q: "廣播節目廣告區隔辦法規定，揭露「置入性行銷」人者訊息的時間上限為何？",
+    options: ["20秒","30秒","45秒","60秒"],
+    ans: 2, exp: "<span class='law-ref'>廣播節目廣告區隔辦法第11條第1項</span>：揭露置入人者訊息時間上限<strong>四十五秒（45秒）</strong>。注意與贊助揭露（<strong>20秒</strong>）的差異。" },
+  { q: "廣播電視法第23條規定，電臺收到更正要求後應於幾日內更正？",
+    options: ["3日內","5日內","7日內","10日內"],
+    ans: 2, exp: "<span class='law-ref'>廣播電視法第23條第1項</span>：電臺應於接到要求後<strong>七日內</strong>，在原節目或同一時間之節目中加以更正。注意是七日，常見錯誤填五日。" },
+  { q: "比例原則的三個子原則中，「選擇對人民侵害最小的手段」是指哪一個子原則？",
+    options: ["適當性原則","必要性原則","衡平性原則","正當性原則"],
+    ans: 1, exp: "比例原則三子原則：①<strong>適當性原則</strong>：手段有助於目的達成；②<strong>必要性原則</strong>：選擇<strong>對人民侵害最小的手段</strong>；③<strong>衡平性原則</strong>：手段與目的保持適當比例。" },
+  { q: "廣播電視法施行細則規定，具有特種任務或專業性電臺，其特種或專業節目時間應占播出總時間多少以上？",
+    options: ["50%","60%","70%","80%"],
+    ans: 1, exp: "<span class='law-ref'>廣播電視法施行細則第18條</span>：具特種任務或專業性電臺之特種或專業節目時間，應占<strong>百分之六十（60%）以上</strong>，注意非七十。" },
+  { q: "無線電視事業播送本國自製節目管理辦法規定，不同電視事業合製節目，出資比率達多少以上，於所屬頻道第一次播出時視為「新播」？",
+    options: ["20%以上","25%以上","30%以上","50%以上"],
+    ans: 2, exp: "<span class='law-ref'>無線電視事業播送本國自製節目管理辦法第7條第2項</span>：合製節目出資比率達<strong>百分之三十（30%）以上</strong>者視為新播。常見錯誤誤填20%。" },
+  { q: "藥事法第92條規定，藥商違反第66條第1項（初次未取得核准即刊播），處新台幣多少罰鍰？",
+    options: ["1萬元以上5萬元以下","6萬元以上30萬元以下","20萬元以上500萬元以下","60萬元以上2500萬元以下"],
+    ans: 2, exp: "<span class='law-ref'>藥事法第92條</span>：違反第66條第1項（初次）處<strong>新台幣二十萬元以上五百萬元以下</strong>。若通知後仍繼續刊播，則處<strong>六十萬元以上二千五百萬元以下</strong>。" },
+  { q: "藥事法第95條規定，傳播業者違反第66條第3項，處新台幣多少罰鍰？",
+    options: ["1萬元以上5萬元以下","6萬元以上30萬元以下","20萬元以上500萬元以下","60萬元以上2500萬元以下"],
+    ans: 1, exp: "<span class='law-ref'>藥事法第95條第1項</span>：<strong>傳播業者</strong>違反第66條第3項，處<strong>新台幣六萬元以上三十萬元以下</strong>。注意與藥商罰鍰（20萬～500萬）不同，傳播業者罰則較輕。" },
+  { q: "有線廣播電視法規定，節目由系統經營者及其關係企業提供者，不得超過可利用頻道的多少比例？",
+    options: ["三分之一","四分之一","五分之一","二分之一"],
+    ans: 1, exp: "<span class='law-ref'>有線廣播電視法第25條第3項</span>：由系統經營者及關係企業提供之節目，不得超過可利用頻道之<strong>四分之一（1/4）</strong>，防止垂直整合壟斷。" },
+  { q: "廣播電視法第19條規定，廣播、電視中的本國自製節目不得少於多少比例？",
+    options: ["50%","60%","70%","80%"],
+    ans: 2, exp: "<span class='law-ref'>廣播電視法第19條第1項</span>：本國自製節目<strong>不得少於百分之七十（70%）</strong>，保護本土文化產業。" },
+  { q: "電視節目廣告區隔辦法規定，電視事業播送之非本國自製節目，不得接受冠名贊助的時段為何？",
+    options: ["每日晚間17:00至22:00","每日晚間18:00至23:00","每日晚間19:00至23:00","每日晚間20:00至翌日00:00"],
+    ans: 2, exp: "<span class='law-ref'>電視節目廣告區隔辦法第12條第3項</span>：每日<strong>晚間十九時至二十三時（19:00～23:00）</strong>播送之非本國自製節目，不得接受冠名贊助。常見錯誤起始時間誤填18:00。" },
+  { q: "廣播電視法施行細則規定，電臺播送後之影音檔案、節目文稿等相關資料，應保存幾日以備查考？",
+    options: ["7日","14日","20日","30日"],
+    ans: 2, exp: "<span class='law-ref'>廣播電視法施行細則第19條</span>：電臺播送後之資料應保存<strong>二十日（20日）</strong>備查。" },
+  { q: "有線廣播電視法規定，設置「地方頻道」的義務主體為何？",
+    options: ["頻道供應商","衛星頻道業者","系統經營者","中央主管機關指定業者"],
+    ans: 2, exp: "<span class='law-ref'>有線廣播電視法第42條第1項</span>：設置地方頻道的義務主體為<strong>系統經營者</strong>，非頻道供應商。兩者為不同主體，應注意區別。" },
+  { q: "廣播電視法第25條規定，主管機關對電臺節目有審查權，但下列哪類節目不得審查？",
+    options: ["兒童節目","娛樂節目","教育文化節目","新聞節目"],
+    ans: 3, exp: "<span class='law-ref'>廣播電視法第25條</span>：「電臺播送之節目，<strong>除新聞節目外</strong>，主管機關均得審查。」新聞節目受新聞自由保障，主管機關不得審查。" },
+  { q: "廣播電視法第31條規定，節目時間達半小時者得於節目中間插播幾次廣告？",
+    options: ["僅限1次","1次或2次","最多3次","最多4次"],
+    ans: 1, exp: "<span class='law-ref'>廣播電視法第31條第3項</span>：廣告應於節目前後播出，不得中間插播；節目時間達<strong>半小時</strong>者，得插播<strong>一次或二次</strong>。" },
+  { q: "中華民國憲法第172條規定：「___與憲法或法律抵觸者無效。」空格應填入？",
+    options: ["法律","規章","命令","條約"],
+    ans: 2, exp: "<span class='law-ref'>憲法第172條</span>原文：「<strong>命令</strong>與憲法或法律抵觸者無效。」位階較低的命令違反憲法或法律時才無效。常見錯誤誤填「法律」。" },
+  { q: "廣播電視法第34-3條規定，置入性行銷及揭露贊助者之時間，與廣告時間的關係為何？",
+    options: ["全數計入廣告時間","超過5秒部分才計入","不計入廣告時間","計入一半廣告時間"],
+    ans: 2, exp: "<span class='law-ref'>廣播電視法第34-3條第1項</span>明定：置入性行銷及揭露贊助者之時間，<strong>不計入廣告時間</strong>，鼓勵業者透明揭露。" },
+  { q: "依電視節目廣告區隔辦法第7條，下列哪些節目類型「不得」進行置入性行銷？",
+    options: ["新聞節目與兒童節目","新聞節目與娛樂節目","兒童節目與教育節目","新聞節目與宗教節目"],
+    ans: 0, exp: "<span class='law-ref'>電視節目廣告區隔辦法第7條</span>：除<strong>新聞節目</strong>（保障新聞獨立）及<strong>兒童節目</strong>（保護兒童）外，得為置入性行銷。" },
+  { q: "廣播電視法第17條規定，廣播電台「新聞及政令宣導節目、教育文化節目及公共服務節目」每週合計不得少於多少比例？",
+    options: ["30%","40%","45%","50%"],
+    ans: 2, exp: "<span class='law-ref'>廣播電視法第17條第1項</span>：三類節目合計不得少於每週總時間<strong>百分之四十五（45%）</strong>。注意：大眾娛樂節目並無最低比例要求。" },
+  { q: "藥事法第70條規定，「採訪、報導或___，其內容暗示或影射醫療效能者，視為藥物廣告」，空格應填入？",
+    options: ["廣告","行銷","宣傳","推廣"],
+    ans: 2, exp: "<span class='law-ref'>藥事法第70條</span>原文：「採訪、報導或<strong>宣傳</strong>，其內容暗示或影射醫療效能者，視為藥物廣告。」此條旨在規範以宣傳形式規避廣告管制的行為。" },
+  { q: "有線廣播電視法第27條規定，系統經營者對依法應鎖碼之特定節目的鎖碼方式，應如何處理？",
+    options: ["報請中央主管機關核定","報請中央主管機關核准","報請中央主管機關備查","向地方主管機關申報"],
+    ans: 2, exp: "<span class='law-ref'>有線廣播電視法第27條</span>：鎖碼方式應<strong>報請中央主管機關備查</strong>，非核定。<br>📌 區別：<strong>備查</strong>（陳報後即生效）vs <strong>核定</strong>（需等主管機關作成決定後方生效）。" },
+  { q: "廣播電視法第2條對「置入性行銷」定義，下列哪個描述最正確？",
+    options: ["基於無償公益目的，於節目中呈現商品","基於有償或對價關係，於節目中呈現特定觀念、商品、商標、服務等","基於有償關係，僅限展示商品外觀","基於贊助關係，於廣告時段中呈現特定服務"],
+    ans: 1, exp: "<span class='law-ref'>廣播電視法第2條第1項第9款</span>：置入性行銷須同時符合①<strong>有償或對價關係</strong>、②在<strong>節目中</strong>（非廣告時段）、③呈現<strong>特定觀念、商品、商標、服務或相關資訊、特徵</strong>等三要素。" },
+  { q: "依藥事法，現行「藥物」定義不再包含下列哪一項？",
+    options: ["原料藥","製劑","醫療器材","藥品"],
+    ans: 2, exp: "2020年台灣施行<strong>《醫療器材管理法》</strong>，醫療器材已從藥事法獨立出來。現行<span class='law-ref'>藥事法第4條</span>所稱「藥物」係指藥品（含原料藥及製劑），<strong>不再包含醫療器材</strong>。" }
+];
+
 /* ─── 模式狀態 ─── */
 let currentMode = 'learn'; // 'learn' | 'classic'
 let userAnswers = Array(questions.length).fill(null);
@@ -402,7 +515,11 @@ let correctCount = 0, wrongCount = 0;
 let classicChecked = false;
 let shuffleEnabled = false;
 let displayQuestions = [...questions];
+let displayMCQuestions = [...mcQuestions];
+let mcUserAnswers = Array(mcQuestions.length).fill(null);
+let mcCorrectCount = 0, mcWrongCount = 0;
 const TOTAL = questions.length;
+const MC_TOTAL = mcQuestions.length;
 
 /* ─── 隨機排序 ─── */
 function toggleShuffle() {
@@ -424,29 +541,40 @@ function switchMode(mode) {
   currentMode = mode;
   document.getElementById('btn-mode-learn').classList.toggle('active', mode === 'learn');
   document.getElementById('btn-mode-classic').classList.toggle('active', mode === 'classic');
+  document.getElementById('btn-mode-mc').classList.toggle('active', mode === 'mc');
 
   const desc = document.getElementById('mode-desc');
   const headerSub = document.getElementById('header-sub');
   const btnCheck = document.getElementById('btn-check-all');
 
   if (mode === 'learn') {
+    document.getElementById('total-count').textContent = TOTAL;
     desc.textContent = '答題後立即顯示對錯與詳解，隨時掌握學習進度';
     headerSub.innerHTML = '選擇答案後，<strong>立即顯示對錯與詳解</strong>・不確定可標記「🎲 猜的」・每題可新增個人筆記';
     btnCheck.style.display = 'none';
     document.getElementById('correct-stat').style.display = '';
     document.getElementById('wrong-stat').style.display = '';
-  } else {
+  } else if (mode === 'classic') {
+    document.getElementById('total-count').textContent = TOTAL;
     desc.textContent = '作答完所有題目後，點「對答案」一次看完所有結果與詳解';
     headerSub.innerHTML = '選擇 ○（正確）或 ✕（錯誤）・不確定時可點「🎲 猜的」標記・作答後點<strong>「✅ 對答案」</strong>查看結果';
     btnCheck.style.display = '';
     document.getElementById('correct-stat').style.display = 'none';
     document.getElementById('wrong-stat').style.display = 'none';
+  } else { // mc
+    document.getElementById('total-count').textContent = MC_TOTAL;
+    desc.textContent = '共 ' + MC_TOTAL + ' 題四選一，融會貫通易混淆觀念・答題後立即顯示詳解';
+    headerSub.innerHTML = '從判斷題中精選<strong>最容易混淆的觀念</strong>，製成四選一選擇題・答題後<strong>立即顯示正確答案與詳解</strong>';
+    btnCheck.style.display = 'none';
+    document.getElementById('correct-stat').style.display = '';
+    document.getElementById('wrong-stat').style.display = '';
   }
   resetAll();
 }
 
 /* ─── 建立題目 ─── */
 function buildQuiz() {
+  if (currentMode === 'mc') { buildMCQuiz(); return; }
   const c = document.getElementById('quiz-container');
   c.innerHTML = '';
   displayQuestions.forEach((q, i) => {
@@ -481,6 +609,96 @@ function buildQuiz() {
     `;
     c.appendChild(card);
   });
+}
+
+/* ─── 選擇題模式：建立 ─── */
+function buildMCQuiz() {
+  const c = document.getElementById('quiz-container');
+  c.innerHTML = '';
+  displayMCQuestions.forEach((q, i) => {
+    const LABELS = ['A','B','C','D'];
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = 'card-' + i;
+    card.innerHTML = `
+      <div class="question-top">
+        <div class="q-num" id="qnum-${i}">${i + 1}</div>
+        <div class="q-text">${q.q}</div>
+      </div>
+      <div class="mc-options-grid" id="opts-${i}">
+        ${q.options.map((opt, j) => `
+          <button class="mc-option-btn" id="mc-btn-${i}-${j}" onclick="answerMC(${i},${j})">
+            <span class="mc-label">${LABELS[j]}</span>
+            <span>${opt}</span>
+          </button>`).join('')}
+      </div>
+      <div class="result-row" id="rrow-${i}">
+        <div class="result-badge" id="rbadge-${i}"></div>
+      </div>
+      <div class="explanation" id="exp-${i}">${q.exp}</div>
+      <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
+        <span class="arrow">▶</span>
+        <span id="ntxt-${i}">✏️ 新增筆記</span>
+      </div>
+      <div class="note-area" id="narea-${i}">
+        <textarea class="note-textarea" id="note-${i}"
+          placeholder="記憶口訣、易混淆點、任何筆記…"
+          oninput="saveNote(${i})"></textarea>
+        <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
+      </div>
+    `;
+    c.appendChild(card);
+  });
+}
+
+/* ─── 選擇題模式：作答 ─── */
+function answerMC(idx, chosen) {
+  const q = displayMCQuestions[idx];
+  const prev = mcUserAnswers[idx];
+  if (prev === chosen) return;
+
+  if (prev !== null) {
+    if (prev === q.ans) mcCorrectCount--;
+    else mcWrongCount--;
+  }
+
+  mcUserAnswers[idx] = chosen;
+  const correct = chosen === q.ans;
+
+  // 重設所有選項樣式
+  q.options.forEach((_, j) => {
+    document.getElementById(`mc-btn-${idx}-${j}`).className = 'mc-option-btn';
+  });
+  if (correct) {
+    document.getElementById(`mc-btn-${idx}-${chosen}`).className = 'mc-option-btn mc-correct';
+  } else {
+    document.getElementById(`mc-btn-${idx}-${chosen}`).className = 'mc-option-btn mc-wrong';
+    document.getElementById(`mc-btn-${idx}-${q.ans}`).className = 'mc-option-btn mc-show-correct';
+  }
+
+  const rbadge = document.getElementById('rbadge-' + idx);
+  const LABELS = ['A','B','C','D'];
+  if (correct) {
+    mcCorrectCount++;
+    rbadge.className = 'result-badge correct-badge show';
+    rbadge.innerHTML = '✅ 答對了！';
+  } else {
+    mcWrongCount++;
+    rbadge.className = 'result-badge wrong-badge show';
+    rbadge.innerHTML = `❌ 答錯了，正確答案是「${LABELS[q.ans]}」`;
+  }
+  document.getElementById('rrow-' + idx).classList.add('show');
+  document.getElementById('exp-' + idx).classList.add('show');
+
+  const card = document.getElementById('card-' + idx);
+  card.classList.remove('correct-card', 'wrong-card');
+  card.classList.add(correct ? 'correct-card' : 'wrong-card');
+  const qnum = document.getElementById('qnum-' + idx);
+  qnum.classList.remove('answered-correct', 'answered-wrong');
+  qnum.classList.add(correct ? 'answered-correct' : 'answered-wrong');
+
+  updateBar();
+  if (mcUserAnswers.filter(a => a !== null).length === MC_TOTAL) showFinal();
 }
 
 /* ─── 答題處理（依模式分流）─── */
@@ -602,6 +820,7 @@ function checkAll() {
 
 /* ─── 猜題標記 ─── */
 function toggleGuess(idx) {
+  if (currentMode === 'mc') return; // 選擇題模式無猜題功能
   // 傳統模式：答題後或對答案後不能改；學習模式：任何時候都可以標記
   if (currentMode === 'classic') {
     if (userAnswers[idx] !== null || classicChecked) return;
@@ -631,6 +850,15 @@ function saveNote(idx) {
 
 /* ─── 進度條 ─── */
 function updateBar() {
+  if (currentMode === 'mc') {
+    const answered = mcUserAnswers.filter(a => a !== null).length;
+    document.getElementById('answered-count').textContent = answered;
+    document.getElementById('correct-count').textContent = mcCorrectCount;
+    document.getElementById('wrong-count').textContent = mcWrongCount;
+    document.getElementById('progress-fill').style.width = (answered / MC_TOTAL * 100) + '%';
+    document.getElementById('guess-chip').style.display = 'none';
+    return;
+  }
   const answered = userAnswers.filter(a => a !== null).length;
   const gCount = guessFlags.filter(Boolean).length;
   document.getElementById('answered-count').textContent = answered;
@@ -644,6 +872,24 @@ function updateBar() {
 
 /* ─── 最終結果 ─── */
 function showFinal() {
+  if (currentMode === 'mc') {
+    document.getElementById('final-score-text').textContent = `得分：${mcCorrectCount} / ${MC_TOTAL}`;
+    document.getElementById('fs-correct').textContent = mcCorrectCount;
+    document.getElementById('fs-wrong').textContent = mcWrongCount;
+    document.getElementById('fs-guess-wrap').style.display = 'none';
+    document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+    const pct = mcCorrectCount / MC_TOTAL;
+    document.getElementById('final-msg').textContent =
+      pct >= 0.9 ? '🏆 優秀！選擇題觀念已完全融會貫通！'
+    : pct >= 0.7 ? '🎯 良好！再加強幾個易混淆的數字與主體就滿分了！'
+    : pct >= 0.5 ? '📖 尚可！建議重點複習罰鍰金額與定義條文。'
+    : '💪 加油！多對照判斷題的詳解，釐清每個關鍵數字。';
+    const fb = document.getElementById('final-box');
+    fb.style.display = 'block';
+    fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
   const totalGuess = guessFlags.filter(Boolean).length;
   const guessCorrect = displayQuestions.reduce((n, q, i) => n + (guessFlags[i] && userAnswers[i] === q.ans ? 1 : 0), 0);
 
@@ -670,17 +916,24 @@ function showFinal() {
 
 /* ─── 重置 ─── */
 function resetAll() {
-  displayQuestions = shuffleEnabled ? shuffleArray([...questions]) : [...questions];
-  userAnswers  = Array(TOTAL).fill(null);
-  guessFlags   = Array(TOTAL).fill(false);
-  correctCount = 0; wrongCount = 0;
-  classicChecked = false;
   document.getElementById('final-box').style.display = 'none';
   document.getElementById('answered-count').textContent = '0';
   document.getElementById('correct-count').textContent  = '0';
   document.getElementById('wrong-count').textContent    = '0';
   document.getElementById('progress-fill').style.width  = '0%';
   document.getElementById('guess-chip').style.display   = 'none';
+
+  if (currentMode === 'mc') {
+    displayMCQuestions = shuffleEnabled ? shuffleArray([...mcQuestions]) : [...mcQuestions];
+    mcUserAnswers  = Array(MC_TOTAL).fill(null);
+    mcCorrectCount = 0; mcWrongCount = 0;
+  } else {
+    displayQuestions = shuffleEnabled ? shuffleArray([...questions]) : [...questions];
+    userAnswers  = Array(TOTAL).fill(null);
+    guessFlags   = Array(TOTAL).fill(false);
+    correctCount = 0; wrongCount = 0;
+    classicChecked = false;
+  }
   buildQuiz();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
