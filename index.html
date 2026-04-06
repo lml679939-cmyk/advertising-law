@@ -321,6 +321,38 @@
   .final-stat .num { font-size: 2em; font-weight: bold; display: block; }
   .final-stat .lbl { font-size: 0.8em; opacity: 0.85; }
 
+  /* ── Fill mode ── */
+  .fill-input {
+    display: inline-block; border: none;
+    border-bottom: 2.5px solid #8e44ad;
+    padding: 1px 6px; font-size: 0.95em;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    color: #1a3c6e; background: rgba(142,68,173,0.05);
+    outline: none; min-width: 90px; max-width: 220px;
+    transition: border-color 0.2s; vertical-align: middle;
+    border-radius: 3px 3px 0 0;
+  }
+  .fill-input:focus { border-bottom-color: #5b2c8d; background: rgba(142,68,173,0.1); }
+  .fill-input.fill-correct { border-bottom-color: #27ae60; color: #1e8449; background: rgba(39,174,96,0.08); }
+  .fill-input.fill-wrong   { border-bottom-color: #e74c3c; color: #c0392b; background: rgba(231,76,60,0.08); }
+  .fill-check-row { margin-top: 12px; margin-left: 40px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .btn-fill-check {
+    padding: 7px 18px; border-radius: 8px; border: none;
+    background: linear-gradient(135deg, #8e44ad, #6c3483);
+    color: white; font-size: 0.9em; font-weight: bold; cursor: pointer;
+    transition: transform 0.1s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .btn-fill-check:hover { transform: translateY(-1px); }
+  .btn-retry {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    color: white; border: none; padding: 10px 24px; border-radius: 10px;
+    font-size: 0.95em; cursor: pointer; font-weight: bold;
+    transition: transform 0.1s; margin-top: 10px;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .btn-retry:hover { transform: translateY(-1px); }
+
   @media (max-width: 600px) {
     .choices-row, .note-toggle, .note-area, .result-row, .explanation { margin-left: 0; }
     .progress-wrap { width: 100px; }
@@ -336,6 +368,7 @@
     <button class="mode-btn active" id="btn-mode-learn" onclick="switchMode('learn')">📖 學習模式</button>
     <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
     <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
+    <button class="mode-btn" id="btn-mode-fill" onclick="switchMode('fill')">✏️ 填空題</button>
   </div>
 </div>
 <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
@@ -376,6 +409,9 @@
   </div>
   <p id="final-msg"></p>
   <p style="margin-top:14px;font-size:0.85em;opacity:0.75;" id="final-hint"></p>
+  <div id="retry-wrap" style="display:none">
+    <button class="btn-retry" id="btn-retry" onclick="retryWrong()">🔁 重新練習答錯題目</button>
+  </div>
 </div>
 
 <script>
@@ -507,6 +543,130 @@ const mcQuestions = [
     ans: 2, exp: "2020年台灣施行<strong>《醫療器材管理法》</strong>，醫療器材已從藥事法獨立出來。現行<span class='law-ref'>藥事法第4條</span>所稱「藥物」係指藥品（含原料藥及製劑），<strong>不再包含醫療器材</strong>。" }
 ];
 
+/* ─── 填空題資料（30題）─── */
+const fillQuestions = [
+  { q: "廣播電視法第31條第一項規定，電臺播送廣告，不得超過播送總時間___。",
+    blanks: [["百分之十五","15%","15","十五","百分之15"]],
+    answers: ["百分之十五（15%）"],
+    exp: "<span class='law-ref'>廣播電視法第31條第1項</span>：電臺播送廣告不得超過播送總時間<strong>百分之十五（15%）</strong>。" },
+  { q: "廣播電視法施行細則第18條規定，具有特種任務或為專業性之電台所播送特種或專業節目之時間，應占___以上。",
+    blanks: [["百分之六十","60%","60","六十","百分之60"]],
+    answers: ["百分之六十（60%）"],
+    exp: "<span class='law-ref'>廣播電視法施行細則第18條</span>：具特種任務或專業性電臺之特種或專業節目時間應占<strong>百分之六十（60%）以上</strong>，注意非七十。" },
+  { q: "廣播電視法第17條規定，廣播電台新聞及政令宣導節目、教育文化節目及公共服務節目，每週合計不得少於總時間___。",
+    blanks: [["百分之四十五","45%","45","四十五","百分之45"]],
+    answers: ["百分之四十五（45%）"],
+    exp: "<span class='law-ref'>廣播電視法第17條第1項</span>：三類節目合計不得少於每週總時間<strong>百分之四十五（45%）</strong>。注意：大眾娛樂節目無最低比例要求。" },
+  { q: "廣播電視法第19條第一項規定，廣播、電視中之本國自製節目，不得少於___。",
+    blanks: [["百分之七十","70%","70","七十","百分之70"]],
+    answers: ["百分之七十（70%）"],
+    exp: "<span class='law-ref'>廣播電視法第19條第1項</span>：本國自製節目<strong>不得少於百分之七十（70%）</strong>，保護本土文化產業。" },
+  { q: "廣播電視法施行細則第19條規定，電臺播送後之影音檔案、節目文稿或其他有關資料，應保存___，以備查考。",
+    blanks: [["二十日","20日","20天","二十天"]],
+    answers: ["二十日（20日）"],
+    exp: "<span class='law-ref'>廣播電視法施行細則第19條</span>：電臺播送後之資料應保存<strong>二十日（20日）</strong>備查。" },
+  { q: "廣播電視法施行細則第20條規定，電台節目時間表應於播送___，依本會所定之項目及格式，登載於指定之資料庫。",
+    blanks: [["五日前","5日前","五天前","5天前"]],
+    answers: ["五日前"],
+    exp: "<span class='law-ref'>廣播電視法施行細則第20條</span>：節目時間表應於播送<strong>五日前</strong>登載於指定資料庫，為備查性質，無需等待核定。" },
+  { q: "廣播電視法第23條第一項規定，利害關係人於播送之日起十五日內要求更正時，電臺應於接到要求後___，在原節目或同一時間之節目中加以更正。",
+    blanks: [["七日內","7日內","七天內","7天內"]],
+    answers: ["七日內（7日內）"],
+    exp: "<span class='law-ref'>廣播電視法第23條第1項</span>：電臺應於接到要求後<strong>七日內</strong>更正。常見錯誤誤填「五日內」。" },
+  { q: "廣播電視法第31條第三項規定，廣告應於節目前後播出；但節目時間達半小時者，得插播___。",
+    blanks: [["一次或二次","一次或兩次","1次或2次","一或二次"]],
+    answers: ["一次或二次"],
+    exp: "<span class='law-ref'>廣播電視法第31條第3項</span>：節目時間達半小時者，得於節目中間插播<strong>一次或二次</strong>廣告。" },
+  { q: "廣播節目廣告區隔辦法第11條規定，揭露置入人者之訊息，不得含有廣告內容，且其時間不得超過___。",
+    blanks: [["四十五秒","45秒","45s","四十五"]],
+    answers: ["四十五秒（45秒）"],
+    exp: "<span class='law-ref'>廣播節目廣告區隔辦法第11條</span>：揭露置入人者訊息時間上限<strong>四十五秒（45秒）</strong>。對照：贊助揭露上限為二十秒（第16條）。" },
+  { q: "廣播節目廣告區隔辦法第16條規定，揭露贊助者之訊息，不得含有廣告內容，且其時間不得超過___。",
+    blanks: [["二十秒","20秒","20s","二十"]],
+    answers: ["二十秒（20秒）"],
+    exp: "<span class='law-ref'>廣播節目廣告區隔辦法第16條</span>：揭露贊助者訊息時間上限<strong>二十秒（20秒）</strong>。對照：置入性行銷揭露上限為四十五秒（第11條）。" },
+  { q: "有線廣播電視法第25條第三項規定，節目由系統經營者及其關係企業提供者，不得超過可利用頻道之___。",
+    blanks: [["四分之一","1/4","25%","百分之二十五"]],
+    answers: ["四分之一（1/4）"],
+    exp: "<span class='law-ref'>有線廣播電視法第25條第3項</span>：由系統經營者及關係企業提供之節目，不得超過可利用頻道之<strong>四分之一（1/4）</strong>，防止垂直整合壟斷。" },
+  { q: "有線廣播電視法第42條第一項規定，___應至少劃一個以上地方頻道，提供符合中央主管機關指定區域內民眾利益及需求之節目。",
+    blanks: [["系統經營者"]],
+    answers: ["系統經營者"],
+    exp: "<span class='law-ref'>有線廣播電視法第42條第1項</span>：設置地方頻道的義務主體為<strong>系統經營者</strong>，非頻道供應商。兩者主體不同，應注意區別。" },
+  { q: "無線電視事業播送本國自製節目管理辦法第7條第二項規定，不同無線電視事業合製同一節目，出資比率達___以上者，於其所屬頻道第一次播出時，視為新播。",
+    blanks: [["百分之三十","30%","30","三十","百分之30"]],
+    answers: ["百分之三十（30%）"],
+    exp: "<span class='law-ref'>無線電視事業播送本國自製節目管理辦法第7條第2項</span>：合製節目出資比率達<strong>百分之三十（30%）以上</strong>者視為新播。常見錯誤誤填20%。" },
+  { q: "無線電視事業播送本國自製節目管理辦法第2條規定，電視節目中本國自製節目不得少於___；主要時段本國自製戲劇不得少於同類型節目之___；新播比率不得低於___。",
+    blanks: [["百分之七十","70%","70","七十"],["百分之五十","50%","50","五十"],["百分之四十","40%","40","四十"]],
+    answers: ["百分之七十（70%）","百分之五十（50%）","百分之四十（40%）"],
+    exp: "<span class='law-ref'>無線電視事業播送本國自製節目管理辦法第2條</span>：①整體本國自製<strong>不少於70%</strong>；②主要時段本國自製戲劇<strong>不少於同類型50%</strong>；③新播比率<strong>不低於40%</strong>。" },
+  { q: "電視節目廣告區隔辦法第12條第三項規定，電視事業於每日晚間___播送之非本國自製節目，不得接受冠名贊助。",
+    blanks: [["十九時至二十三時","19時至23時","19:00至23:00","19:00～23:00","七時至十一時"]],
+    answers: ["十九時至二十三時（19:00～23:00）"],
+    exp: "<span class='law-ref'>電視節目廣告區隔辦法第12條第3項</span>：每日晚間<strong>十九時至二十三時（19:00～23:00）</strong>播送之非本國自製節目，不得接受冠名贊助。常見錯誤誤填「六時至十一時」。" },
+  { q: "電視節目分級處理辦法第10條第一項規定，電視事業播送節目應於節目開始時，以___方式，至少標示分級標識___，其大小應與螢幕上電視事業之識別標識相當。",
+    blanks: [["疊印或插播卡","疊印或插播","疊印"],["十秒鐘","10秒鐘","十秒","10秒","10"]],
+    answers: ["疊印或插播卡","十秒鐘（10秒）"],
+    exp: "<span class='law-ref'>電視節目分級處理辦法第10條第1項</span>：以<strong>疊印或插播卡</strong>方式，至少標示分級標識<strong>十秒鐘</strong>，大小與識別標識相當。" },
+  { q: "藥事法第66-1條第一項規定，藥物廣告有效期間為___；每次展延之期間，不得超過___。",
+    blanks: [["一年","1年"],["一年","1年"]],
+    answers: ["一年","一年"],
+    exp: "<span class='law-ref'>藥事法第66-1條第1項</span>：藥物廣告有效期間<strong>為一年</strong>，期滿展延每次不得超過<strong>一年</strong>。兩格答案相同，均為「一年」。" },
+  { q: "藥事法第92條規定，藥商違反第66條第1項（初次未取得核准即刊播），處新台幣___罰鍰。",
+    blanks: [["二十萬元以上五百萬元以下","20萬以上500萬以下","20萬~500萬","20萬至500萬","20萬元以上500萬元以下"]],
+    answers: ["二十萬元以上五百萬元以下"],
+    exp: "<span class='law-ref'>藥事法第92條</span>：初次違反第66條第1項，處<strong>新台幣二十萬元以上五百萬元以下</strong>罰鍰。" },
+  { q: "藥事法第92條規定，藥商違反第66條第1項，經通知限期停止而仍繼續刊播者，處新台幣___罰鍰。",
+    blanks: [["六十萬元以上二千五百萬元以下","60萬以上2500萬以下","60萬~2500萬","60萬至2500萬","60萬元以上2500萬元以下"]],
+    answers: ["六十萬元以上二千五百萬元以下"],
+    exp: "<span class='law-ref'>藥事法第92條</span>：通知後仍繼續刊播，處<strong>新台幣六十萬元以上二千五百萬元以下</strong>罰鍰，並得按次連續處罰。" },
+  { q: "藥事法第95條第一項規定，傳播業者違反第66條第三項，處新台幣___罰鍰。",
+    blanks: [["六萬元以上三十萬元以下","6萬以上30萬以下","6萬~30萬","6萬至30萬","6萬元以上30萬元以下"]],
+    answers: ["六萬元以上三十萬元以下"],
+    exp: "<span class='law-ref'>藥事法第95條第1項</span>：<strong>傳播業者</strong>違反第66條第3項，處<strong>新台幣六萬元以上三十萬元以下</strong>罰鍰。注意與藥商罰鍰（20萬~500萬）金額不同。" },
+  { q: "中華民國憲法第172條規定：「___與憲法或法律抵觸者無效。」",
+    blanks: [["命令"]],
+    answers: ["命令"],
+    exp: "<span class='law-ref'>憲法第172條</span>：「<strong>命令</strong>與憲法或法律抵觸者無效。」位階較低的命令違反憲法或法律時才無效。常見錯誤誤填「法律」。" },
+  { q: "廣播電視法第25條規定：「電臺播送之節目，___，主管機關均得審查；其辦法由主管機關定之。」",
+    blanks: [["除新聞節目外","新聞節目除外"]],
+    answers: ["除新聞節目外"],
+    exp: "<span class='law-ref'>廣播電視法第25條</span>：「電臺播送之節目，<strong>除新聞節目外</strong>，主管機關均得審查。」新聞節目受新聞自由保障，不得審查。" },
+  { q: "廣播電視法第34條規定，廣播電視事業播送應經主管機關核准之廣告，應先取得目的事業主管機關___之證明文件，始得播送。",
+    blanks: [["核准"]],
+    answers: ["核准"],
+    exp: "<span class='law-ref'>廣播電視法第34條</span>：應取得主管機關<strong>核准</strong>之證明文件，始得播送。常見錯誤誤填「核定」——核准與核定行政程序意義不同。" },
+  { q: "有線廣播電視法第36條第一項規定：「系統經營者播送之頻道節目及廣告，___依著作權法或其他相關法規取得合法授權。」",
+    blanks: [["應"]],
+    answers: ["應"],
+    exp: "<span class='law-ref'>有線廣播電視法第36條第1項</span>：「系統經營者…<strong>應</strong>依著作權法取得合法授權。」為強制義務，常見錯誤誤填「得」（裁量），意義截然不同。" },
+  { q: "廣播電視法施行細則第22條規定，廣播電臺於節目進行中，應斟酌情況，每___簡報臺名一次，以資辨認。",
+    blanks: [["半小時","半個小時","30分鐘","三十分鐘"]],
+    answers: ["半小時"],
+    exp: "<span class='law-ref'>廣播電視法施行細則第22條</span>：節目進行中每<strong>半小時</strong>簡報臺名一次。播音開始、結束及節目更換時，應播報臺名、呼號及頻率。" },
+  { q: "廣播電視法第2條對「置入性行銷」之定義，指基於___，於節目中呈現特定觀念、商品、商標、服務或相關資訊、特徵等之行為。",
+    blanks: [["有償或對價關係","有償或對價"]],
+    answers: ["有償或對價關係"],
+    exp: "<span class='law-ref'>廣播電視法第2條第1項第9款</span>：置入性行銷須基於<strong>有償或對價關係</strong>，且在節目中（非廣告時段）呈現。" },
+  { q: "藥事法第70條規定：「採訪、報導或___，其內容暗示或影射醫療效能者，視為藥物廣告。」",
+    blanks: [["宣傳"]],
+    answers: ["宣傳"],
+    exp: "<span class='law-ref'>藥事法第70條</span>：「採訪、報導或<strong>宣傳</strong>，其內容暗示或影射醫療效能者，視為藥物廣告。」常見錯誤誤填「廣告」。" },
+  { q: "有線廣播電視法第27條規定：「系統經營者播送依法應鎖碼之特定節目者，應將其鎖碼方式報請中央主管機關___。」",
+    blanks: [["備查"]],
+    answers: ["備查"],
+    exp: "<span class='law-ref'>有線廣播電視法第27條</span>：鎖碼方式應<strong>報請中央主管機關備查</strong>，非核定。備查：陳報後即生效；核定：需等主管機關作成決定後方生效。" },
+  { q: "比例原則之必要性原則，係指在能達成目的的手段中，應選擇對人民___的手段。",
+    blanks: [["侵害最小","最小侵害","侵害最輕","損害最小"]],
+    answers: ["侵害最小"],
+    exp: "比例原則三子原則：①適當性：手段有助於目的；②<strong>必要性：選擇對人民侵害最小的手段</strong>（最小手段原則）；③衡平性：手段與目的比例適當。" },
+  { q: "廣播電視法施行細則第22條規定，廣播電臺每次播音開始、結束及節目更換時，應播報___。",
+    blanks: [["臺名、呼號及頻率","台名、呼號及頻率","臺名呼號頻率","台名呼號頻率"]],
+    answers: ["臺名、呼號及頻率"],
+    exp: "<span class='law-ref'>廣播電視法施行細則第22條</span>：播音開始、結束及節目更換時應播報<strong>臺名、呼號及頻率</strong>；節目進行中每半小時簡報臺名一次。" }
+];
+
 /* ─── 模式狀態 ─── */
 let currentMode = 'learn'; // 'learn' | 'classic'
 let userAnswers = Array(questions.length).fill(null);
@@ -520,6 +680,10 @@ let mcUserAnswers = Array(mcQuestions.length).fill(null);
 let mcCorrectCount = 0, mcWrongCount = 0;
 const TOTAL = questions.length;
 const MC_TOTAL = mcQuestions.length;
+let fillUserAnswers = Array(fillQuestions.length).fill(null);
+let fillCorrectCount = 0, fillWrongCount = 0;
+let displayFillQuestions = [...fillQuestions];
+const FILL_TOTAL = fillQuestions.length;
 
 /* ─── 隨機排序 ─── */
 function toggleShuffle() {
@@ -542,6 +706,7 @@ function switchMode(mode) {
   document.getElementById('btn-mode-learn').classList.toggle('active', mode === 'learn');
   document.getElementById('btn-mode-classic').classList.toggle('active', mode === 'classic');
   document.getElementById('btn-mode-mc').classList.toggle('active', mode === 'mc');
+  document.getElementById('btn-mode-fill').classList.toggle('active', mode === 'fill');
 
   const desc = document.getElementById('mode-desc');
   const headerSub = document.getElementById('header-sub');
@@ -561,10 +726,17 @@ function switchMode(mode) {
     btnCheck.style.display = '';
     document.getElementById('correct-stat').style.display = 'none';
     document.getElementById('wrong-stat').style.display = 'none';
-  } else { // mc
+  } else if (mode === 'mc') {
     document.getElementById('total-count').textContent = MC_TOTAL;
     desc.textContent = '共 ' + MC_TOTAL + ' 題四選一，融會貫通易混淆觀念・答題後立即顯示詳解';
     headerSub.innerHTML = '從判斷題中精選<strong>最容易混淆的觀念</strong>，製成四選一選擇題・答題後<strong>立即顯示正確答案與詳解</strong>';
+    btnCheck.style.display = 'none';
+    document.getElementById('correct-stat').style.display = '';
+    document.getElementById('wrong-stat').style.display = '';
+  } else { // fill
+    document.getElementById('total-count').textContent = FILL_TOTAL;
+    desc.textContent = '填入關鍵數字與詞彙，強化法條細節記憶・答對才算完成';
+    headerSub.innerHTML = '從法條中挖空<strong>最容易記錯的數字與關鍵詞</strong>・輸入答案後按「✅ 確認答案」・<strong>答對才算完成</strong>';
     btnCheck.style.display = 'none';
     document.getElementById('correct-stat').style.display = '';
     document.getElementById('wrong-stat').style.display = '';
@@ -575,6 +747,7 @@ function switchMode(mode) {
 /* ─── 建立題目 ─── */
 function buildQuiz() {
   if (currentMode === 'mc') { buildMCQuiz(); return; }
+  if (currentMode === 'fill') { buildFillQuiz(); return; }
   const c = document.getElementById('quiz-container');
   c.innerHTML = '';
   displayQuestions.forEach((q, i) => {
@@ -698,7 +871,123 @@ function answerMC(idx, chosen) {
   qnum.classList.add(correct ? 'answered-correct' : 'answered-wrong');
 
   updateBar();
-  if (mcUserAnswers.filter(a => a !== null).length === MC_TOTAL) showFinal();
+  if (mcUserAnswers.filter(a => a !== null).length === displayMCQuestions.length) showFinal();
+}
+
+/* ─── 填空題模式：建立 ─── */
+function buildFillQuiz() {
+  const c = document.getElementById('quiz-container');
+  c.innerHTML = '';
+  displayFillQuestions.forEach((q, i) => {
+    const parts = q.q.split('___');
+    let qHtml = '';
+    parts.forEach((part, j) => {
+      qHtml += part;
+      if (j < parts.length - 1) {
+        const w = Math.max(90, Math.min(220, (q.answers[j] || '').length * 18));
+        qHtml += `<input class="fill-input" id="fill-input-${i}-${j}" type="text" style="width:${w}px" placeholder="填入答案" onkeydown="if(event.key==='Enter'){checkFill(${i})}">`;
+      }
+    });
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = 'card-' + i;
+    card.innerHTML = `
+      <div class="question-top">
+        <div class="q-num" id="qnum-${i}">${i + 1}</div>
+        <div class="q-text" style="line-height:2">${qHtml}</div>
+      </div>
+      <div class="fill-check-row">
+        <button class="btn-fill-check" id="fill-check-${i}" onclick="checkFill(${i})">✅ 確認答案</button>
+      </div>
+      <div class="result-row" id="rrow-${i}">
+        <div class="result-badge" id="rbadge-${i}"></div>
+      </div>
+      <div class="explanation" id="exp-${i}">${q.exp}</div>
+      <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
+        <span class="arrow">▶</span><span id="ntxt-${i}">✏️ 新增筆記</span>
+      </div>
+      <div class="note-area" id="narea-${i}">
+        <textarea class="note-textarea" id="note-${i}" placeholder="記憶口訣、易混淆點、任何筆記…" oninput="saveNote(${i})"></textarea>
+        <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
+      </div>`;
+    c.appendChild(card);
+  });
+}
+
+/* ─── 填空題：確認答案 ─── */
+function normFill(s) {
+  return s.trim().replace(/\s/g,'').replace(/％/g,'%').replace(/（/g,'(').replace(/）/g,')').toLowerCase();
+}
+function checkFill(idx) {
+  const q = displayFillQuestions[idx];
+  const prev = fillUserAnswers[idx];
+  let allOk = true;
+  const res = q.blanks.map((accept, j) => {
+    const inp = document.getElementById(`fill-input-${idx}-${j}`);
+    if (!inp || !inp.value.trim()) { allOk = false; return false; }
+    const ok = accept.some(a => normFill(a) === normFill(inp.value));
+    if (!ok) allOk = false;
+    return ok;
+  });
+
+  if (prev !== null) { if (prev) fillCorrectCount--; else fillWrongCount--; }
+  fillUserAnswers[idx] = allOk;
+  if (allOk) fillCorrectCount++; else fillWrongCount++;
+
+  q.blanks.forEach((_, j) => {
+    const inp = document.getElementById(`fill-input-${idx}-${j}`);
+    inp.className = 'fill-input ' + (res[j] ? 'fill-correct' : 'fill-wrong');
+    inp.disabled = allOk;
+  });
+
+  const rbadge = document.getElementById('rbadge-' + idx);
+  document.getElementById('rrow-' + idx).classList.add('show');
+  document.getElementById('exp-' + idx).classList.add('show');
+  const card = document.getElementById('card-' + idx);
+  card.classList.remove('correct-card','wrong-card');
+  card.classList.add(allOk ? 'correct-card' : 'wrong-card');
+  const qnum = document.getElementById('qnum-' + idx);
+  qnum.classList.remove('answered-correct','answered-wrong');
+  qnum.classList.add(allOk ? 'answered-correct' : 'answered-wrong');
+
+  const btn = document.getElementById(`fill-check-${idx}`);
+  if (allOk) {
+    rbadge.className = 'result-badge correct-badge show';
+    rbadge.innerHTML = '✅ 完全正確！';
+    btn.style.display = 'none';
+  } else {
+    const hints = q.blanks.map((_, j) => !res[j] ? `<strong>${q.answers[j]}</strong>` : null).filter(Boolean).join('、');
+    rbadge.className = 'result-badge wrong-badge show';
+    rbadge.innerHTML = `❌ 有填錯　正確答案：${hints}`;
+    btn.textContent = '🔄 清空重試';
+    btn.onclick = () => clearFill(idx);
+  }
+
+  updateBar();
+  if (fillUserAnswers.filter(a => a !== null).length === displayFillQuestions.length) showFinal();
+}
+
+/* ─── 填空題：清空重試 ─── */
+function clearFill(idx) {
+  const q = displayFillQuestions[idx];
+  q.blanks.forEach((_, j) => {
+    const inp = document.getElementById(`fill-input-${idx}-${j}`);
+    inp.disabled = false; inp.value = ''; inp.className = 'fill-input';
+  });
+  if (fillUserAnswers[idx] !== null) {
+    if (fillUserAnswers[idx]) fillCorrectCount--; else fillWrongCount--;
+  }
+  fillUserAnswers[idx] = null;
+  document.getElementById('rrow-' + idx).classList.remove('show');
+  document.getElementById('exp-' + idx).classList.remove('show');
+  const card = document.getElementById('card-' + idx);
+  card.classList.remove('correct-card','wrong-card');
+  document.getElementById('qnum-' + idx).classList.remove('answered-correct','answered-wrong');
+  const btn = document.getElementById(`fill-check-${idx}`);
+  btn.style.display = ''; btn.textContent = '✅ 確認答案';
+  btn.onclick = () => checkFill(idx);
+  updateBar();
+  document.getElementById(`fill-input-${idx}-0`).focus();
 }
 
 /* ─── 答題處理（依模式分流）─── */
@@ -758,7 +1047,7 @@ function answerLearn(idx, chosen) {
   qnum.classList.add(correct ? 'answered-correct' : 'answered-wrong');
 
   updateBar();
-  if (userAnswers.filter(a => a !== null).length === TOTAL) showFinal();
+  if (userAnswers.filter(a => a !== null).length === displayQuestions.length) showFinal();
 }
 
 /* ─── 傳統模式：選擇不立即批改 ─── */
@@ -820,7 +1109,7 @@ function checkAll() {
 
 /* ─── 猜題標記 ─── */
 function toggleGuess(idx) {
-  if (currentMode === 'mc') return; // 選擇題模式無猜題功能
+  if (currentMode === 'mc' || currentMode === 'fill') return; // 選擇題與填空題模式無猜題功能
   // 傳統模式：答題後或對答案後不能改；學習模式：任何時候都可以標記
   if (currentMode === 'classic') {
     if (userAnswers[idx] !== null || classicChecked) return;
@@ -850,21 +1139,23 @@ function saveNote(idx) {
 
 /* ─── 進度條 ─── */
 function updateBar() {
+  let answered, total, corr, wrng, gCount = 0;
   if (currentMode === 'mc') {
-    const answered = mcUserAnswers.filter(a => a !== null).length;
-    document.getElementById('answered-count').textContent = answered;
-    document.getElementById('correct-count').textContent = mcCorrectCount;
-    document.getElementById('wrong-count').textContent = mcWrongCount;
-    document.getElementById('progress-fill').style.width = (answered / MC_TOTAL * 100) + '%';
-    document.getElementById('guess-chip').style.display = 'none';
-    return;
+    total = displayMCQuestions.length; answered = mcUserAnswers.filter(a=>a!==null).length;
+    corr = mcCorrectCount; wrng = mcWrongCount;
+  } else if (currentMode === 'fill') {
+    total = displayFillQuestions.length; answered = fillUserAnswers.filter(a=>a!==null).length;
+    corr = fillCorrectCount; wrng = fillWrongCount;
+  } else {
+    total = displayQuestions.length; answered = userAnswers.filter(a=>a!==null).length;
+    corr = correctCount; wrng = wrongCount;
+    gCount = guessFlags.filter(Boolean).length;
   }
-  const answered = userAnswers.filter(a => a !== null).length;
-  const gCount = guessFlags.filter(Boolean).length;
+  document.getElementById('total-count').textContent = total;
   document.getElementById('answered-count').textContent = answered;
-  document.getElementById('correct-count').textContent = correctCount;
-  document.getElementById('wrong-count').textContent = wrongCount;
-  document.getElementById('progress-fill').style.width = (answered / TOTAL * 100) + '%';
+  document.getElementById('correct-count').textContent = corr;
+  document.getElementById('wrong-count').textContent = wrng;
+  document.getElementById('progress-fill').style.width = (answered / total * 100) + '%';
   const chip = document.getElementById('guess-chip');
   chip.style.display = gCount > 0 ? 'inline' : 'none';
   document.getElementById('guess-count').textContent = gCount;
@@ -872,46 +1163,54 @@ function updateBar() {
 
 /* ─── 最終結果 ─── */
 function showFinal() {
+  let score, total, retryCount = 0;
+  const fb = document.getElementById('final-box');
+
   if (currentMode === 'mc') {
-    document.getElementById('final-score-text').textContent = `得分：${mcCorrectCount} / ${MC_TOTAL}`;
-    document.getElementById('fs-correct').textContent = mcCorrectCount;
-    document.getElementById('fs-wrong').textContent = mcWrongCount;
+    total = displayMCQuestions.length; score = mcCorrectCount;
     document.getElementById('fs-guess-wrap').style.display = 'none';
     document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
-    const pct = mcCorrectCount / MC_TOTAL;
-    document.getElementById('final-msg').textContent =
-      pct >= 0.9 ? '🏆 優秀！選擇題觀念已完全融會貫通！'
-    : pct >= 0.7 ? '🎯 良好！再加強幾個易混淆的數字與主體就滿分了！'
-    : pct >= 0.5 ? '📖 尚可！建議重點複習罰鍰金額與定義條文。'
-    : '💪 加油！多對照判斷題的詳解，釐清每個關鍵數字。';
-    const fb = document.getElementById('final-box');
-    fb.style.display = 'block';
-    fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-
-  const totalGuess = guessFlags.filter(Boolean).length;
-  const guessCorrect = displayQuestions.reduce((n, q, i) => n + (guessFlags[i] && userAnswers[i] === q.ans ? 1 : 0), 0);
-
-  document.getElementById('final-score-text').textContent = `得分：${correctCount} / ${TOTAL}`;
-  document.getElementById('fs-correct').textContent = correctCount;
-  document.getElementById('fs-wrong').textContent = wrongCount;
-  if (currentMode === 'learn') {
-    document.getElementById('fs-guess-wrap').style.display = totalGuess > 0 ? '' : 'none';
-    document.getElementById('fs-guess').textContent = guessCorrect;
-    document.getElementById('fs-guessed-total').textContent = totalGuess;
+    const p = score/total;
+    document.getElementById('final-msg').textContent = p>=0.9?'🏆 優秀！選擇題觀念已完全融會貫通！':p>=0.7?'🎯 良好！再加強幾個易混淆數字就滿分了！':p>=0.5?'📖 尚可！建議重點複習罰鍰金額與定義條文。':'💪 加油！多對照判斷題詳解，釐清每個關鍵數字。';
+    retryCount = displayMCQuestions.filter((q,i)=>mcUserAnswers[i]!==q.ans).length;
+  } else if (currentMode === 'fill') {
+    total = displayFillQuestions.length; score = fillCorrectCount;
+    document.getElementById('fs-guess-wrap').style.display = 'none';
     document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+    const p = score/total;
+    document.getElementById('final-msg').textContent = p>=0.9?'🏆 優秀！關鍵數字與法條細節已完全掌握！':p>=0.7?'🎯 良好！再多背幾個關鍵數字就完美了！':p>=0.5?'📖 尚可！建議重點複習容易填錯的數字條文。':'💪 加油！多練幾次，關鍵數字一定能記住！';
+    retryCount = displayFillQuestions.filter((_,i)=>fillUserAnswers[i]!==true).length;
+  } else {
+    total = displayQuestions.length; score = correctCount;
+    const totalGuess = guessFlags.filter(Boolean).length;
+    const guessCorrect = displayQuestions.reduce((n,q,i)=>n+(guessFlags[i]&&userAnswers[i]===q.ans?1:0),0);
+    if (currentMode==='learn'||currentMode==='classic') {
+      document.getElementById('fs-guess-wrap').style.display = totalGuess>0?'':'none';
+      document.getElementById('fs-guess').textContent = guessCorrect;
+      document.getElementById('fs-guessed-total').textContent = totalGuess;
+    }
+    document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+    const p = score/total;
+    document.getElementById('final-msg').textContent = p>=0.9?'🏆 優秀！廣告法規熟悉度極高！':p>=0.7?'🎯 良好！繼續加強幾個易混淆條文就更完美了！':p>=0.5?'📖 尚可！建議重點複習罰則金額與定義條文。':'💪 加油！多多複習法條原文，尤其注意數字與主詞。';
+    if (currentMode==='learn') retryCount = displayQuestions.filter((q,i)=>userAnswers[i]!==q.ans||guessFlags[i]).length;
   }
 
-  const msg = correctCount >= 40 ? '🏆 優秀！廣告法規熟悉度極高！'
-            : correctCount >= 33 ? '🎯 良好！繼續加強幾個易混淆條文就更完美了！'
-            : correctCount >= 25 ? '📖 尚可！建議重點複習罰則金額與定義條文。'
-            : '💪 加油！多多複習法條原文，尤其注意數字與主詞。';
-  document.getElementById('final-msg').textContent = msg;
+  document.getElementById('final-score-text').textContent = `得分：${score} / ${total}`;
+  document.getElementById('fs-correct').textContent = score;
+  document.getElementById('fs-wrong').textContent = total - score;
 
-  const fb = document.getElementById('final-box');
+  const retryWrap = document.getElementById('retry-wrap');
+  const btnRetry = document.getElementById('btn-retry');
+  if (retryCount > 0 && currentMode !== 'classic') {
+    const label = currentMode==='learn'?'答錯＆猜的':'答錯';
+    btnRetry.textContent = `🔁 重新練習${label}題目（共 ${retryCount} 題）`;
+    retryWrap.style.display = 'block';
+  } else {
+    retryWrap.style.display = 'none';
+  }
+
   fb.style.display = 'block';
-  fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  fb.scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
 /* ─── 重置 ─── */
@@ -922,19 +1221,60 @@ function resetAll() {
   document.getElementById('wrong-count').textContent    = '0';
   document.getElementById('progress-fill').style.width  = '0%';
   document.getElementById('guess-chip').style.display   = 'none';
+  if (document.getElementById('retry-wrap')) document.getElementById('retry-wrap').style.display = 'none';
 
   if (currentMode === 'mc') {
     displayMCQuestions = shuffleEnabled ? shuffleArray([...mcQuestions]) : [...mcQuestions];
-    mcUserAnswers  = Array(MC_TOTAL).fill(null);
+    mcUserAnswers = Array(displayMCQuestions.length).fill(null);
     mcCorrectCount = 0; mcWrongCount = 0;
+  } else if (currentMode === 'fill') {
+    displayFillQuestions = shuffleEnabled ? shuffleArray([...fillQuestions]) : [...fillQuestions];
+    fillUserAnswers = Array(displayFillQuestions.length).fill(null);
+    fillCorrectCount = 0; fillWrongCount = 0;
   } else {
     displayQuestions = shuffleEnabled ? shuffleArray([...questions]) : [...questions];
-    userAnswers  = Array(TOTAL).fill(null);
-    guessFlags   = Array(TOTAL).fill(false);
+    userAnswers = Array(TOTAL).fill(null);
+    guessFlags  = Array(TOTAL).fill(false);
     correctCount = 0; wrongCount = 0;
     classicChecked = false;
   }
   buildQuiz();
+  updateBar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ─── 重新練習答錯題目 ─── */
+function retryWrong() {
+  let retryList;
+  if (currentMode === 'learn') {
+    retryList = displayQuestions.filter((q,i) => userAnswers[i] !== q.ans || guessFlags[i]);
+    if (shuffleEnabled) shuffleArray(retryList);
+    displayQuestions = retryList;
+    userAnswers = Array(retryList.length).fill(null);
+    guessFlags  = Array(retryList.length).fill(false);
+    correctCount = 0; wrongCount = 0;
+  } else if (currentMode === 'mc') {
+    retryList = displayMCQuestions.filter((q,i) => mcUserAnswers[i] !== q.ans);
+    if (shuffleEnabled) shuffleArray(retryList);
+    displayMCQuestions = retryList;
+    mcUserAnswers = Array(retryList.length).fill(null);
+    mcCorrectCount = 0; mcWrongCount = 0;
+  } else if (currentMode === 'fill') {
+    retryList = displayFillQuestions.filter((_,i) => fillUserAnswers[i] !== true);
+    if (shuffleEnabled) shuffleArray(retryList);
+    displayFillQuestions = retryList;
+    fillUserAnswers = Array(retryList.length).fill(null);
+    fillCorrectCount = 0; fillWrongCount = 0;
+  }
+  if (!retryList || retryList.length === 0) return;
+  document.getElementById('final-box').style.display = 'none';
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('correct-count').textContent  = '0';
+  document.getElementById('wrong-count').textContent    = '0';
+  document.getElementById('progress-fill').style.width  = '0%';
+  document.getElementById('guess-chip').style.display   = 'none';
+  buildQuiz();
+  updateBar();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
