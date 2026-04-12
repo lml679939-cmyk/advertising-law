@@ -753,26 +753,40 @@ const fillQuestions = [
     exp: "<span class='law-ref'>廣播電視法施行細則第22條</span>：播音開始、結束及節目更換時應播報<strong>臺名、呼號及頻率</strong>；節目進行中每半小時簡報臺名一次。", page: "p.71" }
 ];
 
+/* ─── 解鎖檢查 ─── */
+const UNLOCK_KEY = 'More1620';
+const urlKey = new URLSearchParams(window.location.search).get('key');
+const isUnlocked = (urlKey === UNLOCK_KEY) || (sessionStorage.getItem('unlocked') === UNLOCK_KEY);
+if (isUnlocked) {
+  sessionStorage.setItem('unlocked', UNLOCK_KEY);
+  document.querySelector('.exam-header h1').innerHTML = '廣告法規期中考 <span style="font-size:0.6em;opacity:0.8;">🔓</span>';
+}
+
+/* ─── 依解鎖狀態篩選題目 ─── */
+const activeQuestions    = questions.filter(q => isUnlocked || !q.hidden);
+const activeMCQuestions  = mcQuestions.filter(q => isUnlocked || !q.hidden);
+const activeFillQuestions = fillQuestions.filter(q => isUnlocked || !q.hidden);
+
 /* ─── 模式狀態 ─── */
 let currentMode = 'learn'; // 'learn' | 'classic'
-let userAnswers = Array(questions.length).fill(null);
-let guessFlags  = Array(questions.length).fill(false);
+let userAnswers = Array(activeQuestions.length).fill(null);
+let guessFlags  = Array(activeQuestions.length).fill(false);
 let correctCount = 0, wrongCount = 0;
 let classicChecked = false;
 let shuffleEnabled = false;
-let displayQuestions = [...questions];
-let displayMCQuestions = [...mcQuestions];
-let mcUserAnswers = Array(mcQuestions.length).fill(null);
+let displayQuestions = [...activeQuestions];
+let displayMCQuestions = [...activeMCQuestions];
+let mcUserAnswers = Array(activeMCQuestions.length).fill(null);
 let mcCorrectCount = 0, mcWrongCount = 0;
-let mcGuessFlags = Array(mcQuestions.length).fill(false);
+let mcGuessFlags = Array(activeMCQuestions.length).fill(false);
 let mcOptionOrders = []; // shuffled option order per question [0-3]
 let mcMappedAns   = []; // correct answer index after shuffling options
-const TOTAL = questions.length;
-const MC_TOTAL = mcQuestions.length;
-let fillUserAnswers = Array(fillQuestions.length).fill(null);
+const TOTAL = activeQuestions.length;
+const MC_TOTAL = activeMCQuestions.length;
+let fillUserAnswers = Array(activeFillQuestions.length).fill(null);
 let fillCorrectCount = 0, fillWrongCount = 0;
-let displayFillQuestions = [...fillQuestions];
-const FILL_TOTAL = fillQuestions.length;
+let displayFillQuestions = [...activeFillQuestions];
+const FILL_TOTAL = activeFillQuestions.length;
 
 /* ─── 隨機排序 ─── */
 function toggleShuffle() {
@@ -1346,17 +1360,17 @@ function resetAll() {
   if (document.getElementById('retry-wrap')) document.getElementById('retry-wrap').style.display = 'none';
 
   if (currentMode === 'mc') {
-    displayMCQuestions = shuffleEnabled ? shuffleArray([...mcQuestions]) : [...mcQuestions];
+    displayMCQuestions = shuffleEnabled ? shuffleArray([...activeMCQuestions]) : [...activeMCQuestions];
     mcUserAnswers = Array(displayMCQuestions.length).fill(null);
     mcGuessFlags  = Array(displayMCQuestions.length).fill(false);
     mcOptionOrders = []; mcMappedAns = [];
     mcCorrectCount = 0; mcWrongCount = 0;
   } else if (currentMode === 'fill') {
-    displayFillQuestions = shuffleEnabled ? shuffleArray([...fillQuestions]) : [...fillQuestions];
+    displayFillQuestions = shuffleEnabled ? shuffleArray([...activeFillQuestions]) : [...activeFillQuestions];
     fillUserAnswers = Array(displayFillQuestions.length).fill(null);
     fillCorrectCount = 0; fillWrongCount = 0;
   } else {
-    displayQuestions = shuffleEnabled ? shuffleArray([...questions]) : [...questions];
+    displayQuestions = shuffleEnabled ? shuffleArray([...activeQuestions]) : [...activeQuestions];
     userAnswers = Array(TOTAL).fill(null);
     guessFlags  = Array(TOTAL).fill(false);
     correctCount = 0; wrongCount = 0;
