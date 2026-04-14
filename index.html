@@ -391,7 +391,7 @@
   <div class="bar-left">
     <div>
       <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
-        <div class="bar-score">進度 <span id="answered-count">0</span> / <span id="total-count">45</span></div>
+        <div class="bar-score">進度 <span id="answered-count">0</span> / <span id="total-count">0</span></div>
         <div class="bar-correct" id="correct-stat">✅ <span id="correct-count">0</span></div>
         <div class="bar-wrong" id="wrong-stat">❌ <span id="wrong-count">0</span></div>
         <div class="bar-guessed" id="guess-chip">🎲 猜的：<span id="guess-count">0</span></div>
@@ -1010,6 +1010,12 @@ function buildQuiz() {
       </div>
     `;
     c.appendChild(card);
+    const _sn = localStorage.getItem('note_' + q.q.slice(0, 60));
+    if (_sn) {
+      document.getElementById('note-' + i).value = _sn;
+      document.getElementById('nsaved-' + i).classList.add('show');
+      document.getElementById('ntxt-' + i).textContent = '✏️ 我的筆記（已記錄）';
+    }
   });
 }
 
@@ -1061,6 +1067,12 @@ function buildMCQuiz() {
       </div>
     `;
     c.appendChild(card);
+    const _sn = localStorage.getItem('note_' + q.q.slice(0, 60));
+    if (_sn) {
+      document.getElementById('note-' + i).value = _sn;
+      document.getElementById('nsaved-' + i).classList.add('show');
+      document.getElementById('ntxt-' + i).textContent = '✏️ 我的筆記（已記錄）';
+    }
   });
 }
 
@@ -1158,6 +1170,12 @@ function buildFillQuiz() {
         <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
       </div>`;
     c.appendChild(card);
+    const _sn = localStorage.getItem('note_' + q.q.slice(0, 60));
+    if (_sn) {
+      document.getElementById('note-' + i).value = _sn;
+      document.getElementById('nsaved-' + i).classList.add('show');
+      document.getElementById('ntxt-' + i).textContent = '✏️ 我的筆記（已記錄）';
+    }
   });
 }
 
@@ -1344,13 +1362,14 @@ function checkAll() {
   });
 
   correctCount = score;
-  wrongCount = TOTAL - score;
+  wrongCount = displayQuestions.length - score;
 
   const totalGuess = guessFlags.filter(Boolean).length;
   document.getElementById('fs-guess-wrap').style.display = totalGuess > 0 ? '' : 'none';
   document.getElementById('fs-guess').textContent = guessCorrect;
   document.getElementById('fs-guessed-total').textContent = totalGuess;
   document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+  updateBar();
   showFinal();
 }
 
@@ -1388,7 +1407,16 @@ function toggleNote(idx) {
   if (!open) setTimeout(() => document.getElementById('note-' + idx).focus(), 80);
 }
 function saveNote(idx) {
+  const q = (currentMode === 'mc') ? displayMCQuestions[idx]
+          : (currentMode === 'fill') ? displayFillQuestions[idx]
+          : displayQuestions[idx];
   const v = document.getElementById('note-' + idx).value;
+  const key = 'note_' + q.q.slice(0, 60);
+  if (v.trim()) {
+    localStorage.setItem(key, v);
+  } else {
+    localStorage.removeItem(key);
+  }
   const has = v.trim().length > 0;
   document.getElementById('nsaved-' + idx).classList.toggle('show', has);
   document.getElementById('ntxt-' + idx).textContent = has ? '✏️ 我的筆記（已記錄）' : '✏️ 新增筆記';
