@@ -367,6 +367,196 @@
     .progress-wrap { width: 100px; }
     .mode-btn { padding: 8px 14px; font-size: 0.88em; }
   }
+
+  /* ══════════════════════════════════════
+     劇情模式 — 菜鳥律師小廣的廣告法求生記
+  ══════════════════════════════════════ */
+  #story-panel { display: none; max-width: 760px; margin: 0 auto; }
+
+  .story-day-header {
+    background: linear-gradient(135deg, #6c3483, #9b59b6);
+    color: white; border-radius: 14px;
+    padding: 18px 24px; margin-bottom: 16px;
+    text-align: center; box-shadow: 0 4px 16px rgba(108,52,131,0.3);
+  }
+  .story-intro-box {
+    background: #fef9f0; border: 1.5px solid #f0e3c8;
+    border-radius: 14px; padding: 20px 24px; margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .story-status-bar {
+    background: white; border-radius: 12px;
+    padding: 12px 20px; margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 10px;
+  }
+  .story-hearts { font-size: 1.2em; letter-spacing: 1px; }
+  .story-streak { font-size: 0.9em; font-weight: bold; color: #e67e22; }
+  .story-progress-text { font-size: 0.9em; color: #7f8c8d; font-weight: bold; }
+
+  .story-command-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .story-cmd-btn {
+    padding: 6px 14px; border-radius: 20px;
+    border: 1.5px solid #bdc3c7; background: white;
+    font-size: 0.8em; cursor: pointer; color: #7f8c8d; font-weight: bold;
+    transition: all 0.15s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .story-cmd-btn:hover { border-color: #9b59b6; color: #9b59b6; }
+
+  .story-extra-box {
+    display: none; background: #fef9e7;
+    border: 1.5px solid #f9e79f; border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 14px;
+    font-size: 0.88em; line-height: 1.85; color: #5d4e37;
+    animation: storyFadeIn 0.3s ease;
+  }
+  .story-lucky-event {
+    display: none;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white; border-radius: 12px;
+    padding: 14px 18px; text-align: center;
+    margin-bottom: 14px; font-weight: bold; font-size: 0.9em;
+    animation: storyFadeIn 0.3s ease;
+  }
+  .story-scene-card {
+    background: #fef9f0; border: 1.5px solid #f0e3c8;
+    border-radius: 14px; padding: 18px 22px; margin-bottom: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  .story-setup-text {
+    font-size: 0.88em; color: #5d4e37;
+    line-height: 1.9; white-space: pre-line; margin-bottom: 12px;
+  }
+  .story-dialogue-box {
+    background: white; border: 2px solid #f0a500;
+    border-radius: 0 12px 12px 12px;
+    padding: 12px 16px; position: relative;
+    font-size: 0.93em; color: #2c3e50; line-height: 1.8;
+  }
+  .story-client-name {
+    font-size: 0.75em; font-weight: bold;
+    color: #f0a500; margin-bottom: 5px;
+  }
+  .story-q-card {
+    background: white; border-radius: 12px;
+    padding: 18px 22px; margin-bottom: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border-left: 5px solid #9b59b6;
+  }
+  .story-q-label {
+    font-size: 0.74em; font-weight: bold;
+    color: #9b59b6; letter-spacing: 1px; margin-bottom: 8px;
+  }
+  .story-q-text { font-size: 0.95em; color: #2c3e50; line-height: 1.8; }
+
+  .story-tf-buttons {
+    display: flex; gap: 14px; margin-top: 16px; justify-content: center;
+  }
+  .story-tf-btn {
+    padding: 12px 38px; border-radius: 10px;
+    border: 2.5px solid #bdc3c7; background: white;
+    font-size: 1.1em; font-weight: bold; cursor: pointer;
+    transition: all 0.18s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .story-tf-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+  .story-tf-btn.story-O:hover, .story-tf-btn.story-O.sel {
+    border-color: #27ae60; background: #27ae60; color: white;
+  }
+  .story-tf-btn.story-X:hover, .story-tf-btn.story-X.sel {
+    border-color: #e74c3c; background: #e74c3c; color: white;
+  }
+  .story-mc-options {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-top: 14px;
+  }
+  .story-mc-btn {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 11px 13px; border-radius: 10px;
+    border: 2px solid #c8d0dc; background: white;
+    font-size: 0.9em; cursor: pointer; transition: all 0.18s;
+    color: #34495e; text-align: left; line-height: 1.6;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .story-mc-btn:hover { border-color: #9b59b6; background: #f5eef8; }
+  .story-mc-label {
+    background: #95a5a6; color: white; border-radius: 50%;
+    width: 24px; height: 24px; min-width: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8em; font-weight: bold; flex-shrink: 0; margin-top: 1px;
+  }
+  .story-mc-btn.smc-correct { border-color: #27ae60; background: #eafaf1; }
+  .story-mc-btn.smc-correct .story-mc-label { background: #27ae60; }
+  .story-mc-btn.smc-wrong   { border-color: #e74c3c; background: #fdf0f0; }
+  .story-mc-btn.smc-wrong   .story-mc-label { background: #e74c3c; }
+
+  .story-reaction-box {
+    display: none; border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 14px;
+    animation: storyFadeIn 0.35s ease;
+  }
+  .story-reaction-box.sreact-correct { background: #f0fff4; border: 1.5px solid #a9dfbf; }
+  .story-reaction-box.sreact-wrong   { background: #fff5f5; border: 1.5px solid #f1948a; }
+  .story-reaction-badge { font-size: 1.05em; font-weight: bold; margin-bottom: 10px; }
+  .story-reaction-line  { font-size: 0.9em; color: #555; line-height: 1.85; padding: 4px 0; }
+  .story-exp-box {
+    background: #f8f9fa; border-left: 4px solid #9b59b6;
+    border-radius: 0 8px 8px 0; padding: 12px 16px;
+    font-size: 0.87em; color: #34495e;
+    line-height: 1.85; margin-top: 12px;
+  }
+  .story-next-btn {
+    display: none; width: 100%; padding: 14px;
+    border-radius: 10px; border: none;
+    background: linear-gradient(135deg, #9b59b6, #6c3483);
+    color: white; font-size: 1em; font-weight: bold;
+    cursor: pointer; margin-bottom: 14px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .story-next-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(155,89,182,0.4); }
+  .story-end-panel {
+    display: none;
+    background: linear-gradient(135deg, #6c3483, #9b59b6);
+    color: white; border-radius: 14px;
+    padding: 28px 24px; text-align: center; margin-top: 10px;
+  }
+  .story-end-title   { font-size: 1.8em; margin-bottom: 10px; }
+  .story-end-score   { font-size: 1.1em; margin-bottom: 10px; opacity: 0.9; }
+  .story-end-verdict {
+    font-size: 1em; margin-bottom: 18px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px; padding: 12px 18px;
+  }
+  .story-end-recap {
+    background: rgba(255,255,255,0.1); border-radius: 10px;
+    padding: 14px; margin-bottom: 16px;
+    text-align: left; font-size: 0.86em; line-height: 1.85;
+  }
+  .story-restart-btn {
+    padding: 11px 28px; border-radius: 10px;
+    border: 2px solid white; background: transparent;
+    color: white; font-size: 0.92em; font-weight: bold; cursor: pointer;
+    transition: all 0.18s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  }
+  .story-restart-btn:hover { background: white; color: #6c3483; }
+  .story-lock-box {
+    background: white; border-radius: 14px;
+    padding: 40px 24px; text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  @keyframes storyFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 600px) {
+    .story-mc-options { grid-template-columns: 1fr; }
+    .story-tf-buttons { gap: 10px; }
+    .story-tf-btn { padding: 10px 26px; }
+  }
 </style>
 </head>
 <body>
@@ -378,6 +568,7 @@
     <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
     <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
     <button class="mode-btn" id="btn-mode-fill" onclick="switchMode('fill')">✏️ 填空題</button>
+    <button class="mode-btn" id="btn-mode-story" onclick="switchMode('story')">🎭 劇情模式</button>
   </div>
 </div>
 <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
@@ -407,6 +598,7 @@
 </div>
 
 <div id="quiz-container"></div>
+<div id="story-panel"></div>
 
 <div class="final-box" id="final-box">
   <h2 id="final-score-text"></h2>
@@ -971,6 +1163,21 @@ function switchMode(mode) {
   document.getElementById('btn-mode-classic').classList.toggle('active', mode === 'classic');
   document.getElementById('btn-mode-mc').classList.toggle('active', mode === 'mc');
   document.getElementById('btn-mode-fill').classList.toggle('active', mode === 'fill');
+  document.getElementById('btn-mode-story').classList.toggle('active', mode === 'story');
+
+  // 劇情模式：顯示 story-panel，隱藏其他主要 UI
+  const isStory = mode === 'story';
+  document.getElementById('story-panel').style.display   = isStory ? 'block' : 'none';
+  document.getElementById('quiz-container').style.display = isStory ? 'none'  : '';
+  document.getElementById('final-box').style.display      = 'none';
+  document.querySelector('.sticky-bar').style.display     = isStory ? 'none'  : '';
+  document.querySelector('.exam-header').style.display    = isStory ? 'none'  : '';
+
+  if (isStory) {
+    document.getElementById('mode-desc').textContent = '🔒 限密碼解鎖者遊玩・菜鳥律師小廣的廣告法求生記';
+    resetAll();
+    return;
+  }
 
   const desc = document.getElementById('mode-desc');
   const headerSub = document.getElementById('header-sub');
@@ -1010,6 +1217,7 @@ function switchMode(mode) {
 
 /* ─── 建立題目 ─── */
 function buildQuiz() {
+  if (currentMode === 'story') return;
   if (currentMode === 'mc') { buildMCQuiz(); return; }
   if (currentMode === 'fill') { buildFillQuiz(); return; }
   const c = document.getElementById('quiz-container');
@@ -1459,6 +1667,7 @@ function saveNote(idx) {
 
 /* ─── 進度條 ─── */
 function updateBar() {
+  if (currentMode === 'story') return;
   let answered, total, corr, wrng, gCount = 0;
   if (currentMode === 'mc') {
     total = displayMCQuestions.length; answered = mcUserAnswers.filter(a=>a!==null).length;
@@ -1541,6 +1750,7 @@ function showFinal() {
 /* ─── 重置 ─── */
 function resetAll() {
   document.getElementById('final-box').style.display = 'none';
+  if (currentMode === 'story') { initStoryMode(); return; }
   document.getElementById('answered-count').textContent = '0';
   document.getElementById('correct-count').textContent  = '0';
   document.getElementById('wrong-count').textContent    = '0';
@@ -1605,6 +1815,370 @@ function retryWrong() {
   buildQuiz();
   updateBar();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   劇情模式 — 菜鳥律師小廣的廣告法求生記
+   Day 1：藥事法（共 10 題）
+   🔒 密碼解鎖（?key=More1620）才可遊玩
+══════════════════════════════════════════════════════════════ */
+
+const storyDay1 = {
+  dayTitle: 'Day 1 ── 藥廠客戶的緊急求助',
+  daySubtitle: '菜鳥律師小廣的廣告法求生記',
+  dayIntro: '王鐵嘴主任把一疊文件重重摔在桌上，大吼：\n「小廣！新來的！今天有個藥廠客戶陳經理說有十萬火急的問題！你給我一題都不能答錯！答錯一題老子就扣你薪水！」',
+  questions: [
+    {
+      setup: '【早上 9:00 ─ 會議室】\n藥廠業務陳經理拿著廣告企劃衝進來，氣喘吁吁地說：',
+      client: '陳經理',
+      clientLine: '「小廣律師！我們想刊播藥物廣告，只要把藥物許可證影本、標籤影本、廣告內容跟審查費備好，直接寄給衛生主管機關就好了，不需要什麼特別「申請核准」的程序，對吧？」',
+      type: 'tf', q: '藥商刊播藥物廣告，只需備妥相關文件寄給衛生主管機關，無需另行「申請核准」程序。',
+      ans: 'X',
+      exp: '依<strong>藥事法第66條第1項</strong>，藥商刊播藥物廣告，應於刊播前將所有文字、圖畫或言詞，<strong>申請</strong>中央或直轄市衛生主管機關<strong>核准</strong>，並向傳播業者送驗核准文件。備妥文件寄出≠申請核准，陳經理搞錯程序了！',
+      sour: '林酸酸翻個白眼：「§66第1項，申請核准。藥事法第一關，你不可能不知道。」',
+      rage: '王鐵嘴主任拍桌：「申請！核准！§66第1項！寄文件就好？你在菜市場買菜嗎！！！」',
+      correctR: ['主任哼了一聲：「還算沒廢。繼續。」', '酸酸（背對你）：「……過了，這次。」', '阿肥小聲鼓掌：「學長答對了！加油加油！」'],
+      wrongR:   ['主任把文件夾往桌上砸：「你法學院是念假的嗎？！申請！核准！不是寄一寄就好！」', '酸酸冷笑：「連申請核准都搞錯，你是來這裡當裝飾的嗎？」', '阿肥低頭：「學長……這題我也會……」']
+    },
+    {
+      setup: '【早上 9:30 ─ 陳經理翻出舊課本】\n陳經理指著課本自信地說：',
+      client: '陳經理',
+      clientLine: '「藥事法第4條說，藥物就是指原料藥跟製劑，醫療器材是獨立一套法律在管的，跟藥事法已經沒關係了，這樣對嗎？」',
+      type: 'tf', q: '現行藥事法第4條所稱「藥物」，係指原料藥及製劑，不再包含醫療器材。',
+      ans: 'X',
+      exp: '現行<strong>藥事法第4條</strong>明文：「本法所稱藥物，係指<strong>藥品及醫療器材</strong>。」其中「藥品」才是指原料藥及製劑。雖《醫療器材管理法》2020年已施行，但藥事法第4條仍保留醫療器材於藥物定義中。陳經理把「藥物」和「藥品」搞混了！',
+      sour: '林酸酸放下咖啡：「§4，藥物＝藥品＋醫療器材。藥品才是原料藥跟製劑。不同層級。」',
+      rage: '主任吼道：「藥物跟藥品是不同層級！§4！藥物包含醫療器材！白紙黑字！你的課本是哪一年的！！」',
+      correctR: ['主任難得微笑：「§4這個陷阱沒踩到，不錯。」', '酸酸挑眉：「藥物≠藥品，這個區別你記住了，合格。」', '阿肥崇拜地看著你：「哇學長連陷阱都看出來了！」'],
+      wrongR:   ['主任捶桌：「§4！藥物還包含醫療器材！你讓客戶帶著錯誤觀念去談判！」', '酸酸搖頭：「藥物＝藥品＋醫療器材，§4原文。你說錯了，陳經理也被你帶錯了。」', '阿肥悄悄把藥事法課本推到你眼前：「學長……第四條在這……」']
+    },
+    {
+      setup: '【早上 10:00 ─ 廣告有效期限確認】\n陳經理打開筆電查紀錄，問：',
+      client: '陳經理',
+      clientLine: '「廣告申請核准後，有效期間是一年、自核發日起算，到期可以申請展延，每次展延也不超過一年，這樣說是正確的吧？」',
+      type: 'tf', q: '藥物廣告核准有效期間為一年，自核發證明文件之日起算；期滿申請展延，每次不得超過一年。',
+      ans: 'O',
+      exp: '<strong>藥事法第66-1條第1項</strong>：藥物廣告核准有效期間<strong>一年</strong>，自核發日起算；期滿仍需廣告者，得申請原核准機關<strong>核定展延</strong>，每次不得超過<strong>一年</strong>。陳經理這次說對了！',
+      sour: '林酸酸冷淡地說：「§66-1第1項，一年、可展延、每次不超過一年。陳經理說對了，你也答對了，這樣才正常。」',
+      rage: '主任低吼：「§66-1第1項！有效期間一年！一年！還能展延！還是一年！背不住嗎！」',
+      correctR: ['主任：「嗯，陳經理說對的你也確認，這才是律師的工作。」', '酸酸：「§66-1，有效期一年，可展延一年。答對，繼續。」', '阿肥：「學長跟陳經理都對！好棒好棒！」'],
+      wrongR:   ['主任爆發：「陳經理說對的你給我說錯！§66-1！有效一年！展延一年！你課書白念了！」', '酸酸難以置信地看著你：「連正確法條你都否定……我開始懷疑你是不是真的畢業了。」', '阿肥慌忙翻書：「學長！這題陳經理說對了，他§66-1背得很熟…」']
+    },
+    {
+      setup: '【上午 10:30 ─ 廣告修改爭議】\n陳經理掏出手機說：',
+      client: '陳經理',
+      clientLine: '「廣告核准後，假如產品有小更新想改廣告台詞，再補一份說明書給衛生機關，就可以繼續播了吧？」',
+      type: 'tf', q: '藥物廣告在核准登載、宣播期間，只要補件說明即可變更原核准事項。',
+      ans: 'X',
+      exp: '<strong>藥事法第66條第2項</strong>：藥物廣告在核准登載、宣播期間，<strong>不得變更原核准事項</strong>。要變更內容，必須<strong>重新申請核准</strong>，補件說明是行不通的。',
+      sour: '林酸酸皺眉：「§66第2項，不得變更。重新申請。沒有補件繼續播這種操作。」',
+      rage: '主任吼叫：「不得變更！不得！補件說明？你以為衛生主管機關是你家客服？！重新申請！」',
+      correctR: ['主任：「對！嚴格告訴客戶，省錢省事到最後沒有好下場！」', '酸酸：「§66第2項，不得變更。你阻止了一個潛在違法行為，算有點用。」', '阿肥豎起大拇指：「學長有阻止陳經理犯法！太棒了！」'],
+      wrongR:   ['主任把原子筆丟向你：「你讓客戶去違法！§66第2項！不得變更！重新申請！你這律師是幫客戶惹禍的嗎？！」', '酸酸冷冰冰：「§66第2項，不得變更。你讓陳經理以為補件就好，等著被罰吧。」', '阿肥急著查法條：「學長！這樣陳經理要被開罰單了！」']
+    },
+    {
+      setup: '【中午 12:00 ─ 午餐時間危機】\n陳經理吃飯時靈機一動，興奮地說：',
+      client: '陳經理',
+      clientLine: '「我有個超聰明的行銷想法！找媒體來採訪，讓記者說我們的藥效果神奇，因為是新聞採訪不是廣告，不用事前審查，可以省掉很多麻煩！」',
+      type: 'tf', q: '媒體採訪、報導中若暗示藥物有醫療效能，因不屬廣告形式，不受藥事法藥物廣告規定管制。',
+      ans: 'X',
+      exp: '<strong>藥事法第70條</strong>：「採訪、報導或<strong>宣傳</strong>，其內容暗示或影射醫療效能者，<strong>視為藥物廣告</strong>。」就是為了防止廠商用採訪報導的外殼規避廣告審查。陳經理這招行不通！',
+      sour: '林酸酸放下筷子：「§70。視為藥物廣告。採訪報導包含在內。你沒被這個陷阱騙到，還不錯。」',
+      rage: '主任舉起便當：「§70！採訪報導暗示醫療效能！視為！廣告！視！為！廣！告！記住了嗎！！！」',
+      correctR: ['主任放下筷子難得說好話：「你真的幫陳經理省了個大麻煩，今晚加班費翻倍！」', '酸酸：「§70，視為廣告，採訪報導繞不過去。你沒讓陳經理犯法，這次合格。」', '阿肥感動地差點哭出來：「學長救了陳經理！！！」'],
+      wrongR:   ['主任沒收你的便當：「你讓陳經理去做違法廣告！§70！採訪報導視為廣告！去罰站！」', '酸酸面無表情：「§70，視為藥物廣告。你說可以，陳經理已經記下來了。罰款帳單你來出嗎？」', '阿肥哭著說：「學長……陳經理已經打電話給記者了……」']
+    },
+    {
+      setup: '【下午 1:30 ─ 主任突擊提問】\n午休結束，主任從辦公室衝出來指著你說：',
+      client: '王鐵嘴主任',
+      clientLine: '「小廣！考你！藥商違反廣告核准規定（第66條第1項），依藥事法第92條最高罰多少？三秒答！」',
+      type: 'mc', q: '依藥事法第92條，藥商違反第66條第1項（廣告未事前核准），最高罰鍰為多少？',
+      options: ['新臺幣五萬元', '新臺幣三十萬元', '新臺幣五百萬元', '新臺幣二千五百萬元'],
+      ans: 2,
+      exp: '<strong>藥事法第92條</strong>：藥商違反第66條第1項，處新臺幣<strong>二十萬元以上五百萬元以下</strong>罰鍰。注意：二千五百萬是傳播業者通知後仍繼續刊播的加重罰則（§95），不要跟藥商罰則混淆！',
+      sour: '林酸酸冷淡地說：「§92，藥商，二十萬到五百萬。二千五百萬是傳播業者的，不要混。」',
+      rage: '主任大吼：「§92！二十萬到五百萬！你連罰鍰都記不住你要怎麼幫客戶！二千五百萬是§95傳播業者加重罰則！分清楚！」',
+      correctR: ['主任點頭：「數字記住了，今晚不用加班！」', '酸酸（低頭繼續看文件）：「§92，二十萬到五百萬，記住了，繼續。」', '阿肥：「哇五百萬！學長好厲害記住了！主任好開心！」'],
+      wrongR:   ['主任翻白眼：「§92！二十萬到五百萬！不是五萬不是三十萬不是二千五百萬！去廁所反省！」', '酸酸嗤之以鼻：「藥商§92，二十萬到五百萬。二千五百萬是傳播業者。基本數字都搞錯了。」', '阿肥小聲：「學長這個主任說是重點，要背起來的…」']
+    },
+    {
+      setup: '【下午 2:30 ─ 電視台業務來電】\n電視台合作業務小陳打電話：',
+      client: '電視台業務小陳',
+      clientLine: '「喂，小廣律師，我們如果播了違反藥事法第66條第3項的藥物廣告，最高會被罰五百萬對嗎？我要跟老闆報告要小心這件事。」',
+      type: 'tf', q: '依藥事法第95條第1項，傳播業者違反第66條第3項規定，最高罰鍰為新臺幣五百萬元。',
+      ans: 'O',
+      exp: '<strong>藥事法第95條第1項</strong>：傳播業者違反第66條第3項，處新臺幣<strong>二十萬元以上五百萬元以下</strong>罰鍰。上限確實是五百萬元，電視台業務說對了！（注意：六百萬是錯的；二千五百萬是通知後仍繼續刊播的加重罰則。）',
+      sour: '林酸酸說：「§95第1項，傳播業者，二十萬到五百萬。電視台說對了，你也答對了，這是正常水準。」',
+      rage: '主任嚷嚷：「§95第1項！傳播業者！二十萬到五百萬！上限五百萬！你有告訴電視台嗎？！」',
+      correctR: ['主任：「電視台確認正確，你也確認對，這才是法律顧問的工作。」', '酸酸：「§95第1項，最高五百萬。答對，繼續。」', '阿肥：「學長幫電視台確認了！好有職業感！」'],
+      wrongR:   ['主任扶額：「電視台說對的你給我說錯？！§95第1項！五百萬！你讓電視台老闆信錯數字！」', '酸酸：「§95第1項，最高五百萬。電視台說對了，你說錯，你的專業度不如業務員。」', '阿肥慌張：「學長！電視台業務已經掛電話去跟老闆報告了……他報的是對的，但你說錯了……」']
+    },
+    {
+      setup: '【下午 3:30 ─ 陳經理臨走前的問題】\n陳經理準備離開，突然回頭：',
+      client: '陳經理',
+      clientLine: '「對了，廣告核准文件只要我們藥商自己好好保存就好了，不用特別拿去給電視台廣播站確認，對吧？他們就負責播就好了。」',
+      type: 'tf', q: '藥商申請廣告核准後，核准文件僅需自行保存，無需向傳播業者送驗。',
+      ans: 'X',
+      exp: '<strong>藥事法第66條第1項</strong>規定，藥商除申請核准外，還須<strong>向傳播業者送驗核准文件</strong>。傳播業者播放廣告前有義務查驗，不能僅憑藥商口頭保證「有核准」就播出去。',
+      sour: '林酸酸：「§66第1項，向傳播業者送驗，這是獨立義務，不只是申請核准而已。」',
+      rage: '主任大叫：「送驗！傳播業者送驗！§66第1項！申請核准之後還要送驗！兩個步驟！記！住！」',
+      correctR: ['主任：「對！補送文件給電視台，這才是合規程序，做得好！」', '酸酸點頭：「傳播業者送驗義務，§66第1項。答對，繼續。」', '阿肥：「原來還要送驗！學長幫陳經理補了一個步驟！」'],
+      wrongR:   ['主任大吼：「你讓陳經理少做一個步驟！電視台沒看到核准文件就播出去是誰的責任！§66第1項！送驗！」', '酸酸：「送驗，§66第1項。你少說一個步驟，陳經理和電視台都可能因此違法。」', '阿肥急得跑去攔陳經理：「陳經理等一下！還有一個步驟！」']
+    },
+    {
+      setup: '【下午 4:30 ─ 主任的憲法大考驗】\n主任把你叫進辦公室，嚴肅地說：',
+      client: '王鐵嘴主任',
+      clientLine: '「考你！有人說藥物廣告事前審查制度違憲，大法官遲早會推翻，你同意嗎？」',
+      type: 'tf', q: '大法官釋字第414號解釋認定，藥物廣告事前審查制度違反憲法保障的言論自由，應屬違憲。',
+      ans: 'X',
+      exp: '<strong>釋字第414號</strong>（1996年）：大法官認定藥物廣告事前審查制度<strong>合憲</strong>，理由是藥物廣告涉及公眾健康，屬必要且合理的限制。反觀<strong>釋字第744號</strong>（2017年）才是宣告化粧品廣告事前審查<strong>違憲</strong>。兩者千萬別搞混！',
+      sour: '林酸酸：「釋字414，藥物廣告事前審查，合憲。釋字744，化粧品廣告事前審查，違憲。兩個不同，你沒搞混，算是。」',
+      rage: '主任吼道：「414合憲！744違憲！藥物合憲！化粧品違憲！這是期末必考！背起來！！！」',
+      correctR: ['主任難得說了句讚美：「414跟744的區別搞清楚了，今天算沒讓我丟臉。」', '酸酸：「釋字414合憲、744違憲，這個陷阱你沒踩，有進步。」', '阿肥：「哇學長連大法官解釋都記得！主任有在笑耶！」'],
+      wrongR:   ['主任把你推出去：「414是合憲！違憲的是744化粧品！你說反了！回去念！！！」', '酸酸嘆了口氣：「414合憲、744違憲。這送分題你都錯，我已經不知道說什麼好了。」', '阿肥小聲：「學長……主任臉色比剛才更差了……」']
+    },
+    {
+      setup: '【下午 5:00 ─ 今日最終大考】\n就在你準備下班時，陳經理衝回來，手裡拿著一張傳票！',
+      client: '陳經理（驚慌失措）',
+      clientLine: '「小廣！我被告了！說我廣告違反第69條！依藥事法第91條第2項，最高罰多少？我要有心理準備！」',
+      type: 'mc', q: '依藥事法第91條第2項，違反第69條（非藥物宣稱醫療效能）者，處新臺幣多少罰鍰？',
+      options: ['二十萬元以上五百萬元以下', '四萬元以上二十萬元以下', '六十萬元以上二千五百萬元以下', '三萬元以上二百萬元以下'],
+      ans: 2,
+      exp: '<strong>藥事法第91條第2項</strong>：違反第69條（非藥物宣稱醫療效能）者，處新臺幣<strong>六十萬元以上二千五百萬元以下</strong>罰鍰，且得按次連續處罰。這是藥事法中<strong>最重的罰鍰級距</strong>！陳經理的問題非常嚴重。',
+      sour: '林酸酸面無表情：「§91第2項違反§69，六十萬到二千五百萬。藥事法最重罰則，按次連續。陳經理的問題很大。」',
+      rage: '主任大吼：「六十萬到二千五百萬！這是藥事法最大罰單！還可以按次連續開！陳經理完蛋了除非你救他！！」',
+      correctR: ['主任站起來！（難得一見）「最後一題答對！你今天沒被開除！晚上請你吃豬腳飯！」', '酸酸放下文件，難得說：「§91第2項，六十萬到二千五百萬，藥事法最重。你最後沒放棄，算過了。」', '阿肥興奮跳起來：「學長！你沒被開除！！！明天還能來上班！！！」'],
+      wrongR:   ['主任把打卡機指著你：「六十萬到二千五百萬！最重罰則！你讓陳經理以為罰得少，繼續加班到你想通！」', '酸酸：「§91第2項，六十萬到二千五百萬，最重級距，按次連續。你最後一題也錯了，記得補念。」', '阿肥抱著你哭：「學長今天最後一題……沒事的，明天再來！明天一定會更好！」']
+    }
+  ]
+};
+
+/* ── 狀態 ── */
+let storyState = { qIdx:0, score:0, hearts:3, streak:0, answered:false, wrongList:[] };
+const S_MAX_HEARTS = 5;
+const S_LABELS = ['A','B','C','D'];
+function sHearts(n){ return '❤️'.repeat(Math.max(0,Math.min(n,S_MAX_HEARTS)))+'🖤'.repeat(S_MAX_HEARTS-Math.max(0,Math.min(n,S_MAX_HEARTS))); }
+function sRand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+/* ── 初始化 ── */
+function initStoryMode() {
+  storyState = { qIdx:0, score:0, hearts:3, streak:0, answered:false, wrongList:[] };
+  const panel = document.getElementById('story-panel');
+
+  /* 密碼鎖 */
+  if (!isUnlocked) {
+    panel.innerHTML = `
+      <div class="story-day-header">
+        <div style="font-size:0.8em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${storyDay1.daySubtitle}</div>
+        <div style="font-size:1.25em;font-weight:bold;letter-spacing:2px;">${storyDay1.dayTitle}</div>
+      </div>
+      <div class="story-lock-box">
+        <div style="font-size:2.5em;margin-bottom:12px;">🔒</div>
+        <div style="font-size:1.1em;font-weight:bold;color:#6c3483;margin-bottom:8px;">劇情模式限密碼解鎖者遊玩</div>
+        <div style="font-size:0.88em;color:#7f8c8d;line-height:1.8;">請在網址後方加上<br><code style="background:#f0e6f9;padding:2px 8px;border-radius:4px;color:#6c3483;">?key=More1620</code><br>解鎖後即可進入小廣的求生日常！</div>
+      </div>`;
+    return;
+  }
+
+  panel.innerHTML = `
+    <div class="story-day-header">
+      <div style="font-size:0.78em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${storyDay1.daySubtitle}</div>
+      <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">${storyDay1.dayTitle}</div>
+    </div>
+    <div class="story-intro-box" id="story-intro">
+      <div style="font-size:0.88em;color:#5d4e37;white-space:pre-line;line-height:1.95;">${storyDay1.dayIntro}</div>
+      <button class="story-next-btn" style="display:block;margin-top:16px;" onclick="storyDismissIntro()">⚖️ 開始第一天上班！</button>
+    </div>
+    <div id="story-game" style="display:none;">
+      <div class="story-status-bar">
+        <div>
+          <div style="font-size:0.72em;color:#95a5a6;font-weight:bold;margin-bottom:3px;">主任好感度</div>
+          <div class="story-hearts" id="s-hearts">${sHearts(3)}</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:0.72em;color:#95a5a6;font-weight:bold;margin-bottom:3px;">連對</div>
+          <div class="story-streak" id="s-streak">－</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.72em;color:#95a5a6;font-weight:bold;margin-bottom:3px;">進度</div>
+          <div class="story-progress-text" id="s-progress">1 / ${storyDay1.questions.length}</div>
+        </div>
+      </div>
+      <div class="story-command-strip">
+        <button class="story-cmd-btn" onclick="storyCmd('sour')">🧊 酸酸講解</button>
+        <button class="story-cmd-btn" onclick="storyCmd('rage')">😡 主任發飆</button>
+        <button class="story-cmd-btn" onclick="storyCmd('end')">🏠 今天先到這裡</button>
+      </div>
+      <div id="s-extra" class="story-extra-box"></div>
+      <div id="s-lucky" class="story-lucky-event"></div>
+      <div id="s-content"></div>
+    </div>
+    <div id="s-end" class="story-end-panel"></div>`;
+}
+
+function storyDismissIntro() {
+  document.getElementById('story-intro').style.display = 'none';
+  document.getElementById('story-game').style.display  = 'block';
+  storyBuildScene(0);
+}
+
+/* ── 建立題目場景 ── */
+function storyBuildScene(idx) {
+  const day = storyDay1;
+  if (idx >= day.questions.length) { storyShowEnd(); return; }
+  const q = day.questions[idx];
+  storyState.answered = false;
+
+  document.getElementById('s-hearts').textContent   = sHearts(storyState.hearts);
+  document.getElementById('s-streak').textContent   = storyState.streak >= 2 ? `🔥 ${storyState.streak}連對` : storyState.streak === 1 ? '🔥 1連對' : '－';
+  document.getElementById('s-progress').textContent = `${idx+1} / ${day.questions.length}`;
+  document.getElementById('s-extra').style.display  = 'none';
+  document.getElementById('s-lucky').style.display  = 'none';
+
+  const btnArea = q.type === 'tf'
+    ? `<div class="story-tf-buttons">
+         <button class="story-tf-btn story-O" id="sbO" onclick="storyTF('O')">○ 正確</button>
+         <button class="story-tf-btn story-X" id="sbX" onclick="storyTF('X')">✕ 錯誤</button>
+       </div>`
+    : `<div class="story-mc-options">${q.options.map((o,i)=>`
+         <button class="story-mc-btn" id="smc${i}" onclick="storyMC(${i})">
+           <span class="story-mc-label">${S_LABELS[i]}</span><span>${o}</span>
+         </button>`).join('')}</div>`;
+
+  document.getElementById('s-content').innerHTML = `
+    <div class="story-scene-card">
+      <div class="story-setup-text">${q.setup}</div>
+      <div class="story-dialogue-box">
+        <div class="story-client-name">💬 ${q.client}</div>
+        ${q.clientLine}
+      </div>
+    </div>
+    <div class="story-q-card">
+      <div class="story-q-label">⚖️ 法律判斷</div>
+      <div class="story-q-text">${q.q}</div>
+      ${btnArea}
+    </div>
+    <div class="story-reaction-box" id="s-react"></div>
+    <button class="story-next-btn" id="s-next" onclick="storyNext()">
+      ${idx+1 < day.questions.length ? '▶ 下一題' : '📋 結算今日成績'}
+    </button>`;
+}
+
+/* ── 作答 ── */
+function storyTF(choice) {
+  if (storyState.answered) return;
+  storyState.answered = true;
+  const q = storyDay1.questions[storyState.qIdx];
+  ['sbO','sbX'].forEach(id=>{ const b=document.getElementById(id); if(b){b.style.pointerEvents='none';} });
+  const winBtn = document.getElementById('sb'+q.ans);
+  if (winBtn) winBtn.classList.add('sel');
+  storyProcess(choice === q.ans, q);
+}
+
+function storyMC(opt) {
+  if (storyState.answered) return;
+  storyState.answered = true;
+  const q = storyDay1.questions[storyState.qIdx];
+  for (let i=0;i<q.options.length;i++){
+    const b=document.getElementById('smc'+i);
+    if(!b) continue;
+    b.style.pointerEvents='none';
+    if(i===q.ans) b.classList.add('smc-correct');
+    else if(i===opt) b.classList.add('smc-wrong');
+  }
+  storyProcess(opt === q.ans, q);
+}
+
+function storyProcess(ok, q) {
+  if (ok) {
+    storyState.score++;
+    storyState.streak++;
+    if (storyState.streak === 3) {
+      storyState.hearts = Math.min(S_MAX_HEARTS, storyState.hearts+1);
+      const msgs = [
+        '🎉 【幸運事件】阿肥端來咖啡：「學長！連對三題！拿鐵是我親手泡的！」',
+        '🎉 【幸運事件】主任突然說：「表現不錯，下午可以早走五分鐘。」',
+        '🎉 【幸運事件】酸酸難得說了句：「……今天狀態還可以。」（這大概是她能說出口最好的讚美了。）'
+      ];
+      const el=document.getElementById('s-lucky');
+      el.textContent=sRand(msgs); el.style.display='block';
+    }
+  } else {
+    storyState.streak = 0;
+    storyState.hearts = Math.max(0, storyState.hearts-1);
+    storyState.wrongList.push({ no: storyState.qIdx+1, q: q.q, ans: q.ans, type: q.type, options: q.options });
+  }
+  document.getElementById('s-hearts').textContent = sHearts(storyState.hearts);
+  document.getElementById('s-streak').textContent = storyState.streak >= 2 ? `🔥 ${storyState.streak}連對` : storyState.streak === 1 ? '🔥 1連對' : '－';
+
+  const badge = ok
+    ? '✅ 答對了！'
+    : `❌ 答錯了！正確答案：${q.type==='tf' ? (q.ans==='O'?'○ 正確':'✕ 錯誤') : S_LABELS[q.ans]+'. '+q.options[q.ans]}`;
+  const react = document.getElementById('s-react');
+  react.className = 'story-reaction-box '+(ok ? 'sreact-correct' : 'sreact-wrong');
+  react.style.display = 'block';
+  react.innerHTML = `
+    <div class="story-reaction-badge">${badge}</div>
+    <div class="story-reaction-line">${sRand(ok ? q.correctR : q.wrongR)}</div>
+    <div class="story-exp-box">${q.exp}</div>`;
+  document.getElementById('s-next').style.display = 'block';
+  setTimeout(()=>{ react.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 100);
+}
+
+/* ── 特殊指令 ── */
+function storyCmd(cmd) {
+  if (cmd === 'end') { storyShowEnd(true); return; }
+  const q = storyDay1.questions[storyState.qIdx];
+  const box = document.getElementById('s-extra');
+  box.style.display = 'block';
+  if (cmd === 'sour') box.innerHTML = `<strong>🧊 林酸酸講解：</strong><br>${q.sour||'（酸酸今天不想開口。）'}`;
+  if (cmd === 'rage') box.innerHTML = `<strong>😡 王鐵嘴主任發飆：</strong><br>${q.rage||'（主任今天難得沒發飆，珍惜吧。）'}`;
+}
+
+/* ── 下一題 ── */
+function storyNext() {
+  storyState.qIdx++;
+  storyBuildScene(storyState.qIdx);
+  const game = document.getElementById('story-game');
+  if (game) window.scrollTo({ top: game.offsetTop - 20, behavior: 'smooth' });
+}
+
+/* ── 結算 ── */
+function storyShowEnd(early=false) {
+  const gameEl = document.getElementById('story-game');
+  const introEl = document.getElementById('story-intro');
+  if (gameEl)  gameEl.style.display  = 'none';
+  if (introEl) introEl.style.display = 'none';
+  const total = storyDay1.questions.length;
+  const score = storyState.score;
+  const pct   = score / total;
+  const hearts = storyState.hearts;
+  let verdict;
+  if      (pct >= 0.9) verdict = hearts >= 4 ? '🏆 主任要給你加薪！（才怪，但至少今天沒被開除，而且主任心情很好！）' : '🏆 優秀！今晚可以正常下班！';
+  else if (pct >= 0.7) verdict = '🎯 還算能看的新人，至少沒讓事務所被客訴。繼續加油。';
+  else if (pct >= 0.5) verdict = '📖 勉強沒被開除，但主任說你明天要寫三份反省書。';
+  else                 verdict = '💀 王鐵嘴主任：「你確定你有法學院畢業嗎？！我要查你的畢業證書真偽！」';
+
+  const recapHTML = storyState.wrongList.length > 0 ? `
+    <div class="story-end-recap">
+      <strong>📋 今日錯題回顧（酸酸毒舌版）：</strong><br><br>
+      ${storyState.wrongList.map(w=>`
+        <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.15);">
+          <span style="opacity:0.7;font-size:0.85em;">第 ${w.no} 題</span><br>${w.q}<br>
+          <span style="color:#a9dfbf;">正確答案：${w.type==='tf'?(w.ans==='O'?'○ 正確':'✕ 錯誤'):S_LABELS[w.ans]+'. '+w.options[w.ans]}</span>
+        </div>`).join('')}
+    </div>` : '';
+
+  const endEl = document.getElementById('s-end');
+  endEl.style.display = 'block';
+  endEl.innerHTML = `
+    <div class="story-end-title">Day 1 結束！</div>
+    ${early ? '<div style="font-size:0.82em;opacity:0.7;margin-bottom:10px;">（提前離場）</div>' : ''}
+    <div class="story-end-score">得分：${score} / ${total}　${sHearts(hearts)}</div>
+    <div class="story-end-verdict">${verdict}</div>
+    ${recapHTML}
+    <button class="story-restart-btn" onclick="initStoryMode()">🔄 重新挑戰 Day 1</button>`;
+  endEl.scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
 /* ─── 初始化 ─── */
