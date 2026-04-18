@@ -560,6 +560,100 @@
     border-color: #9b59b6; background: #f5eef8;
     transform: translateY(-2px); box-shadow: 0 4px 14px rgba(155,89,182,0.2);
   }
+
+  /* ── VN 視覺小說風格舞台 ── */
+  .story-vn-stage {
+    position: relative;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 45%, #0f3460 100%);
+    border-radius: 14px;
+    padding: 18px 18px 22px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+  .story-vn-stage::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(155,89,182,0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(52,152,219,0.12) 0%, transparent 45%);
+    pointer-events: none;
+  }
+  .story-vn-stage > * { position: relative; z-index: 1; }
+  .story-vn-setup {
+    background: rgba(255,255,255,0.08);
+    border-left: 3px solid rgba(255,255,255,0.35);
+    color: #e8e8ea;
+    font-size: 0.82em;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    border-radius: 0 8px 8px 0;
+    white-space: pre-line;
+    line-height: 1.8;
+  }
+  .story-vn-portrait {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+    min-height: 160px;
+  }
+  .story-vn-portrait img {
+    width: 170px; height: 170px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    border: 4px solid rgba(255,255,255,0.6);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    animation: storyCharIn 0.45s ease-out;
+  }
+  .story-vn-emoji-badge {
+    position: absolute;
+    bottom: 4px;
+    left: calc(50% + 50px);
+    background: white;
+    border-radius: 50%;
+    width: 42px; height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4em;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    animation: storyCharIn 0.55s ease-out 0.1s backwards;
+  }
+  .story-vn-nameline {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .story-vn-namebox {
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 22px;
+    font-weight: bold;
+    color: white;
+    font-size: 0.92em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .story-vn-title {
+    font-size: 0.76em;
+    opacity: 0.88;
+    margin-left: 8px;
+    font-weight: normal;
+  }
+  .story-vn-dialogue {
+    background: rgba(255,255,255,0.97);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #2c3e50;
+    font-size: 0.95em;
+    line-height: 1.85;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+    border: 2px solid rgba(240,165,0,0.8);
+    animation: storyCharIn 0.5s ease-out 0.15s backwards;
+  }
+  @keyframes storyCharIn {
+    from { opacity: 0; transform: translateY(14px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
   @keyframes storyFadeIn {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -2099,6 +2193,42 @@ const storyDay2 = {
 /* ── 狀態 ── */
 let storyState = { qIdx:0, score:0, hearts:3, streak:0, answered:false, wrongList:[] };
 let currentDay = storyDay1;
+
+/* ── 角色圖像（DiceBear Avataaars）──
+   如需替換為自製角色圖，把 avatar 改成本地路徑即可，例如 './images/boss.png' */
+const storyCharacters = {
+  '王鐵嘴主任': {
+    avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=WangBossFury&backgroundColor=c0392b',
+    color: '#c0392b', emoji: '😤', title: '律師事務所主任'
+  },
+  '林酸酸': {
+    avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=SuanSuanCold&backgroundColor=34495e',
+    color: '#34495e', emoji: '🧊', title: '資深律師'
+  },
+  '阿肥': {
+    avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=AFeiIntern2024&backgroundColor=f39c12',
+    color: '#e67e22', emoji: '😊', title: '實習生'
+  },
+  '陳經理': {
+    avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=ChenPharmaMgr&backgroundColor=27ae60',
+    color: '#27ae60', emoji: '💊', title: '藥廠業務經理'
+  },
+  '電視台業務小陳': {
+    avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=XiaoChenTVBiz&backgroundColor=3498db',
+    color: '#3498db', emoji: '📺', title: '電視台業務'
+  },
+  '林法務': {
+    avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=LinLegalTVDept&backgroundColor=8e44ad',
+    color: '#8e44ad', emoji: '⚖️', title: '全台電視法務'
+  }
+};
+
+/* 依角色名稱找對應資料，自動忽略「陳經理（驚慌失措）」這種括號補述 */
+function getCharacter(name) {
+  if (!name) return null;
+  const cleanName = name.replace(/[（(][^）)]*[）)]/g, '').trim();
+  return storyCharacters[cleanName] || storyCharacters[name] || null;
+}
 const S_MAX_HEARTS = 5;
 const S_LABELS = ['A','B','C','D'];
 function sHearts(n){ return '❤️'.repeat(Math.max(0,Math.min(n,S_MAX_HEARTS)))+'🖤'.repeat(S_MAX_HEARTS-Math.max(0,Math.min(n,S_MAX_HEARTS))); }
@@ -2214,13 +2344,29 @@ function storyBuildScene(idx) {
            <span class="story-mc-label">${S_LABELS[i]}</span><span>${o}</span>
          </button>`).join('')}</div>`;
 
+  const char = getCharacter(q.client);
+  const charColor  = char ? char.color  : '#9b59b6';
+  const charAvatar = char ? char.avatar : '';
+  const charEmoji  = char ? char.emoji  : '💬';
+  const charTitle  = char ? char.title  : '';
+
+  const portraitHTML = charAvatar
+    ? `<div class="story-vn-portrait">
+         <img src="${charAvatar}" alt="${q.client}" onerror="this.style.display='none'" />
+         <div class="story-vn-emoji-badge">${charEmoji}</div>
+       </div>`
+    : '';
+
   document.getElementById('s-content').innerHTML = `
-    <div class="story-scene-card">
-      <div class="story-setup-text">${q.setup}</div>
-      <div class="story-dialogue-box">
-        <div class="story-client-name">💬 ${q.client}</div>
-        ${q.clientLine}
+    <div class="story-vn-stage">
+      <div class="story-vn-setup">${q.setup}</div>
+      ${portraitHTML}
+      <div class="story-vn-nameline">
+        <span class="story-vn-namebox" style="background:${charColor}">
+          ${q.client}${charTitle ? `<span class="story-vn-title">${charTitle}</span>` : ''}
+        </span>
       </div>
+      <div class="story-vn-dialogue">${q.clientLine}</div>
     </div>
     <div class="story-q-card">
       <div class="story-q-label">⚖️ 法律判斷</div>
