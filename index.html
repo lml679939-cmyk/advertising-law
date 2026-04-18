@@ -571,16 +571,18 @@
   }
   /* ── 存圖按鈕 ── */
   .save-png-btn {
-    display: inline-flex; align-items: center; gap: 5px;
-    margin-left: 12px; margin-top: 10px;
-    padding: 4px 11px; border-radius: 20px;
-    border: 1.5px solid #b0bec5; background: #f8f9fa;
-    color: #546e7a; font-size: 0.78em; cursor: pointer;
-    transition: all 0.18s; vertical-align: middle;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-left: 10px; margin-top: 10px;
+    width: 28px; height: 28px; border-radius: 7px;
+    border: 1.5px solid #cfd8dc; background: transparent;
+    color: #90a4ae; cursor: pointer;
+    transition: all 0.18s; vertical-align: middle; padding: 0;
+    flex-shrink: 0;
   }
   .save-png-btn:hover { border-color: #6c3483; color: #6c3483; background: #f5eef8; }
-  .save-png-btn:active { transform: scale(0.96); }
-  .save-png-btn.saving { opacity: 0.6; pointer-events: none; }
+  .save-png-btn:active { transform: scale(0.92); }
+  .save-png-btn.saving { opacity: 0.4; pointer-events: none; }
+  .save-png-btn svg { display: block; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -1385,7 +1387,7 @@ function buildQuiz() {
           <span class="arrow">▶</span>
           <span id="ntxt-${i}">✏️ 新增筆記</span>
         </div>
-        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})">📷 存為圖片</button>
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="存為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>
       <div class="note-area" id="narea-${i}">
         <textarea class="note-textarea" id="note-${i}"
@@ -1445,7 +1447,7 @@ function buildMCQuiz() {
           <span class="arrow">▶</span>
           <span id="ntxt-${i}">✏️ 新增筆記</span>
         </div>
-        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})">📷 存為圖片</button>
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="存為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>
       <div class="note-area" id="narea-${i}">
         <textarea class="note-textarea" id="note-${i}"
@@ -1554,7 +1556,7 @@ function buildFillQuiz() {
         <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
           <span class="arrow">▶</span><span id="ntxt-${i}">✏️ 新增筆記</span>
         </div>
-        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})">📷 存為圖片</button>
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="存為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>
       <div class="note-area" id="narea-${i}">
         <textarea class="note-textarea" id="note-${i}" placeholder="記憶口訣、易混淆點、任何筆記…" oninput="saveNote(${i})"></textarea>
