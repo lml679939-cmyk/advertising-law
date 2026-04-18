@@ -2692,7 +2692,6 @@
       q.blanks.forEach((_, j) => {
         const inp = document.getElementById(`fill-input-${idx}-${j}`);
         inp.className = 'fill-input ' + (res[j] ? 'fill-correct' : 'fill-wrong');
-        inp.disabled = allOk;
       });
 
       const rbadge = document.getElementById('rbadge-' + idx);
