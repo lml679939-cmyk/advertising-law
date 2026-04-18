@@ -287,18 +287,8 @@
     color: #1a3c6e;
   }
 
-  /* ── Note ── */
-  .note-toggle {
-    display: inline-flex; align-items: center; gap: 5px;
-    margin-left: 40px; margin-top: 10px;
-    font-size: 0.81em; color: #95a5a6;
-    cursor: pointer; user-select: none; transition: color 0.15s;
-  }
-  .note-toggle:hover { color: #2e6da4; }
-  .note-toggle .arrow { font-size: 0.75em; transition: transform 0.2s; display: inline-block; }
-  .note-toggle.open .arrow { transform: rotate(90deg); }
-  .note-area { display: none; margin-top: 8px; margin-left: 40px; }
-  .note-area.show { display: block; }
+  /* ── Note (removed) ── */
+  .note-area { display: none; }
   .note-textarea {
     width: 100%; min-height: 68px;
     border: 1.5px solid #d0d7e3; border-radius: 8px;
@@ -1382,27 +1372,11 @@ function buildQuiz() {
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;">
-        <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
-          <span class="arrow">▶</span>
-          <span id="ntxt-${i}">✏️ 新增筆記</span>
-        </div>
-        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="存為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
-      </div>
-      <div class="note-area" id="narea-${i}">
-        <textarea class="note-textarea" id="note-${i}"
-          placeholder="記憶口訣、易混淆點、任何筆記…"
-          oninput="saveNote(${i})"></textarea>
-        <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>
     `;
     c.appendChild(card);
-    const _sn = localStorage.getItem('note_' + q.q.slice(0, 60));
-    if (_sn) {
-      document.getElementById('note-' + i).value = _sn;
-      document.getElementById('nsaved-' + i).classList.add('show');
-      document.getElementById('ntxt-' + i).textContent = '✏️ 我的筆記（已記錄）';
-    }
   });
 }
 
@@ -1442,27 +1416,11 @@ function buildMCQuiz() {
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;">
-        <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
-          <span class="arrow">▶</span>
-          <span id="ntxt-${i}">✏️ 新增筆記</span>
-        </div>
-        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="存為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
-      </div>
-      <div class="note-area" id="narea-${i}">
-        <textarea class="note-textarea" id="note-${i}"
-          placeholder="記憶口訣、易混淆點、任何筆記…"
-          oninput="saveNote(${i})"></textarea>
-        <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>
     `;
     c.appendChild(card);
-    const _sn = localStorage.getItem('note_' + q.q.slice(0, 60));
-    if (_sn) {
-      document.getElementById('note-' + i).value = _sn;
-      document.getElementById('nsaved-' + i).classList.add('show');
-      document.getElementById('ntxt-' + i).textContent = '✏️ 我的筆記（已記錄）';
-    }
   });
 }
 
@@ -1552,23 +1510,10 @@ function buildFillQuiz() {
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div style="display:flex;align-items:center;flex-wrap:wrap;">
-        <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
-          <span class="arrow">▶</span><span id="ntxt-${i}">✏️ 新增筆記</span>
-        </div>
-        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="存為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
-      </div>
-      <div class="note-area" id="narea-${i}">
-        <textarea class="note-textarea" id="note-${i}" placeholder="記憶口訣、易混淆點、任何筆記…" oninput="saveNote(${i})"></textarea>
-        <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>`;
     c.appendChild(card);
-    const _sn = localStorage.getItem('note_' + q.q.slice(0, 60));
-    if (_sn) {
-      document.getElementById('note-' + i).value = _sn;
-      document.getElementById('nsaved-' + i).classList.add('show');
-      document.getElementById('ntxt-' + i).textContent = '✏️ 我的筆記（已記錄）';
-    }
   });
 }
 
@@ -1790,30 +1735,6 @@ function toggleGuess(idx) {
   updateBar();
 }
 
-/* ─── 筆記 ─── */
-function toggleNote(idx) {
-  const area = document.getElementById('narea-' + idx);
-  const toggle = document.getElementById('ntoggle-' + idx);
-  const open = area.classList.contains('show');
-  area.classList.toggle('show', !open);
-  toggle.classList.toggle('open', !open);
-  if (!open) setTimeout(() => document.getElementById('note-' + idx).focus(), 80);
-}
-function saveNote(idx) {
-  const q = (currentMode === 'mc') ? displayMCQuestions[idx]
-          : (currentMode === 'fill') ? displayFillQuestions[idx]
-          : displayQuestions[idx];
-  const v = document.getElementById('note-' + idx).value;
-  const key = 'note_' + q.q.slice(0, 60);
-  if (v.trim()) {
-    localStorage.setItem(key, v);
-  } else {
-    localStorage.removeItem(key);
-  }
-  const has = v.trim().length > 0;
-  document.getElementById('nsaved-' + idx).classList.toggle('show', has);
-  document.getElementById('ntxt-' + idx).textContent = has ? '✏️ 我的筆記（已記錄）' : '✏️ 新增筆記';
-}
 
 /* ─── 進度條 ─── */
 function updateBar() {
@@ -2491,17 +2412,16 @@ function storyShowEnd(early=false) {
   endEl.scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
-/* ─── 存為 PNG ─── */
+/* ─── 複製題目為圖片到剪貼簿 ─── */
 function captureCard(idx) {
   const card = document.getElementById('card-' + idx);
   const btn  = document.getElementById('savebtn-' + idx);
   if (!card) return;
 
-  // 暫時隱藏存圖按鈕本身（不讓它出現在截圖裡）
   if (btn) btn.style.visibility = 'hidden';
   btn && btn.classList.add('saving');
 
-  // 先確保詳解可見（即使尚未作答，截圖仍要包含題目全貌）
+  // 確保詳解可見
   const expEl = document.getElementById('exp-' + idx);
   const wasHidden = expEl && !expEl.classList.contains('show');
   if (wasHidden) expEl.classList.add('show');
@@ -2512,16 +2432,39 @@ function captureCard(idx) {
     useCORS: true,
     logging: false
   }).then(canvas => {
-    const link = document.createElement('a');
-    const modeLabel = currentMode === 'mc' ? '選擇題' : currentMode === 'fill' ? '填空題' : '是非題';
-    link.download = `廣告法規_${modeLabel}_第${idx + 1}題.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    canvas.toBlob(blob => {
+      if (!blob) return;
+      try {
+        navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob })
+        ]).then(() => {
+          // 短暫閃綠色提示複製成功
+          if (btn) {
+            btn.style.visibility = '';
+            btn.style.borderColor = '#27ae60';
+            btn.style.color = '#27ae60';
+            setTimeout(() => {
+              btn.style.borderColor = '';
+              btn.style.color = '';
+            }, 1200);
+          }
+        }).catch(() => fallbackDownload(canvas, idx));
+      } catch(e) { fallbackDownload(canvas, idx); }
+    }, 'image/png');
   }).finally(() => {
-    if (btn) btn.style.visibility = '';
     btn && btn.classList.remove('saving');
     if (wasHidden) expEl.classList.remove('show');
   });
+}
+function fallbackDownload(canvas, idx) {
+  // 瀏覽器不支援剪貼簿時，改為下載
+  const btn = document.getElementById('savebtn-' + idx);
+  if (btn) btn.style.visibility = '';
+  const link = document.createElement('a');
+  const modeLabel = currentMode === 'mc' ? '選擇題' : currentMode === 'fill' ? '填空題' : '是非題';
+  link.download = `廣告法規_${modeLabel}_第${idx + 1}題.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
 }
 
 /* ─── 初始化 ─── */
