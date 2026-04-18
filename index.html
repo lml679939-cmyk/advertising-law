@@ -551,98 +551,137 @@
     transform: translateY(-2px); box-shadow: 0 4px 14px rgba(155,89,182,0.2);
   }
 
-  /* ── VN 視覺小說風格舞台 ── */
+  /* ══════════════════════════════════════
+     VN 視覺小說全幅舞台
+  ══════════════════════════════════════ */
   .story-vn-stage {
     position: relative;
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 45%, #0f3460 100%);
+    height: 420px;
     border-radius: 14px;
-    padding: 18px 18px 22px;
-    margin-bottom: 14px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    margin-bottom: 14px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.35);
+    cursor: default;
+    user-select: none;
   }
-  .story-vn-stage::before {
-    content: ''; position: absolute; inset: 0;
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(155,89,182,0.15) 0%, transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(52,152,219,0.12) 0%, transparent 45%);
-    pointer-events: none;
-  }
-  .story-vn-stage > * { position: relative; z-index: 1; }
-  .story-vn-setup {
-    background: rgba(255,255,255,0.08);
-    border-left: 3px solid rgba(255,255,255,0.35);
-    color: #e8e8ea;
-    font-size: 0.82em;
-    padding: 10px 14px;
-    margin-bottom: 16px;
-    border-radius: 0 8px 8px 0;
-    white-space: pre-line;
-    line-height: 1.8;
-  }
-  .story-vn-portrait {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 8px;
-    min-height: 160px;
-  }
-  .story-vn-portrait img {
-    width: 170px; height: 170px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.95);
-    border: 4px solid rgba(255,255,255,0.6);
-    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
-    animation: storyCharIn 0.45s ease-out;
-  }
-  .story-vn-emoji-badge {
+  /* 背景層 */
+  .story-vn-bg {
     position: absolute;
-    bottom: 4px;
-    left: calc(50% + 50px);
-    background: white;
-    border-radius: 50%;
-    width: 42px; height: 42px;
+    inset: 0;
+    z-index: 0;
+    transition: background 0.5s ease;
+  }
+  /* 邊緣暗角 */
+  .story-vn-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0,0,0,0.35) 100%);
+  }
+  /* 場景說明文字（左上角浮板） */
+  .story-vn-setup {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 3;
+    background: rgba(0,0,0,0.52);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border-radius: 8px;
+    padding: 9px 14px;
+    color: rgba(255,255,255,0.92);
+    font-size: 0.78em;
+    line-height: 1.78;
+    white-space: pre-line;
+  }
+  /* 角色大圖（浮立於中央，下移與對話條交疊） */
+  .story-vn-sprite {
+    position: absolute;
+    left: 50%;
+    top: 44%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    animation: storyCharIn 0.5s ease-out;
+  }
+  .story-vn-sprite img {
+    width: 230px;
+    height: 230px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.92);
+    border: 3px solid rgba(255,255,255,0.55);
+    box-shadow:
+      0 12px 40px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(255,255,255,0.08);
+    display: block;
+  }
+  /* 底部半透明對話條 */
+  .story-vn-dbox {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    z-index: 4;
+    background: rgba(6,6,20,0.84);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding: 11px 16px 14px;
+    animation: storyDialogueIn 0.4s ease-out 0.2s backwards;
+  }
+  .story-vn-namerow {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1.4em;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    animation: storyCharIn 0.55s ease-out 0.1s backwards;
+    gap: 10px;
+    margin-bottom: 8px;
   }
-  .story-vn-nameline {
-    text-align: center;
-    margin-bottom: 10px;
+  /* 對話條左側小頭像 */
+  .story-vn-mini {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.9);
+    border: 2.5px solid rgba(255,255,255,0.45);
+    overflow: hidden;
   }
+  .story-vn-mini img {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+  }
+  /* 角色名牌 */
   .story-vn-namebox {
-    display: inline-block;
-    padding: 6px 18px;
-    border-radius: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 14px;
+    border-radius: 20px;
     font-weight: bold;
     color: white;
-    font-size: 0.92em;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    font-size: 0.9em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
   }
   .story-vn-title {
-    font-size: 0.76em;
-    opacity: 0.88;
-    margin-left: 8px;
+    font-size: 0.74em;
+    opacity: 0.82;
     font-weight: normal;
   }
-  .story-vn-dialogue {
-    background: rgba(255,255,255,0.97);
-    border-radius: 12px;
-    padding: 14px 18px;
-    color: #2c3e50;
-    font-size: 0.95em;
-    line-height: 1.85;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.2);
-    border: 2px solid rgba(240,165,0,0.8);
-    animation: storyCharIn 0.5s ease-out 0.15s backwards;
+  /* 對話文字 */
+  .story-vn-line {
+    color: rgba(255,255,255,0.95);
+    font-size: 0.93em;
+    line-height: 1.82;
+    padding-left: 52px;
   }
   @keyframes storyCharIn {
-    from { opacity: 0; transform: translateY(14px) scale(0.96); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+    from { opacity: 0; transform: translate(-50%, -46%) scale(0.95); }
+    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+  @keyframes storyDialogueIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 600px) {
+    .story-vn-stage { height: 380px; }
+    .story-vn-sprite img { width: 190px; height: 190px; }
+    .story-vn-line { padding-left: 0; }
   }
   @keyframes storyFadeIn {
     from { opacity: 0; transform: translateY(8px); }
@@ -2287,6 +2326,23 @@ function getCharacter(name) {
   const cleanName = name.replace(/[（(][^）)]*[）)]/g, '').trim();
   return storyCharacters[cleanName] || storyCharacters[name] || null;
 }
+
+/* 依 setup 文字中的時間判斷背景漸層
+   早上(藍天曙光) → 中午(暖金陽光) → 下午(午後藍天) → 傍晚(橘紅夕陽) → 夜晚(深藍夜空) */
+function getSceneBackground(setupText) {
+  const t = setupText || '';
+  if (/下午 5|傍晚|夜|晚/.test(t))
+    return 'linear-gradient(170deg,#0a0a2e 0%,#1a1a4e 40%,#162447 70%,#0f3460 100%)';
+  if (/下午 4/.test(t))
+    return 'linear-gradient(170deg,#1a0533 0%,#8e1c4c 20%,#d45d2a 45%,#f39c12 70%,#ffd57e 100%)';
+  if (/下午 [23]/.test(t))
+    return 'linear-gradient(170deg,#1565c0 0%,#1976d2 25%,#42a5f5 55%,#bbdefb 85%,#e3f2fd 100%)';
+  if (/中午|12:|午休|午餐/.test(t))
+    return 'linear-gradient(170deg,#e65100 0%,#f57c00 20%,#ffa726 45%,#ffcc80 75%,#fff8e1 100%)';
+  if (/早上|上午|9:|10:|11:/.test(t))
+    return 'linear-gradient(170deg,#1a237e 0%,#283593 15%,#5c6bc0 40%,#90caf9 70%,#e3f2fd 100%)';
+  return 'linear-gradient(170deg,#0a0a2e 0%,#16213e 50%,#0f3460 100%)';
+}
 const S_MAX_HEARTS = 5;
 const S_LABELS = ['A','B','C','D'];
 function sHearts(n){ return '❤️'.repeat(Math.max(0,Math.min(n,S_MAX_HEARTS)))+'🖤'.repeat(S_MAX_HEARTS-Math.max(0,Math.min(n,S_MAX_HEARTS))); }
@@ -2402,29 +2458,35 @@ function storyBuildScene(idx) {
            <span class="story-mc-label">${S_LABELS[i]}</span><span>${o}</span>
          </button>`).join('')}</div>`;
 
-  const char = getCharacter(q.client);
+  const char       = getCharacter(q.client);
   const charColor  = char ? char.color  : '#9b59b6';
   const charAvatar = char ? char.avatar : '';
-  const charEmoji  = char ? char.emoji  : '💬';
   const charTitle  = char ? char.title  : '';
+  const bg         = getSceneBackground(q.setup);
 
-  const portraitHTML = charAvatar
-    ? `<div class="story-vn-portrait">
-         <img src="${charAvatar}" alt="${q.client}" onerror="this.style.display='none'" />
-         <div class="story-vn-emoji-badge">${charEmoji}</div>
+  const spriteHTML = charAvatar
+    ? `<div class="story-vn-sprite">
+         <img src="${charAvatar}" alt="${q.client}" onerror="this.parentElement.style.display='none'" />
        </div>`
+    : '';
+  const miniHTML = charAvatar
+    ? `<div class="story-vn-mini"><img src="${charAvatar}" alt="" onerror="this.parentElement.style.display='none'"/></div>`
     : '';
 
   document.getElementById('s-content').innerHTML = `
     <div class="story-vn-stage">
+      <div class="story-vn-bg" style="background:${bg}"></div>
       <div class="story-vn-setup">${q.setup}</div>
-      ${portraitHTML}
-      <div class="story-vn-nameline">
-        <span class="story-vn-namebox" style="background:${charColor}">
-          ${q.client}${charTitle ? `<span class="story-vn-title">${charTitle}</span>` : ''}
-        </span>
+      ${spriteHTML}
+      <div class="story-vn-dbox">
+        <div class="story-vn-namerow">
+          ${miniHTML}
+          <span class="story-vn-namebox" style="background:${charColor}">
+            ${q.client}${charTitle ? `<span class="story-vn-title">${charTitle}</span>` : ''}
+          </span>
+        </div>
+        <div class="story-vn-line">${q.clientLine}</div>
       </div>
-      <div class="story-vn-dialogue">${q.clientLine}</div>
     </div>
     <div class="story-q-card">
       <div class="story-q-label">⚖️ 法律判斷</div>
