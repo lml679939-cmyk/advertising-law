@@ -548,6 +548,18 @@
     padding: 40px 24px; text-align: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
   }
+  .story-day-select-btn {
+    width: 100%; padding: 18px 22px; border-radius: 14px;
+    border: 2px solid #d2b4de; background: white;
+    text-align: left; cursor: pointer; color: #2c3e50;
+    transition: all 0.2s;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .story-day-select-btn:hover {
+    border-color: #9b59b6; background: #f5eef8;
+    transform: translateY(-2px); box-shadow: 0 4px 14px rgba(155,89,182,0.2);
+  }
   @keyframes storyFadeIn {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -1954,16 +1966,146 @@ const storyDay1 = {
   ]
 };
 
+const storyDay2 = {
+  dayTitle: 'Day 2 ── 廣電法的試煉',
+  daySubtitle: '菜鳥律師小廣的廣告法求生記',
+  dayIntro: '王鐵嘴主任把一本廣播電視法砸在你桌上：\n「小廣！昨天藥事法你沒讓我丟臉！今天換廣電法！\n全台電視林法務帶著一堆廣播電視法、有線廣電法、衛星廣電法問題來了！\n答錯三題以上！你去幫阿肥整理資料室！」',
+  questions: [
+    {
+      setup: '【早上 9:00 ─ 會議室，林法務準時抵達】\n全台電視法務部的林法務攤開一份節目表說：',
+      client: '林法務',
+      clientLine: '「小廣律師，我們新節目下週要首播，正在確認合規流程。廣播電視法施行細則第20條，節目時間表要在播送五日前送主管機關核備，這樣說是正確的嗎？」',
+      type: 'tf', q: '依廣播電視法施行細則第20條，廣播電視事業應於節目播送5日前，將節目時間表送請主管機關核備。',
+      ans: 'O',
+      exp: '<strong>廣播電視法施行細則第20條</strong>：廣播電視事業應將節目時間表於<strong>播送5日前</strong>，送請主管機關<strong>核備</strong>。注意用字是「核備」——不是「核定」也不是「核准」！林法務這次確認對了。',
+      sour: '林酸酸不抬頭：「施行細則§20，五日前，核備。林法務說對了，你也答對了，正常水準。」',
+      rage: '主任敲桌：「§20！五！日！前！核備！不是核准不是備查！是核備！背起來！」',
+      correctR: ['主任點頭：「嗯，節目時間表的時程管控確認好了，繼續。」', '酸酸（繼續看文件）：「§20，五日前核備。對了，繼續。」', '阿肥豎起大拇指：「學長連細則都記得！厲害！」'],
+      wrongR: ['主任把筆記本往桌上拍：「§20！五日前送核備！林法務說對的你給我說錯！你去問林法務你的法律知識是哪裡來的！」', '酸酸放下咖啡：「施行細則§20，播送五日前，核備。比林法務還不熟，你法務費要打折收。」', '阿肥悄悄把施行細則推到你眼前：「學長……第二十條在這……」']
+    },
+    {
+      setup: '【早上 9:30 ─ 林法務繼續翻資料】\n林法務從公事包掏出一份內部合規表單：',
+      client: '林法務',
+      clientLine: '「請問節目跟廣告的播出資料，依廣播電視法施行細則的規定，要保存二十天，是這樣嗎？」',
+      type: 'tf', q: '依廣播電視法施行細則第19條，廣播電視事業應將節目及廣告之播出資料保存二十日。',
+      ans: 'O',
+      exp: '<strong>廣播電視法施行細則第19條</strong>：廣播電視事業應將播出之節目及廣告，保存<strong>二十日</strong>。要和藥事法§66第4項的「六個月」保存期限分清楚——兩者截然不同！',
+      sour: '林酸酸：「施行細則§19，保存二十日。別跟藥事法§66的六個月搞混。不同法、不同期限。」',
+      rage: '主任吼道：「二十日！廣電法施行細則§19！藥事法六個月是藥事法！不要亂混用！」',
+      correctR: ['主任：「二十日，記住了，繼續下一個。」', '酸酸：「§19，二十日。對，繼續。」', '阿肥開心地點頭：「學長記得了！二十日跟六個月不一樣！」'],
+      wrongR: ['主任翻白眼：「施行細則§19！二十日！你給出錯誤答案，林法務要拿著你的建議去違法！」', '酸酸搖頭：「二十日，§19。你弄錯了，廣電跟藥事法保存期限差很多，記清楚。」', '阿肥低著頭：「學長……林法務已經在筆記上寫了錯誤答案……」']
+    },
+    {
+      setup: '【早上 10:00 ─ 討論到有線電視鎖碼頻道】\n林法務翻開有線廣播電視法說：',
+      client: '林法務',
+      clientLine: '「有線廣播電視法第27條，系統業者如果要設定鎖碼頻道，鎖碼的方式要向中央主管機關申請「核准」，這樣對嗎？」',
+      type: 'tf', q: '依有線廣播電視法第27條，系統經營者對鎖碼頻道之設定方式，應報請中央主管機關「核准」。',
+      ans: 'X',
+      exp: '<strong>有線廣播電視法第27條</strong>：系統經營者設定鎖碼頻道，鎖碼之方式應報請中央主管機關<strong>核定</strong>，而非「核准」或「備查」。同是廣電相關法規，廣播電視法§27的節目時間表是「核備」，有線廣電法§27的鎖碼卻是「核定」——兩個第27條用字不同，超高頻陷阱！',
+      sour: '林酸酸掀起眼皮：「有線廣電法§27，鎖碼，核定。不是核准，不是備查。廣電法§27節目時間表是核備——同樣第27條，用字不一樣，記清楚。」',
+      rage: '主任大吼：「核定！核！定！不是核准！有線廣電法§27鎖碼是核定！廣電法§27節目時間表是核備！兩個§27用字不同！要命的陷阱！」',
+      correctR: ['主任難得點頭兩次：「核定 vs 核備，這個陷阱沒踩到，今天加一分！」', '酸酸：「有線§27核定，廣電§27核備，這個區別你答對了，算有點用。」', '阿肥：「哇學長連這個陷阱都知道！主任剛才有點在笑哦！」'],
+      wrongR: ['主任把有線廣電法翻到§27直接推到你臉前：「核定！核！定！不是核准！有線廣電§27鎖碼用核定！廣電法§27才是核備！兩個不一樣！」', '酸酸冷冰冰：「有線廣電法§27，核定，不是核准。林法務又被你帶錯了一次。」', '阿肥小聲：「學長……這個主任說是超常考的陷阱……核定跟核准差很多的……」']
+    },
+    {
+      setup: '【上午 10:30 ─ 主任突然殺到】\n王鐵嘴主任拉把椅子坐到你和林法務之間：',
+      client: '王鐵嘴主任',
+      clientLine: '「小廣！衛星廣播電視法第36條！每節目廣告時間的上限，是節目時間的幾分之幾？三秒答！林法務也在聽！」',
+      type: 'mc', q: '依衛星廣播電視法第36條，每一節目所插播之廣告，總時間不得超過該節目時間之多少？',
+      options: ['四分之一', '五分之一', '六分之一', '八分之一'],
+      ans: 2,
+      exp: '<strong>衛星廣播電視法第36條</strong>：每一節目中廣告之總時間，不得超過該節目時間之<strong>六分之一</strong>。四分之一、五分之一、八分之一都是干擾選項。六分之一！這個數字要記牢！',
+      sour: '林酸酸放下筆：「衛星廣電法§36，廣告上限，節目時間六分之一。選四分之一或五分之一都是錯的。」',
+      rage: '主任拍桌：「六分之一！六！分！之！一！不是四分之一不是五分之一！衛星廣電法§36！背起來！」',
+      correctR: ['主任站起來：「六分之一，對！林法務你也聽到了嗎？！繼續！」', '酸酸：「§36，六分之一，答對，繼續。」', '阿肥鼓掌：「學長！連分之幾都記住了！主任今天心情還不錯！」'],
+      wrongR: ['主任把椅子推開：「六分之一！不是你說的那個！林法務都看著你！衛星廣電法§36！六分之一！回去念！」', '酸酸：「衛星廣電法§36，廣告上限是節目時間的六分之一，不是你說的那個。林法務已經記下錯誤答案了。」', '阿肥緊張地拉你袖子：「學長……林法務在做筆記……她記下了你說的數字……」']
+    },
+    {
+      setup: '【中午 11:00 ─ 討論長廣告標示問題】\n林法務翻到衛星廣電法的廣告規定繼續問：',
+      client: '林法務',
+      clientLine: '「如果單則廣告播出時間超過三分鐘，要在廣告前後加標「廣告」字樣，這規定在衛星廣播電視法第36條，對嗎？」',
+      type: 'tf', q: '依衛星廣播電視法第36條，單則廣告播出時間超過三分鐘者，應於廣告播出前後加標「廣告」字樣。',
+      ans: 'O',
+      exp: '<strong>衛星廣播電視法第36條</strong>同時規定：播出之<strong>單則廣告超過三分鐘</strong>者，應於廣告播出<strong>前後</strong>均加標示「廣告」字樣，讓觀眾清楚識別。三分鐘是這項標示義務的觸發門檻。',
+      sour: '林酸酸：「§36，單則廣告超過三分鐘，前後加標「廣告」字樣，對。林法務說對了，這是正常水準。」',
+      rage: '主任：「§36！超過三分鐘！前後！都要標「廣告」！這是透明度規定！記住了嗎！」',
+      correctR: ['主任：「好，三分鐘這個門檻記住，繼續。」', '酸酸：「§36，三分鐘，前後標示。對了。」', '阿肥：「學長！連廣告標示規定都記得！林法務也在點頭！」'],
+      wrongR: ['主任嘆氣：「三分鐘！超過三分鐘單則廣告前後都要加標「廣告」！衛星廣電法§36！你說錯，林法務的客戶可能因此不標示！」', '酸酸：「§36，超過三分鐘的廣告，前後要標「廣告」字樣。你說錯了，這種細節要記。」', '阿肥小聲：「學長……林法務臉色有點怪……」']
+    },
+    {
+      setup: '【下午 1:00 ─ 有線電視市場集中問題】\n林法務放下筷子，掏出有線廣電法：',
+      client: '林法務',
+      clientLine: '「我們集團想收購另一家有線電視業者，但有線廣播電視法第24條規定，單一系統業者的訂戶不得超過全國總訂戶的「四分之一」，請問這樣說對嗎？」',
+      type: 'tf', q: '依有線廣播電視法第24條，有線廣播電視系統經營者之訂戶數，不得超過全國有線廣播電視系統訂戶總數四分之一。',
+      ans: 'X',
+      exp: '<strong>有線廣播電視法第24條</strong>：系統經營者之訂戶數，不得超過全國有線電視訂戶總數之<strong>三分之一</strong>，而非四分之一。三分之一 vs 四分之一是超高頻考點！林法務說錯了，要立刻糾正她！',
+      sour: '林酸酸放下筷子：「有線廣電法§24，三分之一，不是四分之一。訂戶上限三分之一。林法務說錯了，你有沒有告訴她？」',
+      rage: '主任大吼：「三！分！之！一！不是四分之一！有線廣電法§24！訂戶！三分之一！這個是陷阱但你不能踩！！！」',
+      correctR: ['主任難得說：「好眼力，三分之一不是四分之一，這個陷阱沒踩到，加分！」', '酸酸：「§24，三分之一，你有告訴林法務說錯了。有做到律師該做的事。」', '阿肥崇拜地看著你：「學長救了林法務的收購計畫！三分之一不是四分之一！」'],
+      wrongR: ['主任把便當拍到桌上：「三分之一！不是四分之一！有線廣電法§24！林法務說錯你也跟著說錯！你們兩個加起來都是錯的！」', '酸酸嘆氣：「§24，三分之一，不是四分之一。你跟林法務一起說錯，收購計畫有可能違法。」', '阿肥趕緊舉手：「等等！我查到了！是三分之一！是三分之一！」']
+    },
+    {
+      setup: '【下午 2:00 ─ 頻道比例問題】\n林法務繼續問有線電視頻道的法規限制：',
+      client: '林法務',
+      clientLine: '「有線廣播電視法第25條，我們自己集團旗下的頻道，在我們系統上播出，不能超過可播送頻道總數的四分之一，這樣對嗎？」',
+      type: 'tf', q: '依有線廣播電視法第25條，系統經營者及其關係企業所有或經營之頻道，不得超過該系統可播送頻道總數之四分之一。',
+      ans: 'O',
+      exp: '<strong>有線廣播電視法第25條</strong>：系統經營者及其<strong>關係企業</strong>所有或經營的頻道，不得超過可播送頻道總數的<strong>四分之一</strong>。注意：§24是「訂戶數三分之一」，§25是「頻道數四分之一」，這兩個數字要分清楚！',
+      sour: '林酸酸：「有線廣電法§25，頻道四分之一，林法務說對了。記得§24訂戶是三分之一，§25頻道是四分之一。」',
+      rage: '主任：「§25！頻道！四分之一！§24訂戶三分之一！§25頻道四分之一！兩個都要記！」',
+      correctR: ['主任：「§24和§25的數字都記清楚了嗎？訂戶三分之一、頻道四分之一，這對組合要背！」', '酸酸：「§25，頻道四分之一，對。§24跟§25分清楚了，繼續。」', '阿肥：「學長太強了！§24和§25不一樣都記住了！」'],
+      wrongR: ['主任扶額：「§25！頻道！四分之一！§24訂戶三分之一是剛才的！這題是§25頻道四分之一！你搞混了！」', '酸酸：「§25是頻道四分之一。你跟§24搞混了。訂戶三分之一、頻道四分之一，不一樣的。」', '阿肥心疼地說：「學長……兩個不一樣的……§24跟§25要分開記……」']
+    },
+    {
+      setup: '【下午 3:00 ─ 主任突擊罰則考題】\n林法務去洗手間，主任立刻壓低聲音說：',
+      client: '王鐵嘴主任',
+      clientLine: '「考你！廣播電視法第44條，電視事業節目違反第21條第2、3款，而且情節重大，罰鍰範圍是多少？快！林法務回來前答完！」',
+      type: 'mc', q: '依廣播電視法第44條，電視事業節目內容違反同法第21條第2款或第3款規定，且情節重大者，罰鍰為何？',
+      options: ['新臺幣九萬元以上一百二十萬元以下', '新臺幣四十萬元以上二百萬元以下', '新臺幣二十萬元以上五百萬元以下', '新臺幣六十萬元以上二千五百萬元以下'],
+      ans: 1,
+      exp: '<strong>廣播電視法第44條</strong>：<strong>電視</strong>事業違反§21第2、3款且情節重大，罰鍰為<strong>新臺幣四十萬元以上二百萬元以下</strong>，並得命停播3日至3個月。注意：<strong>廣播</strong>事業同條款為<strong>九萬元以上一百二十萬元以下</strong>。電視台金額比廣播電台高，兩者要分清楚！',
+      sour: '林酸酸：「§44，電視台，四十萬到二百萬。廣播電台是九萬到一百二十萬。電視比廣播罰得重，數字不同。」',
+      rage: '主任低聲但凶狠：「電視！四十萬到二百萬！廣播是九萬到一百二十萬！兩個不一樣！§44！背起來！林法務回來了！」',
+      correctR: ['主任眼神示意做得好：「電視台四十萬到二百萬，記住了，這是今天重點！」', '酸酸（林法務剛回來）：「§44，電視，四十萬到二百萬。對了。」', '阿肥悄悄比了個讚：「學長答對了！而且剛好在林法務回來前！」'],
+      wrongR: ['主任瞪你一眼：「電視四十萬到二百萬！廣播才是九萬到一百二十萬！你搞錯了！林法務回來了你還沒想通！」', '酸酸平靜地說：「廣播電視法§44，電視台四十萬到二百萬，廣播九萬到一百二十萬。你說錯了，這題很重要。」', '阿肥小聲：「學長……林法務剛好進來……主任臉色很差……」']
+    },
+    {
+      setup: '【下午 4:00 ─ 贊助商洽談問題】\n一家啤酒品牌業務傳訊息給林法務，林法務看了轉問你：',
+      client: '林法務',
+      clientLine: '「有個啤酒廠商想贊助我們的節目，我說酒類商品雖然不能做置入行銷，但贊助節目是允許的，這樣的理解對嗎？」',
+      type: 'tf', q: '依廣播電視節目廣告區隔與置入性行銷及贊助管理辦法，酒類商品雖禁止進行置入性行銷，但得贊助廣播電視節目。',
+      ans: 'O',
+      exp: '依相關管理辦法，<strong>酒類商品</strong>列於<strong>禁止置入</strong>名單（§8），但<strong>贊助</strong>禁止名單（§13）並未包含酒類——酒類可以贊助節目！相比之下，<strong>菸品</strong>兩者都禁；<strong>跨國境婚姻媒合</strong>也是兩者都禁。酒類「禁置入、可贊助」是超高頻考點！',
+      sour: '林酸酸：「酒類，禁止置入（§8），但可以贊助（§13沒有列入）。菸品是兩者都禁。酒類是特例，可以贊助。林法務說對了。」',
+      rage: '主任：「酒類！禁！置入！但！可以！贊助！§8禁置入、§13不管贊助！菸品才是兩者都禁！記住酒類例外！」',
+      correctR: ['主任：「酒類的置入vs贊助差別答對了，這個很多人搞錯，你今天不錯。」', '酸酸：「置入§8禁酒、贊助§13不禁酒。你沒搞混，這次合格。」', '阿肥興奮地說：「學長幫林法務確認啤酒廠可以贊助！啤酒廠業務超開心！」'],
+      wrongR: ['主任嘆氣：「酒類可以贊助！§13沒有禁酒！你跟菸品搞混了吧！菸品才是置入贊助都禁！酒類只禁置入！」', '酸酸：「§8禁置入含酒類、§13禁贊助不含酒類。酒類可以贊助，你說錯，林法務少了一個合法贊助商。」', '阿肥心疼地說：「學長……啤酒廠業務已經在等回覆了……」']
+    },
+    {
+      setup: '【下午 5:00 ─ 今日最終考驗】\n就在林法務準備離開、你以為今天終於結束的時候，她突然回頭說：',
+      client: '林法務（拿著一份投訴函）',
+      clientLine: '「小廣律師！上週播出的一則節目有不實內容，被害人要求更正！廣播電視法第23條說，我們要在接獲請求後七日內，在相同節目時段播送更正——請問這個時限是正確的嗎？」',
+      type: 'tf', q: '依廣播電視法第23條，廣播電視事業播送內容有損害他人名譽或違反事實者，應於接獲請求後七日內在相同節目時段播送更正。',
+      ans: 'O',
+      exp: '<strong>廣播電視法第23條</strong>：廣播電視事業播送之內容有損害他人名譽或違反事實者，被害人得請求更正，廣播電視事業應於接獲請求後<strong>七日內</strong>在相同節目時段播送更正。林法務確認正確，七日是法定期限！',
+      sour: '林酸酸放下文件：「廣電法§23，七日內，相同節目時段，更正。林法務說對了，你也答對了，這是該有的水準。」',
+      rage: '主任大吼：「七日內！相同節目時段！廣電法§23！七！日！別搞成三日或十日！七日！記住！！！」',
+      correctR: ['主任站起來拍桌（這次是高興的）：「最後一題答對！今天沒讓我丟臉！林法務，你請律師算沒請錯！」', '酸酸放下文件，難得說：「§23，七日，更正義務，你最後也對了。今天表現……還算能看。」', '阿肥興奮跳起來：「學長！全部撐過來了！林法務在對你點頭！主任有在笑！今天可以正常下班！！！」'],
+      wrongR: ['主任把打卡機翻過來指著你：「七日內！廣電法§23！不是三日不是十日！七日！最後一題你給我答錯！今晚不能下班！」', '酸酸：「廣電法§23，七日內，相同節目時段更正。你最後一題也錯了。林法務要帶著錯誤資訊回去了。」', '阿肥紅著眼睛：「學長……最後一題……林法務有點臉色不好……但是沒關係！明天可以重來的！」']
+    }
+  ]
+};
+
 /* ── 狀態 ── */
 let storyState = { qIdx:0, score:0, hearts:3, streak:0, answered:false, wrongList:[] };
+let currentDay = storyDay1;
 const S_MAX_HEARTS = 5;
 const S_LABELS = ['A','B','C','D'];
 function sHearts(n){ return '❤️'.repeat(Math.max(0,Math.min(n,S_MAX_HEARTS)))+'🖤'.repeat(S_MAX_HEARTS-Math.max(0,Math.min(n,S_MAX_HEARTS))); }
 function sRand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-/* ── 初始化 ── */
+/* ── 初始化：顯示關卡選擇 ── */
 function initStoryMode() {
-  storyState = { qIdx:0, score:0, hearts:3, streak:0, answered:false, wrongList:[] };
   const panel = document.getElementById('story-panel');
 
   /* 密碼鎖 */
@@ -1981,14 +2123,40 @@ function initStoryMode() {
     return;
   }
 
+  /* 關卡選擇畫面 */
   panel.innerHTML = `
     <div class="story-day-header">
       <div style="font-size:0.78em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${storyDay1.daySubtitle}</div>
-      <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">${storyDay1.dayTitle}</div>
+      <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">⚖️ 選擇今日關卡</div>
+    </div>
+    <div style="padding:20px 16px;display:flex;flex-direction:column;gap:14px;max-width:480px;margin:0 auto;">
+      <button class="story-day-select-btn" onclick="startStoryDay(storyDay1)">
+        <div style="font-size:1.05em;font-weight:bold;margin-bottom:5px;">⚗️ Day 1 ── 藥廠客戶的緊急求助</div>
+        <div style="font-size:0.82em;opacity:0.75;">藥事法・藥物廣告・罰則・釋字414 vs 744</div>
+      </button>
+      <button class="story-day-select-btn" onclick="startStoryDay(storyDay2)">
+        <div style="font-size:1.05em;font-weight:bold;margin-bottom:5px;">📡 Day 2 ── 廣電法的試煉</div>
+        <div style="font-size:0.82em;opacity:0.75;">廣播電視法・有線廣電法・衛星廣電法・置入 vs 贊助</div>
+      </button>
+    </div>`;
+}
+
+/* ── 開始指定關卡 ── */
+function startStoryDay(dayData) {
+  currentDay = dayData;
+  storyState = { qIdx:0, score:0, hearts:3, streak:0, answered:false, wrongList:[] };
+  const panel = document.getElementById('story-panel');
+  const dayNum = dayData === storyDay1 ? 1 : 2;
+  const startLabel = dayNum === 1 ? '⚖️ 開始第一天上班！' : '📡 開始第二天上班！';
+
+  panel.innerHTML = `
+    <div class="story-day-header">
+      <div style="font-size:0.78em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${dayData.daySubtitle}</div>
+      <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">${dayData.dayTitle}</div>
     </div>
     <div class="story-intro-box" id="story-intro">
-      <div style="font-size:0.88em;color:#5d4e37;white-space:pre-line;line-height:1.95;">${storyDay1.dayIntro}</div>
-      <button class="story-next-btn" style="display:block;margin-top:16px;" onclick="storyDismissIntro()">⚖️ 開始第一天上班！</button>
+      <div style="font-size:0.88em;color:#5d4e37;white-space:pre-line;line-height:1.95;">${dayData.dayIntro}</div>
+      <button class="story-next-btn" style="display:block;margin-top:16px;" onclick="storyDismissIntro()">${startLabel}</button>
     </div>
     <div id="story-game" style="display:none;">
       <div class="story-status-bar">
@@ -2002,7 +2170,7 @@ function initStoryMode() {
         </div>
         <div style="text-align:right;">
           <div style="font-size:0.72em;color:#95a5a6;font-weight:bold;margin-bottom:3px;">進度</div>
-          <div class="story-progress-text" id="s-progress">1 / ${storyDay1.questions.length}</div>
+          <div class="story-progress-text" id="s-progress">1 / ${dayData.questions.length}</div>
         </div>
       </div>
       <div class="story-command-strip">
@@ -2025,7 +2193,7 @@ function storyDismissIntro() {
 
 /* ── 建立題目場景 ── */
 function storyBuildScene(idx) {
-  const day = storyDay1;
+  const day = currentDay;
   if (idx >= day.questions.length) { storyShowEnd(); return; }
   const q = day.questions[idx];
   storyState.answered = false;
@@ -2069,7 +2237,7 @@ function storyBuildScene(idx) {
 function storyTF(choice) {
   if (storyState.answered) return;
   storyState.answered = true;
-  const q = storyDay1.questions[storyState.qIdx];
+  const q = currentDay.questions[storyState.qIdx];
   ['sbO','sbX'].forEach(id=>{ const b=document.getElementById(id); if(b){b.style.pointerEvents='none';} });
   const winBtn = document.getElementById('sb'+q.ans);
   if (winBtn) winBtn.classList.add('sel');
@@ -2079,7 +2247,7 @@ function storyTF(choice) {
 function storyMC(opt) {
   if (storyState.answered) return;
   storyState.answered = true;
-  const q = storyDay1.questions[storyState.qIdx];
+  const q = currentDay.questions[storyState.qIdx];
   for (let i=0;i<q.options.length;i++){
     const b=document.getElementById('smc'+i);
     if(!b) continue;
@@ -2129,7 +2297,7 @@ function storyProcess(ok, q) {
 /* ── 特殊指令 ── */
 function storyCmd(cmd) {
   if (cmd === 'end') { storyShowEnd(true); return; }
-  const q = storyDay1.questions[storyState.qIdx];
+  const q = currentDay.questions[storyState.qIdx];
   const box = document.getElementById('s-extra');
   box.style.display = 'block';
   if (cmd === 'sour') box.innerHTML = `<strong>🧊 林酸酸講解：</strong><br>${q.sour||'（酸酸今天不想開口。）'}`;
@@ -2150,7 +2318,7 @@ function storyShowEnd(early=false) {
   const introEl = document.getElementById('story-intro');
   if (gameEl)  gameEl.style.display  = 'none';
   if (introEl) introEl.style.display = 'none';
-  const total = storyDay1.questions.length;
+  const total = currentDay.questions.length;
   const score = storyState.score;
   const pct   = score / total;
   const hearts = storyState.hearts;
@@ -2172,13 +2340,17 @@ function storyShowEnd(early=false) {
 
   const endEl = document.getElementById('s-end');
   endEl.style.display = 'block';
+  const dayLabel = currentDay === storyDay1 ? 'Day 1' : 'Day 2';
   endEl.innerHTML = `
-    <div class="story-end-title">Day 1 結束！</div>
+    <div class="story-end-title">${dayLabel} 結束！</div>
     ${early ? '<div style="font-size:0.82em;opacity:0.7;margin-bottom:10px;">（提前離場）</div>' : ''}
     <div class="story-end-score">得分：${score} / ${total}　${sHearts(hearts)}</div>
     <div class="story-end-verdict">${verdict}</div>
     ${recapHTML}
-    <button class="story-restart-btn" onclick="initStoryMode()">🔄 重新挑戰 Day 1</button>`;
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="story-restart-btn" onclick="startStoryDay(currentDay)">🔄 重新挑戰 ${dayLabel}</button>
+      <button class="story-restart-btn" onclick="initStoryMode()">📋 選擇關卡</button>
+    </div>`;
   endEl.scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
