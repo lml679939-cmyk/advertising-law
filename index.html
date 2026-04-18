@@ -287,18 +287,8 @@
     color: #1a3c6e;
   }
 
-  /* ── Note ── */
-  .note-toggle {
-    display: inline-flex; align-items: center; gap: 5px;
-    margin-left: 40px; margin-top: 10px;
-    font-size: 0.81em; color: #95a5a6;
-    cursor: pointer; user-select: none; transition: color 0.15s;
-  }
-  .note-toggle:hover { color: #2e6da4; }
-  .note-toggle .arrow { font-size: 0.75em; transition: transform 0.2s; display: inline-block; }
-  .note-toggle.open .arrow { transform: rotate(90deg); }
-  .note-area { display: none; margin-top: 8px; margin-left: 40px; }
-  .note-area.show { display: block; }
+  /* ── Note (removed) ── */
+  .note-area { display: none; }
   .note-textarea {
     width: 100%; min-height: 68px;
     border: 1.5px solid #d0d7e3; border-radius: 8px;
@@ -663,7 +653,22 @@
     .story-tf-buttons { gap: 10px; }
     .story-tf-btn { padding: 10px 26px; }
   }
+  /* ── 存圖按鈕 ── */
+  .save-png-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-left: 10px; margin-top: 10px;
+    width: 28px; height: 28px; border-radius: 7px;
+    border: 1.5px solid #cfd8dc; background: transparent;
+    color: #90a4ae; cursor: pointer;
+    transition: all 0.18s; vertical-align: middle; padding: 0;
+    flex-shrink: 0;
+  }
+  .save-png-btn:hover { border-color: #6c3483; color: #6c3483; background: #f5eef8; }
+  .save-png-btn:active { transform: scale(0.92); }
+  .save-png-btn.saving { opacity: 0.4; pointer-events: none; }
+  .save-png-btn svg { display: block; }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -816,7 +821,11 @@ const questions = [
 
   { q: "《廣播電視法》第21條明文規定廣播、電視節目內容「不得」有妨害公共秩序或善良風俗等情形，此在法理上屬於命令當事人應為一定行為的「強制規定」。", ans: "X", exp: "法條中明文規定「<strong>不得</strong>」有下列情形，係命當事人「<strong>不得為</strong>」一定行為，在法理上屬於「<strong>禁止規定</strong>」，而非強制規定。命令當事人「<strong>應為</strong>」一定行為者（例如系統經營者「應」同時轉播無線電視台節目），才叫做「強制規定」。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", hidden: true },
   { q: "電視節目中出現「非藥物卻宣稱醫療效能」或「播出菸草產品廣告」，在《廣播電視法》第21條的分類中屬於「妨害公共秩序或善良風俗」的範圍。", ans: "X", exp: "「非藥物宣稱醫療效能」違反《藥事法》，「播出菸草產品廣告」違反《菸害防制法》等相關規定，兩者在<span class='law-ref'>廣播電視法第21條</span>的歸類中均屬<strong>第1款「違反法律強制或禁止規定」</strong>，而非第3款妨害公共秩序或善良風俗。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", hidden: true },
-  { q: "電視台節目涉嫌「妨害兒童或少年身心健康」時，主管機關NCC通常會直接依《廣播電視法》第21條第2款自行認定並對業者開罰。", ans: "X", exp: "這是實務管轄權陷阱。關於第21條第2款「妨害兒童或少年身心健康」，除明顯違反電視節目分級處理辦法外，NCC實務上<strong>未曾認定</strong>，多交由「<strong>衛生福利部（衛福部）</strong>」適用兒童及少年相關法規處理，而非NCC自行開罰。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", hidden: true }
+  { q: "電視台節目涉嫌「妨害兒童或少年身心健康」時，主管機關NCC通常會直接依《廣播電視法》第21條第2款自行認定並對業者開罰。", ans: "X", exp: "這是實務管轄權陷阱。關於第21條第2款「妨害兒童或少年身心健康」，除明顯違反電視節目分級處理辦法外，NCC實務上<strong>未曾認定</strong>，多交由「<strong>衛生福利部（衛福部）</strong>」適用兒童及少年相關法規處理，而非NCC自行開罰。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", hidden: true },
+  { q: "依據《衛星廣播電視法》貫徹「黨政軍退出媒體」之精神，政府、政黨及其捐助成立之財團法人，僅能以「間接投資」之方式持有衛星廣播電視事業之股份。", ans: "X", exp: "<span class='law-ref'>衛星廣播電視法第5條第1項</span>明文規定，政府、政黨、其捐助成立之財團法人及其受託人「<strong>不得直接、間接投資</strong>」衛星廣播電視事業。無論直接或間接投資皆在禁止之列，並非僅限制直接投資。故答案為<strong>✕（錯誤）</strong>。", page: "", hidden: true },
+  { q: "依據藥事法規定，須由醫師處方之藥物（處方藥），只要經過衛生主管機關事前核准，即可在電視、廣播或一般報章雜誌上向大眾刊播廣告。", ans: "X", exp: "<span class='law-ref'>藥事法第67條</span>規定，須由醫師處方或經中央衛生主管機關公告指定之藥物，其廣告「<strong>以登載於學術性醫療刊物為限</strong>」，不得向一般大眾刊播，即使事前核准亦然。故答案為<strong>✕（錯誤）</strong>。", page: "", hidden: true },
+  { q: "依據藥事法規定，中藥材之廣告所用文字，其效能之宣傳應以《本草綱目》所載者為限。", ans: "O", exp: "<span class='law-ref'>藥事法施行細則第45條第2項</span>規定，中藥材廣告宣傳效能，確實依法必須以《<strong>本草綱目</strong>》所載者為限。本題敘述正確，故答案為<strong>○（正確）</strong>。", page: "", hidden: true },
+  { q: "依據司法院釋字第 364 號解釋，為保障人民言論自由，傳播媒體必須「無條件強制接受」民眾表達其反對意見之要求，以落實人民之「接近使用傳播媒體權（媒體近用權）」。", ans: "X", exp: "<span class='law-ref'>釋字第364號</span>解釋明確指出，若無條件強制媒體接受民眾表達意見之要求，無異於剝奪媒體之「<strong>編輯自由</strong>」。因此，民眾的媒體近用權必須在「<strong>兼顧傳播媒體編輯自由</strong>」之原則下予以尊重，並非無條件強制。故答案為<strong>✕（錯誤）</strong>。", page: "", hidden: true }
 ];
 
 /* ─── 選擇題資料（45題）─── */
@@ -1085,7 +1094,16 @@ const mcQuestions = [
     ans: 2, exp: "依<span class='law-ref'>廣播電視法第44條第1項</span>規定，<strong>電視事業</strong>違反第21條第2、3款情節重大者，除停播處分外，處新臺幣<strong>四十萬元以上二百萬元以下</strong>罰鍰。📌 注意對比：<strong>廣播事業</strong>才是處新臺幣九萬元以上一百二十萬元以下罰鍰，兩者不同。", page: "p.67", hidden: true },
   { q: "電視台播出廣告「宣揚迷信」並「對身體、屍體作不當之表現」，此最主要違反《廣播電視法》第21條哪一款？",
     options: ["違反法律強制或禁止規定","妨害兒童或少年身心健康","妨害公共秩序或善良風俗","違反事實查證原則"],
-    ans: 2, exp: "「宣揚迷信」、「歧視或嘲笑身心殘障者」、「廣告表現涉及性的內容」及「對身體、屍體作不當之表現」，皆屬<span class='law-ref'>廣播電視法第21條第3款</span>「<strong>妨害公共秩序或善良風俗</strong>」的例示違規行為。📌 注意：若違反《藥事法》或《菸害防制法》等具體法律，則歸類為第1款「違反法律強制或禁止規定」。", page: "p.65", hidden: true }
+    ans: 2, exp: "「宣揚迷信」、「歧視或嘲笑身心殘障者」、「廣告表現涉及性的內容」及「對身體、屍體作不當之表現」，皆屬<span class='law-ref'>廣播電視法第21條第3款</span>「<strong>妨害公共秩序或善良風俗</strong>」的例示違規行為。📌 注意：若違反《藥事法》或《菸害防制法》等具體法律，則歸類為第1款「違反法律強制或禁止規定」。", page: "p.65", hidden: true },
+  { q: "為了確保國內媒體產業的自主性與多樣性，依據《衛星廣播電視法》規定，外國人直接持有衛星廣播電視事業之股份，最高不得達該事業已發行股份總數的多少比例？",
+    options: ["百分之二十","百分之三十","百分之四十九","百分之五十"],
+    ans: 3, exp: "<span class='law-ref'>衛星廣播電視法第4條</span>規定，外國人直接持有衛星廣播電視事業之股份，應「<strong>低於</strong>」該事業已發行股份總數<strong>百分之五十</strong>。換言之，外資最多持有 49.99...%，不得達到或超過50%。此規定為防範外資過度控制我國媒體的重要紅線。", page: "", hidden: true },
+  { q: "購物頻道是電視事業重要的獲利來源，但為了避免排擠一般節目的播送空間，依據《衛星廣播電視法》規定，直播衛星廣播電視服務事業播出之購物頻道數，應低於頻道總數的多少比例？",
+    options: ["百分之五","百分之十","百分之十五","百分之二十"],
+    ans: 1, exp: "<span class='law-ref'>衛星廣播電視法第24條</span>規定，直播衛星廣播電視服務事業播出之購物頻道數，應低於頻道總數「<strong>百分之十</strong>」。此為購物頻道總量管制規定，以保障一般節目的播送空間。", page: "", hidden: true },
+  { q: "《消費者保護法》第22條規定：「企業經營者『應』確保廣告內容之真實，其對消費者所負之義務『不得』低於廣告之內容。」這條法規在法理性質上屬於下列何者？",
+    options: ["僅為強制規定","僅為禁止規定","兼具強制規定與禁止規定","屬無法律效果之訓示規定"],
+    ans: 2, exp: "條文前段的「<strong>應</strong>」確保廣告內容真實，是命令當事人為一定行為的「<strong>強制規定</strong>」；後段的「<strong>不得</strong>」低於廣告內容，則是命令當事人不為一定行為的「<strong>禁止規定</strong>」，故此條文<strong>兼具強制規定與禁止規定</strong>兩種性質。此為講者特別舉例說明的重要考點。", page: "", hidden: true }
 ];
 
 /* ─── 填空題資料（30題）─── */
@@ -1209,7 +1227,107 @@ const fillQuestions = [
   { q: "廣播電視法施行細則第22條規定，廣播電臺每次播音開始、結束及節目更換時，應播報___。",
     blanks: [["臺名、呼號及頻率","台名、呼號及頻率","臺名呼號頻率","台名呼號頻率"]],
     answers: ["臺名、呼號及頻率"],
-    exp: "<span class='law-ref'>廣播電視法施行細則第22條</span>：播音開始、結束及節目更換時應播報<strong>臺名、呼號及頻率</strong>；節目進行中每半小時簡報臺名一次。", page: "p.71" }
+    exp: "<span class='law-ref'>廣播電視法施行細則第22條</span>：播音開始、結束及節目更換時應播報<strong>臺名、呼號及頻率</strong>；節目進行中每半小時簡報臺名一次。", page: "p.71" },
+  { q: "依據廣電法規，廣播事業揭露「贊助者」或「置入者」訊息，時間上限皆不得超過___秒；而電視事業揭露「贊助者」訊息，時間上限則不得超過___秒。",
+    blanks: [["45","四十五","45秒"], ["20","二十","20秒"]],
+    answers: ["45秒", "20秒"],
+    exp: "依據《廣播節目廣告區隔與置入性行銷及贊助管理辦法》第11條（置入揭露）與第16條（贊助揭露），廣播揭露上限皆為<strong>45秒</strong>。《電視節目廣告區隔與置入性行銷及贊助管理辦法》第16條規定，電視的贊助揭露上限則較嚴格，僅為<strong>20秒</strong>。📌 廣播45秒、電視20秒，兩者不同，為常見陷阱。", page: "", hidden: true },
+  { q: "現行《藥事法》第4條明文規定：「本法所稱藥物，係指___及___。」",
+    blanks: [["藥品","醫療器材"], ["醫療器材","藥品"]],
+    answers: ["藥品", "醫療器材"],
+    exp: "現行《藥事法》第4條明文規定：「本法所稱藥物，係指<strong>藥品</strong>及<strong>醫療器材</strong>。」兩空可互換。📌 考題常故意將「藥品」替換為「原料藥、製劑」，或誆稱醫療器材已從藥物定義中移除，均為錯誤。雖然醫療器材在2020年已有《醫療器材管理法》，但《藥事法》第4條原文仍未將其刪除。", page: "p.25", hidden: true },
+  { q: "依據《電視節目廣告區隔與置入性行銷及贊助管理辦法》，「酒類」在節目中被明文禁止進行___，但法規並未禁止，因此「可以」接受___。",
+    blanks: [["置入","置入性行銷"], ["贊助","冠名贊助"]],
+    answers: ["置入（置入性行銷）", "贊助（冠名贊助）"],
+    exp: "依第8條（置入禁止清單），<strong>酒類不可置入</strong>；但依第13條（贊助禁止清單），酒類未被列入，故<strong>可以接受贊助</strong>。📌 規範不對稱！禁止置入但允許贊助，為極易出錯的實務陷阱。", page: "", hidden: true },
+  { q: "大法官釋字第414號認為「___廣告」因牽涉國民生命健康，事前審查合憲；但釋字第744號認為「___廣告」事前審查違反比例原則，宣告違憲。",
+    blanks: [["藥物","藥品"], ["化粧品","化妝品"]],
+    answers: ["藥物", "化粧品"],
+    exp: "<span class='law-ref'>釋字第414號</span>認定<strong>藥物廣告</strong>事前審查<strong>合憲</strong>（因牽涉國民生命健康，國家得加以管制）；<span class='law-ref'>釋字第744號</span>則認定<strong>化粧品廣告</strong>事前審查<strong>違憲</strong>（化粧品為日常用品，不會產生立即危害，事前審查違反比例原則）。📌 法定用字為「化<strong>粧</strong>品」（粧字）非「化妝品」。", page: "", hidden: true },
+  { q: "在行政程序法理上，___需上級機關實質審查並作成決定後才生效；而___只是觀念通知，陳報讓主管機關知悉即可，無需等待審查批准即生效。",
+    blanks: [["核定"], ["備查"]],
+    answers: ["核定", "備查"],
+    exp: "<strong>核定</strong>：需上級機關實質審查並作成決定後始生效，例如《有線廣播電視法》第27條鎖碼方式應報請「核定」。<br><strong>備查</strong>：僅為觀念通知，陳報後即生效，例如《廣播電視法施行細則》第20條節目時間表登載於資料庫為「備查」。📌 考題常混淆「核定」、「核准」、「核備」、「備查」等用語。", page: "", hidden: true },
+  { q: "依《廣播電視法》第23條規定，對於電台之報導，利害關係人認為錯誤要求更正時，電臺應於接到要求後___日內，在原節目或同一時間之節目中加以更正。",
+    blanks: [["7","七","7日","七日"]],
+    answers: ["7日（七日）"],
+    exp: "<span class='law-ref'>廣播電視法第23條第1項</span>規定，電臺應於接到要求後<strong>七日內</strong>更正。📌 考題常故意寫成「五日」來混淆考生，正確答案為七日。", page: "p.67", hidden: true },
+  { q: "在法律用語中，「___」是直接規定一定情形發生一定效果，不容許當事人事後舉證推翻；「___」則是假設一定情形發生一定效果，但容許當事人事後舉證推翻。",
+    blanks: [["視為"], ["推定"]],
+    answers: ["視為", "推定"],
+    exp: "<strong>視為</strong>：直接規定一定情形發生一定效果，<strong>不容許</strong>當事人舉證推翻，具有鐵板釘釘的效果（例如貨架上標價陳列的商品「視為」要約）。<br><strong>推定</strong>：假設一定情形發生一定效果，<strong>容許</strong>當事人舉證推翻（例如無從確定出生月日時「推定」為7月1日出生，若有真實證明則可推翻）。", page: "", hidden: true },
+  { q: "為了防止媒體被過度壟斷，依《有線廣播電視法》規定，系統經營者與其關係企業的「訂戶數」，合計不得超過全國總訂戶數的___；而由系統經營者及其關係企業供應的「節目」，不得超過可利用頻道的___。",
+    blanks: [["三分之一","1/3"], ["四分之一","1/4"]],
+    answers: ["三分之一（1/3）", "四分之一（1/4）"],
+    exp: "依《有線廣播電視法》第24條規定，系統經營者與其關係企業的訂戶數，合計不得超過全國總訂戶數的<strong>三分之一</strong>。同法第25條則規定，由系統經營者及其關係企業供應的節目，不得超過可利用頻道的<strong>四分之一</strong>。📌 訂戶上限較寬（1/3）；節目上限較嚴（1/4），兩者極易混淆。", page: "p.89", hidden: true },
+  { q: "《有線廣播電視法》規定系統經營者「應」同時轉播依法設立的無線電視台節目，在法理上屬於___規定；而規定「不得」播送未經許可的節目，則屬於___規定。",
+    blanks: [["強制"], ["禁止"]],
+    answers: ["強制", "禁止"],
+    exp: "《有線廣播電視法》第33條規定系統經營者「<strong>應</strong>」同時轉播無線電視台節目（Must-carry義務），屬於命令當事人應為一定行為的「<strong>強制規定</strong>」。而第34條規定「<strong>不得</strong>」播送未經許可的節目，則屬於命令當事人不為一定行為的「<strong>禁止規定</strong>」。📌 強制規定＝應為；禁止規定＝不得為。", page: "p.89", hidden: true },
+  { q: "依《廣播電視法》規定，電臺播送廣告，不得超過播送總時間的___；但依《衛星廣播電視法》規定，廣告時間不得超過每一節目播送總時間的___。",
+    blanks: [["15%","百分之十五","百分之15"], ["1/6","六分之一"]],
+    answers: ["百分之十五（15%）", "六分之一（1/6）"],
+    exp: "依《廣播電視法》第31條第1項規定，電臺播送廣告不得超過播送總時間的<strong>百分之十五（15%）</strong>。依《衛星廣播電視法》第36條第1項規定，廣告時間不得超過每一節目播送總時間的<strong>六分之一</strong>。📌 無線廣電用百分比（15%）；衛星廣電用分數（1/6），為常見混淆點。", page: "", hidden: true },
+  { q: "依《消費者保護法》第19條規定，消費者於「___交易」或「___交易」中，得於收受商品或接受服務後七日內，以退回商品或書面通知方式解除契約，無須說明理由及負擔任何費用。",
+    blanks: [["通訊","訪問"], ["訪問","通訊"]],
+    answers: ["通訊", "訪問"],
+    exp: "依《消費者保護法》第2條及第19條規定，<strong>通訊交易</strong>（如透過網際網路、電視未能檢視實體商品）或<strong>訪問交易</strong>（如未經邀約之推銷）之消費者，得於收受商品或接受服務後<strong>七日內</strong>，以退回商品或書面通知方式解除契約，無須說明理由。📌 兩空可互換。", page: "", hidden: true },
+  { q: "依《國家通訊傳播委員會組織法》旋轉門條款，NCC委員於離職後___年內，不得擔任與其離職前___年內職務直接相關之營利事業董事、監察人或顧問等職務。",
+    blanks: [["3","三"], ["5","五"]],
+    answers: ["3年", "5年"],
+    exp: "依《國家通訊傳播委員會組織法》第8條第3項規定，本會委員於其離職後<strong>三年</strong>內，不得擔任與其離職前<strong>五年</strong>內之職務直接相關之營利事業董事、監察人、經理、執行業務之股東或顧問。📌 離職後限制3年；追溯過去職務5年，兩數字勿混淆。", page: "", hidden: true },
+  { q: "依《公平交易法》規定，廣告薦證者明知引人錯誤仍為薦證須負連帶賠償責任；但若薦證者「非屬」知名公眾人物、專業人士或機構，僅於受廣告主報酬___倍之範圍內，負連帶損害賠償責任。",
+    blanks: [["10","十"]],
+    answers: ["10倍"],
+    exp: "依《公平交易法》第21條第5項規定，廣告薦證者明知或可得而知其所從事之薦證有引人錯誤之虞，仍為薦證者，與廣告主負連帶損害賠償責任；但若薦證者非屬知名公眾人物、專業人士或機構，僅於受廣告主報酬<strong>十倍</strong>之範圍內，負連帶損害賠償責任。", page: "", hidden: true },
+  { q: "依《衛星廣播電視法》規定，外國人直接持有衛星廣播電視事業之股份應低於___；而直播衛星廣播電視播出的「購物頻道」數量，應低於頻道總數的___。",
+    blanks: [["50%","百分之五十","半數"], ["10%","百分之十"]],
+    answers: ["百分之五十（50%）", "百分之十（10%）"],
+    exp: "依《衛星廣播電視法》第4條規定，外國人直接持有衛星廣播電視事業之股份，應低於該事業已發行股份總數<strong>百分之五十</strong>。同法第24條規定，播出之購物頻道數應低於頻道總數<strong>百分之十</strong>。📌 外資不能過半（50%）；購物頻道不能超過一成（10%）。", page: "", hidden: true },
+  { q: "遇有天然災害或緊急事故時，依法規定，系統經營者通常只能透過「___（如跑馬燈）」的方式播送公共服務資訊及應變措施。",
+    blanks: [["插播式字幕"]],
+    answers: ["插播式字幕"],
+    exp: "依《有線廣播電視法》第39條及相關子法，系統經營者遇天然災害、緊急事故訊息或公共服務資訊之播送時，可使用「<strong>插播式字幕</strong>」。插播式字幕係指另經編輯製作而在電視螢幕上展現，且非屬於原有播出內容之文字或圖形。", page: "", hidden: true },
+  { q: "原本人民不服行政機關處分，須先提起「___」。但現行《公平交易法》及修法後的廣電三法規定，業者對NCC或公平會的行政處分不服時，可免除上述程序，直接適用「___」程序。",
+    blanks: [["訴願"], ["行政訴訟"]],
+    answers: ["訴願", "行政訴訟"],
+    exp: "一般行政救濟程序需先提起「<strong>訴願</strong>」，再提行政訴訟。但為尊重獨立機關的專業決定，依《公平交易法》第48條及修法後之《廣播電視法》第50-2條等規定，對主管機關所為之行政處分不服者，<strong>免除訴願程序</strong>，直接適用「<strong>行政訴訟</strong>」程序。", page: "", hidden: true },
+  { q: "大法官釋字第364號確立了人民的「媒體近用權」，但同時強調，要求媒體提供版面或時間表達意見時，必須在兼顧傳播媒體的「___自由」原則下予以尊重，不能無條件強制媒體接受。",
+    blanks: [["編輯"]],
+    answers: ["編輯"],
+    exp: "依大法官<span class='law-ref'>釋字第364號</span>解釋，對於人民平等「接近使用傳播媒體」（媒體近用權）之權利，應在兼顧傳播媒體「<strong>編輯自由</strong>」原則下予以尊重，以避免無條件強制接受反對意見，反而剝奪媒體的公正報導功能與獨立自主。", page: "", hidden: true },
+  { q: "依《藥事法》規定，藥物廣告經核准後，其有效期間為___；若期滿需要繼續廣告，得申請核定展延，每次展延之期間不得超過___。",
+    blanks: [["1年","一年","1"], ["1年","一年","1"]],
+    answers: ["1年（一年）", "1年（一年）"],
+    exp: "依《藥事法》第66-1條第1項，藥物廣告核准有效期間為<strong>一年</strong>，自核發證明文件之日起算。期滿仍需廣告者，得申請核定展延，每次不得超過<strong>一年</strong>。📌 兩空皆為「一年」，為常見混淆考點。", page: "", hidden: true },
+  { q: "《廣播電視法》第25條規定：「電臺播送之節目，除___節目外，主管機關均得審查。」",
+    blanks: [["新聞"]],
+    answers: ["新聞"],
+    exp: "<span class='law-ref'>廣播電視法第25條</span>明文規定：「電臺播送之節目，除<strong>新聞</strong>節目外，主管機關均得審查。」為保障新聞自由與第四權的獨立性，新聞節目是政府絕對不得事先審查的例外。📌 考題常故意漏掉「除新聞節目外」的但書。", page: "p.65", hidden: true },
+  { q: "《有線廣播電視法》規定，系統經營者播送之頻道節目及廣告，___依著作權法或其他相關法規取得合法授權。",
+    blanks: [["應","必須"]],
+    answers: ["應"],
+    exp: "<span class='law-ref'>有線廣播電視法第36條第1項</span>規定：系統經營者播送頻道節目及廣告，「<strong>應</strong>」依著作權法取得合法授權。這是強制義務，非裁量。📌 考試常故意將「應」（強制）改成「得」（裁量）來混淆考生。", page: "p.91", hidden: true },
+  { q: "依電視節目分級處理辦法規定，電視事業播送節目，應於該節目開始及每段節目開始時，以疊印或插播卡方式，至少標示分級標識___秒鐘。",
+    blanks: [["10","十","10秒","十秒"]],
+    answers: ["10秒（十秒）"],
+    exp: "<span class='law-ref'>電視節目分級處理辦法第10條第1項</span>規定，應以疊印或插播卡方式，於節目開始時至少標示分級標識<strong>十秒鐘</strong>，其大小應與螢幕上電視事業之識別標識相當。", page: "p.84", hidden: true },
+  { q: "依電視節目廣告區隔辦法規定，電視節目中只有___節目與___節目這兩種類型，是「絕對禁止」進行置入性行銷的。",
+    blanks: [["新聞","兒童"], ["兒童","新聞"]],
+    answers: ["新聞", "兒童"],
+    exp: "電視節目廣告區隔辦法第7條規定，電視節目除<strong>新聞節目</strong>（保障新聞獨立）及<strong>兒童節目</strong>（保護兒童心智）外，得為置入性行銷。兩空可互換。", page: "", hidden: true },
+  { q: "藥商若未經核准就擅自刊播藥物廣告（初次違反），依《藥事法》第92條規定，將處新台幣___萬元以上___萬元以下罰鍰。",
+    blanks: [["20","二十"], ["500","五百"]],
+    answers: ["20萬", "500萬"],
+    exp: "<span class='law-ref'>藥事法第92條</span>規定，藥商違反第66條第1項（初次未取得核准即刊播），處新台幣<strong>二十萬元以上五百萬元以下</strong>罰鍰。📌 常與傳播業者加重罰則「60萬至2500萬」混淆，請注意區別。", page: "p.28", hidden: true },
+  { q: "依《廣播電視法》第19條第1項規定，廣播、電視中之「本國自製節目」，不得少於___。",
+    blanks: [["70%","百分之七十","七成","70"]],
+    answers: ["百分之七十（70%）"],
+    exp: "<span class='law-ref'>廣播電視法第19條第1項</span>規定，廣播、電視中之本國自製節目，不得少於<strong>百分之七十（70%）</strong>。此為保護本土文化產業的重要規定。", page: "", hidden: true },
+  { q: "依廣播電視法施行細則規定，廣播電臺除了播音開始、結束及更換節目應播報臺名外，於節目進行中，亦應每___簡報臺名一次。",
+    blanks: [["半小時","30分鐘","三十分鐘","1/2小時"]],
+    answers: ["半小時（30分鐘）"],
+    exp: "<span class='law-ref'>廣播電視法施行細則第22條</span>規定，節目進行中應每<strong>半小時</strong>簡報臺名一次。📌 播音開始、結束及更換節目時應播報「臺名、呼號及頻率」；節目進行中每半小時僅簡報「臺名」即可，兩者範圍不同。", page: "p.71", hidden: true }
 ];
 
 /* ─── 解鎖檢查 ─── */
@@ -1348,24 +1466,11 @@ function buildQuiz() {
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
-        <span class="arrow">▶</span>
-        <span id="ntxt-${i}">✏️ 新增筆記</span>
-      </div>
-      <div class="note-area" id="narea-${i}">
-        <textarea class="note-textarea" id="note-${i}"
-          placeholder="記憶口訣、易混淆點、任何筆記…"
-          oninput="saveNote(${i})"></textarea>
-        <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>
     `;
     c.appendChild(card);
-    const _sn = localStorage.getItem('note_' + q.q.slice(0, 60));
-    if (_sn) {
-      document.getElementById('note-' + i).value = _sn;
-      document.getElementById('nsaved-' + i).classList.add('show');
-      document.getElementById('ntxt-' + i).textContent = '✏️ 我的筆記（已記錄）';
-    }
   });
 }
 
@@ -1405,24 +1510,11 @@ function buildMCQuiz() {
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
-        <span class="arrow">▶</span>
-        <span id="ntxt-${i}">✏️ 新增筆記</span>
-      </div>
-      <div class="note-area" id="narea-${i}">
-        <textarea class="note-textarea" id="note-${i}"
-          placeholder="記憶口訣、易混淆點、任何筆記…"
-          oninput="saveNote(${i})"></textarea>
-        <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>
     `;
     c.appendChild(card);
-    const _sn = localStorage.getItem('note_' + q.q.slice(0, 60));
-    if (_sn) {
-      document.getElementById('note-' + i).value = _sn;
-      document.getElementById('nsaved-' + i).classList.add('show');
-      document.getElementById('ntxt-' + i).textContent = '✏️ 我的筆記（已記錄）';
-    }
   });
 }
 
@@ -1512,20 +1604,10 @@ function buildFillQuiz() {
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
-        <span class="arrow">▶</span><span id="ntxt-${i}">✏️ 新增筆記</span>
-      </div>
-      <div class="note-area" id="narea-${i}">
-        <textarea class="note-textarea" id="note-${i}" placeholder="記憶口訣、易混淆點、任何筆記…" oninput="saveNote(${i})"></textarea>
-        <div class="note-saved" id="nsaved-${i}">📝 已有筆記</div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>`;
     c.appendChild(card);
-    const _sn = localStorage.getItem('note_' + q.q.slice(0, 60));
-    if (_sn) {
-      document.getElementById('note-' + i).value = _sn;
-      document.getElementById('nsaved-' + i).classList.add('show');
-      document.getElementById('ntxt-' + i).textContent = '✏️ 我的筆記（已記錄）';
-    }
   });
 }
 
@@ -1747,30 +1829,6 @@ function toggleGuess(idx) {
   updateBar();
 }
 
-/* ─── 筆記 ─── */
-function toggleNote(idx) {
-  const area = document.getElementById('narea-' + idx);
-  const toggle = document.getElementById('ntoggle-' + idx);
-  const open = area.classList.contains('show');
-  area.classList.toggle('show', !open);
-  toggle.classList.toggle('open', !open);
-  if (!open) setTimeout(() => document.getElementById('note-' + idx).focus(), 80);
-}
-function saveNote(idx) {
-  const q = (currentMode === 'mc') ? displayMCQuestions[idx]
-          : (currentMode === 'fill') ? displayFillQuestions[idx]
-          : displayQuestions[idx];
-  const v = document.getElementById('note-' + idx).value;
-  const key = 'note_' + q.q.slice(0, 60);
-  if (v.trim()) {
-    localStorage.setItem(key, v);
-  } else {
-    localStorage.removeItem(key);
-  }
-  const has = v.trim().length > 0;
-  document.getElementById('nsaved-' + idx).classList.toggle('show', has);
-  document.getElementById('ntxt-' + idx).textContent = has ? '✏️ 我的筆記（已記錄）' : '✏️ 新增筆記';
-}
 
 /* ─── 進度條 ─── */
 function updateBar() {
@@ -2500,12 +2558,67 @@ function storyShowEnd(early=false) {
   endEl.scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
+/* ─── 複製題目為圖片到剪貼簿 ─── */
+function captureCard(idx) {
+  const card = document.getElementById('card-' + idx);
+  const btn  = document.getElementById('savebtn-' + idx);
+  if (!card) return;
+
+  if (btn) btn.style.visibility = 'hidden';
+  btn && btn.classList.add('saving');
+
+  // 確保詳解可見
+  const expEl = document.getElementById('exp-' + idx);
+  const wasHidden = expEl && !expEl.classList.contains('show');
+  if (wasHidden) expEl.classList.add('show');
+
+  html2canvas(card, {
+    backgroundColor: '#ffffff',
+    scale: 2,
+    useCORS: true,
+    logging: false
+  }).then(canvas => {
+    canvas.toBlob(blob => {
+      if (!blob) return;
+      try {
+        navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob })
+        ]).then(() => {
+          // 短暫閃綠色提示複製成功
+          if (btn) {
+            btn.style.visibility = '';
+            btn.style.borderColor = '#27ae60';
+            btn.style.color = '#27ae60';
+            setTimeout(() => {
+              btn.style.borderColor = '';
+              btn.style.color = '';
+            }, 1200);
+          }
+        }).catch(() => fallbackDownload(canvas, idx));
+      } catch(e) { fallbackDownload(canvas, idx); }
+    }, 'image/png');
+  }).finally(() => {
+    btn && btn.classList.remove('saving');
+    if (wasHidden) expEl.classList.remove('show');
+  });
+}
+function fallbackDownload(canvas, idx) {
+  // 瀏覽器不支援剪貼簿時，改為下載
+  const btn = document.getElementById('savebtn-' + idx);
+  if (btn) btn.style.visibility = '';
+  const link = document.createElement('a');
+  const modeLabel = currentMode === 'mc' ? '選擇題' : currentMode === 'fill' ? '填空題' : '是非題';
+  link.download = `廣告法規_${modeLabel}_第${idx + 1}題.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
 /* ─── 初始化 ─── */
 switchMode('learn');
 buildQuiz();
 </script>
 <footer style="text-align:center; padding: 24px 0 18px; font-size: 0.82em; color: #a0aab8;">
-  © 2026 Yeah Yo. All rights reserved.
+  © 2026 Yeah Yo.
 </footer>
 </body>
 </html>
