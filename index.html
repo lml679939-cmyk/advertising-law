@@ -568,7 +568,7 @@
     <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
     <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
     <button class="mode-btn" id="btn-mode-fill" onclick="switchMode('fill')">✏️ 填空題</button>
-    <button class="mode-btn" id="btn-mode-story" onclick="switchMode('story')">🎭 劇情模式</button>
+    <button class="mode-btn" id="btn-mode-story" onclick="switchMode('story')" style="display:none;">🎭 劇情模式</button>
   </div>
 </div>
 <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
@@ -1113,6 +1113,7 @@ const isUnlocked = (urlKey === UNLOCK_KEY) || (sessionStorage.getItem('unlocked'
 if (isUnlocked) {
   sessionStorage.setItem('unlocked', UNLOCK_KEY);
   document.querySelector('.exam-header h1').innerHTML = '廣告法規期中考 <span style="font-size:0.6em;opacity:0.8;">🔓</span>';
+  document.getElementById('btn-mode-story').style.display = '';
 }
 
 /* ─── 依解鎖狀態篩選題目 ─── */
