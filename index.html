@@ -1965,21 +1965,6 @@ function initStoryMode() {
   storyState = { qIdx:0, score:0, hearts:3, streak:0, answered:false, wrongList:[] };
   const panel = document.getElementById('story-panel');
 
-  /* 密碼鎖 */
-  if (!isUnlocked) {
-    panel.innerHTML = `
-      <div class="story-day-header">
-        <div style="font-size:0.8em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${storyDay1.daySubtitle}</div>
-        <div style="font-size:1.25em;font-weight:bold;letter-spacing:2px;">${storyDay1.dayTitle}</div>
-      </div>
-      <div class="story-lock-box">
-        <div style="font-size:2.5em;margin-bottom:12px;">🔒</div>
-        <div style="font-size:1.1em;font-weight:bold;color:#6c3483;margin-bottom:8px;">劇情模式限密碼解鎖者遊玩</div>
-        <div style="font-size:0.88em;color:#7f8c8d;line-height:1.8;">請在網址後方加上<br><code style="background:#f0e6f9;padding:2px 8px;border-radius:4px;color:#6c3483;">?key=More1620</code><br>解鎖後即可進入小廣的求生日常！</div>
-      </div>`;
-    return;
-  }
-
   panel.innerHTML = `
     <div class="story-day-header">
       <div style="font-size:0.78em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${storyDay1.daySubtitle}</div>
