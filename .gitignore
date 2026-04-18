@@ -1,0 +1,27 @@
+# 系統檔案
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 編輯器
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Node（若未來加入）
+node_modules/
+npm-debug.log*
+
+# 環境變數
+.env
+.env.local
+.env.*.local
+
+# Claude Code 工作目錄（不應 commit）
+.claude/worktrees/
