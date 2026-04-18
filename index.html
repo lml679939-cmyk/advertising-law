@@ -569,7 +569,20 @@
     .story-tf-buttons { gap: 10px; }
     .story-tf-btn { padding: 10px 26px; }
   }
+  /* ── 存圖按鈕 ── */
+  .save-png-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-left: 12px; margin-top: 10px;
+    padding: 4px 11px; border-radius: 20px;
+    border: 1.5px solid #b0bec5; background: #f8f9fa;
+    color: #546e7a; font-size: 0.78em; cursor: pointer;
+    transition: all 0.18s; vertical-align: middle;
+  }
+  .save-png-btn:hover { border-color: #6c3483; color: #6c3483; background: #f5eef8; }
+  .save-png-btn:active { transform: scale(0.96); }
+  .save-png-btn.saving { opacity: 0.6; pointer-events: none; }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -1367,9 +1380,12 @@ function buildQuiz() {
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
-        <span class="arrow">▶</span>
-        <span id="ntxt-${i}">✏️ 新增筆記</span>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;">
+        <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
+          <span class="arrow">▶</span>
+          <span id="ntxt-${i}">✏️ 新增筆記</span>
+        </div>
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})">📷 存為圖片</button>
       </div>
       <div class="note-area" id="narea-${i}">
         <textarea class="note-textarea" id="note-${i}"
@@ -1424,9 +1440,12 @@ function buildMCQuiz() {
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
-        <span class="arrow">▶</span>
-        <span id="ntxt-${i}">✏️ 新增筆記</span>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;">
+        <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
+          <span class="arrow">▶</span>
+          <span id="ntxt-${i}">✏️ 新增筆記</span>
+        </div>
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})">📷 存為圖片</button>
       </div>
       <div class="note-area" id="narea-${i}">
         <textarea class="note-textarea" id="note-${i}"
@@ -1531,8 +1550,11 @@ function buildFillQuiz() {
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
-        <span class="arrow">▶</span><span id="ntxt-${i}">✏️ 新增筆記</span>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;">
+        <div class="note-toggle" id="ntoggle-${i}" onclick="toggleNote(${i})">
+          <span class="arrow">▶</span><span id="ntxt-${i}">✏️ 新增筆記</span>
+        </div>
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})">📷 存為圖片</button>
       </div>
       <div class="note-area" id="narea-${i}">
         <textarea class="note-textarea" id="note-${i}" placeholder="記憶口訣、易混淆點、任何筆記…" oninput="saveNote(${i})"></textarea>
@@ -2465,6 +2487,39 @@ function storyShowEnd(early=false) {
       <button class="story-restart-btn" onclick="initStoryMode()">📋 選擇關卡</button>
     </div>`;
   endEl.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+/* ─── 存為 PNG ─── */
+function captureCard(idx) {
+  const card = document.getElementById('card-' + idx);
+  const btn  = document.getElementById('savebtn-' + idx);
+  if (!card) return;
+
+  // 暫時隱藏存圖按鈕本身（不讓它出現在截圖裡）
+  if (btn) btn.style.visibility = 'hidden';
+  btn && btn.classList.add('saving');
+
+  // 先確保詳解可見（即使尚未作答，截圖仍要包含題目全貌）
+  const expEl = document.getElementById('exp-' + idx);
+  const wasHidden = expEl && !expEl.classList.contains('show');
+  if (wasHidden) expEl.classList.add('show');
+
+  html2canvas(card, {
+    backgroundColor: '#ffffff',
+    scale: 2,
+    useCORS: true,
+    logging: false
+  }).then(canvas => {
+    const link = document.createElement('a');
+    const modeLabel = currentMode === 'mc' ? '選擇題' : currentMode === 'fill' ? '填空題' : '是非題';
+    link.download = `廣告法規_${modeLabel}_第${idx + 1}題.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).finally(() => {
+    if (btn) btn.style.visibility = '';
+    btn && btn.classList.remove('saving');
+    if (wasHidden) expEl.classList.remove('show');
+  });
 }
 
 /* ─── 初始化 ─── */
