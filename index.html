@@ -2652,9 +2652,20 @@
     const _sid = localStorage.getItem('_sid') || (() => {
       const s = crypto.randomUUID(); localStorage.setItem('_sid', s); return s;
     })();
-    function trackAnswer(mode, qType, qIdx, userAns, correct) {
+    function makeQId(text) {
+      let h = 0;
+      for (let i = 0; i < text.length; i++) h = ((h << 5) - h + text.charCodeAt(i)) | 0;
+      return Math.abs(h).toString(36).padStart(7, '0').slice(0, 8);
+    }
+    function trackAnswer(mode, qType, qIdx, userAns, correct, qText) {
       if (!TRACK_URL) return;
-      const body = JSON.stringify({ sid: _sid, mode, qType, qIdx, userAns: String(userAns), correct, ts: Date.now(), token: TRACK_TOKEN, unlocked: isUnlocked });
+      const body = JSON.stringify({
+        sid: _sid, mode, qType, qIdx,
+        qId: qText ? makeQId(qText) : '',
+        qSnippet: qText ? qText.slice(0, 30) : '',
+        userAns: String(userAns), correct, ts: Date.now(),
+        token: TRACK_TOKEN, unlocked: isUnlocked
+      });
       fetch(TRACK_URL, { method: 'POST', body, mode: 'no-cors', headers: { 'Content-Type': 'text/plain' } }).catch(() => {});
     }
 
@@ -2850,7 +2861,7 @@
 
       mcUserAnswers[idx] = chosen;
       const correct = chosen === correctMapped;
-      trackAnswer('mc', 'mc', idx, chosen, correct);
+      trackAnswer('mc', 'mc', idx, chosen, correct, q.q);
 
       // 鎖定猜的按鈕
       const gbtn = document.getElementById('gbtn-' + idx);
@@ -2948,7 +2959,7 @@
 
       if (prev !== null) { if (prev) fillCorrectCount--; else fillWrongCount--; }
       fillUserAnswers[idx] = allOk;
-      trackAnswer('fill', 'fill', idx, null, allOk);
+      trackAnswer('fill', 'fill', idx, null, allOk, q.q);
       if (allOk) fillCorrectCount++; else fillWrongCount++;
 
       q.blanks.forEach((_, j) => {
@@ -3029,7 +3040,7 @@
 
       userAnswers[idx] = chosen;
       const correct = chosen === q.ans;
-      trackAnswer('learn', 'tf', idx, chosen, correct);
+      trackAnswer('learn', 'tf', idx, chosen, correct, q.q);
 
       // 重設按鈕樣式（不 disable，讓使用者可以改答）
       document.getElementById('btn-O-' + idx).className = 'choice-btn';
@@ -3109,7 +3120,7 @@
           rbadge.className = 'result-badge wrong-badge show';
           rbadge.innerHTML = `❌ 答錯了，正確答案：${q.ans === 'O' ? '○ 正確' : '✕ 錯誤'}${guessTag}`;
         }
-        trackAnswer('classic', 'tf', i, userAnswers[i], userAnswers[i] === q.ans);
+        trackAnswer('classic', 'tf', i, userAnswers[i], userAnswers[i] === q.ans, q.q);
         document.getElementById('rrow-' + i).classList.add('show');
         document.getElementById('exp-' + i).classList.add('show');
       });
@@ -4073,7 +4084,7 @@
       if (storyState.answered) return;
       storyState.answered = true;
       const q = currentDay.questions[storyState.qIdx];
-      trackAnswer('story', 'tf', storyState.qIdx, choice, choice === q.ans);
+      trackAnswer('story', 'tf', storyState.qIdx, choice, choice === q.ans, q.q);
       ['sbO', 'sbX'].forEach(id => { const b = document.getElementById(id); if (b) { b.style.pointerEvents = 'none'; } });
       const winBtn = document.getElementById('sb' + q.ans);
       if (winBtn) winBtn.classList.add('sel');
@@ -4084,7 +4095,7 @@
       if (storyState.answered) return;
       storyState.answered = true;
       const q = currentDay.questions[storyState.qIdx];
-      trackAnswer('story', 'mc', storyState.qIdx, opt, opt === q.ans);
+      trackAnswer('story', 'mc', storyState.qIdx, opt, opt === q.ans, q.q);
       for (let i = 0; i < q.options.length; i++) {
         const b = document.getElementById('smc' + i);
         if (!b) continue;
