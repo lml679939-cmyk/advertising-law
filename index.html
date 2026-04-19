@@ -2549,11 +2549,27 @@
     ];
 
     /* ─── 解鎖檢查 ─── */
-    const UNLOCK_KEY = '@new1376omg';
-    const urlKey = new URLSearchParams(window.location.search).get('key');
-    const isUnlocked = (urlKey === UNLOCK_KEY) || (sessionStorage.getItem('unlocked') === UNLOCK_KEY);
+    // 密碼以 SHA-256 hash 儲存，不在原始碼中保留明文
+    const UNLOCK_HASH = '175917e084446d364d5a393b25cddb3a0d0a71b6745b0a120b77e925518c112e';
+    const SESSION_FLAG = 'adlaw_ok';
+
+    // 同步：從 sessionStorage 恢復解鎖狀態（僅儲存旗標，不儲存原始密碼）
+    let isUnlocked = sessionStorage.getItem(SESSION_FLAG) === '1';
+
+    // 非同步：首次以 URL key 解鎖（hash 比對後 reload 以套用狀態）
+    (async () => {
+      const urlKey = new URLSearchParams(window.location.search).get('key');
+      if (urlKey && !isUnlocked) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(urlKey));
+        const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+        if (hex === UNLOCK_HASH) {
+          sessionStorage.setItem(SESSION_FLAG, '1');
+          location.href = location.pathname; // 移除 URL 中的密碼，並重新載入套用解鎖
+        }
+      }
+    })();
+
     if (isUnlocked) {
-      sessionStorage.setItem('unlocked', UNLOCK_KEY);
       document.querySelector('.exam-header h1').innerHTML = '廣告法規期中考 <span style="font-size:0.6em;opacity:0.8;">🔓</span>';
       document.getElementById('btn-mode-story').style.display = '';
     }
@@ -3812,7 +3828,7 @@
       <div class="story-lock-box">
         <div style="font-size:2.5em;margin-bottom:12px;">🔒</div>
         <div style="font-size:1.1em;font-weight:bold;color:#6c3483;margin-bottom:8px;">劇情模式限密碼解鎖者遊玩</div>
-        <div style="font-size:0.88em;color:#7f8c8d;line-height:1.8;">請在網址後方加上<br><code style="background:#f0e6f9;padding:2px 8px;border-radius:4px;color:#6c3483;">?key=@new1376omg</code><br>解鎖後即可進入小廣的求生日常！</div>
+        <div style="font-size:0.88em;color:#7f8c8d;line-height:1.8;">請在網址後方加上密碼參數<br><code style="background:#f0e6f9;padding:2px 8px;border-radius:4px;color:#6c3483;">?key=（密碼）</code><br>解鎖後即可進入小廣的求生日常！</div>
       </div>`;
         return;
       }
