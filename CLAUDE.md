@@ -457,8 +457,8 @@ const storyCharacters = {
 ### 本地預覽指令
 
 ```bash
-# 劇情模式需要解鎖金鑰
-http://127.0.0.1:7788/index.html?key=@new1376omg
+# 劇情模式需要解鎖金鑰（密碼請另行查閱，不記錄於此文件）
+http://127.0.0.1:7788/index.html?key=（密碼）
 # 或用 npx http-server 啟動
 npx http-server . -p 8888
 ```
