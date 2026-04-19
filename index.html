@@ -4247,14 +4247,31 @@
       });
     }
     function fallbackDownload(canvas, idx) {
-      // 瀏覽器不支援剪貼簿時，改為下載
+      // 瀏覽器不支援剪貼簿時，顯示彈窗讓使用者右鍵複製
       const btn = document.getElementById('savebtn-' + idx);
       if (btn) btn.style.visibility = '';
-      const link = document.createElement('a');
-      const modeLabel = currentMode === 'mc' ? '選擇題' : currentMode === 'fill' ? '填空題' : '是非題';
-      link.download = `廣告法規_${modeLabel}_第${idx + 1}題.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      const dataUrl = canvas.toDataURL('image/png');
+
+      // 建立遮罩
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;';
+
+      const hint = document.createElement('div');
+      hint.textContent = '在圖片上按右鍵 → 複製圖片，即可貼到 Word';
+      hint.style.cssText = 'color:#fff;font-size:1rem;background:#333;padding:8px 16px;border-radius:8px;';
+
+      const img = document.createElement('img');
+      img.src = dataUrl;
+      img.style.cssText = 'max-width:90vw;max-height:75vh;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.5);';
+
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = '關閉';
+      closeBtn.style.cssText = 'padding:8px 28px;border:none;border-radius:8px;background:#555;color:#fff;font-size:0.95rem;cursor:pointer;';
+      closeBtn.onclick = () => document.body.removeChild(overlay);
+      overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+
+      overlay.append(hint, img, closeBtn);
+      document.body.appendChild(overlay);
     }
 
     /* ─── 初始化 ─── */
