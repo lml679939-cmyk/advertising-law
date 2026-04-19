@@ -1600,7 +1600,7 @@
       display: block;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -2648,12 +2648,13 @@
 
     /* ─── 匿名答題追蹤 ─── */
     const TRACK_URL = 'https://script.google.com/macros/s/AKfycby1OBl_GcVcmUvz4jcdL-KnufhZRs9wadvrUT82IHC9U8Elal-2fBuJp1JvB9aNzAeA/exec';
+    const TRACK_TOKEN = 'adlaw2026';
     const _sid = localStorage.getItem('_sid') || (() => {
       const s = crypto.randomUUID(); localStorage.setItem('_sid', s); return s;
     })();
     function trackAnswer(mode, qType, qIdx, userAns, correct) {
       if (!TRACK_URL) return;
-      const body = JSON.stringify({ sid: _sid, mode, qType, qIdx, userAns: String(userAns), correct, ts: Date.now() });
+      const body = JSON.stringify({ sid: _sid, mode, qType, qIdx, userAns: String(userAns), correct, ts: Date.now(), token: TRACK_TOKEN });
       fetch(TRACK_URL, { method: 'POST', body, mode: 'no-cors', headers: { 'Content-Type': 'text/plain' } }).catch(() => {});
     }
 
@@ -3108,6 +3109,7 @@
           rbadge.className = 'result-badge wrong-badge show';
           rbadge.innerHTML = `❌ 答錯了，正確答案：${q.ans === 'O' ? '○ 正確' : '✕ 錯誤'}${guessTag}`;
         }
+        trackAnswer('classic', 'tf', i, userAnswers[i], userAnswers[i] === q.ans);
         document.getElementById('rrow-' + i).classList.add('show');
         document.getElementById('exp-' + i).classList.add('show');
       });
