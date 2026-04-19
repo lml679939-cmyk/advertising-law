@@ -2654,7 +2654,7 @@
     })();
     function trackAnswer(mode, qType, qIdx, userAns, correct) {
       if (!TRACK_URL) return;
-      const body = JSON.stringify({ sid: _sid, mode, qType, qIdx, userAns: String(userAns), correct, ts: Date.now(), token: TRACK_TOKEN });
+      const body = JSON.stringify({ sid: _sid, mode, qType, qIdx, userAns: String(userAns), correct, ts: Date.now(), token: TRACK_TOKEN, unlocked: isUnlocked });
       fetch(TRACK_URL, { method: 'POST', body, mode: 'no-cors', headers: { 'Content-Type': 'text/plain' } }).catch(() => {});
     }
 
