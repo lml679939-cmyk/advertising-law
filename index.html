@@ -793,35 +793,51 @@
     }
 
     .story-day-header {
-      background: linear-gradient(135deg, #6c3483, #9b59b6);
+      background: linear-gradient(135deg, #1a0530, #3a1078, #6c3483, #9b59b6);
       color: white;
       border-radius: 14px;
-      padding: 18px 24px;
+      padding: 22px 24px;
       margin-bottom: 16px;
       text-align: center;
-      box-shadow: 0 4px 16px rgba(108, 52, 131, 0.3);
+      box-shadow:
+        0 6px 24px rgba(108, 52, 131, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+      border: 1px solid rgba(255, 215, 100, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .story-day-header::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 10%, rgba(255,215,100,0.5) 50%, transparent 90%);
     }
 
     .story-intro-box {
-      background: #fef9f0;
-      border: 1.5px solid #f0e3c8;
+      background: linear-gradient(135deg, rgba(25,18,45,0.95), rgba(40,28,65,0.95));
+      border: 1px solid rgba(155, 89, 182, 0.3);
       border-radius: 14px;
       padding: 20px 24px;
       margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     }
 
     .story-status-bar {
-      background: white;
+      background: linear-gradient(135deg, rgba(15,15,40,0.95), rgba(30,20,55,0.95));
       border-radius: 12px;
-      padding: 12px 20px;
+      padding: 14px 20px;
       margin-bottom: 14px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255,255,255,0.06);
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 10px;
+      border: 1px solid rgba(155, 89, 182, 0.3);
+      color: white;
     }
 
     .story-hearts {
@@ -837,7 +853,7 @@
 
     .story-progress-text {
       font-size: 0.9em;
-      color: #7f8c8d;
+      color: rgba(255,255,255,0.75);
       font-weight: bold;
     }
 
@@ -849,33 +865,36 @@
     }
 
     .story-cmd-btn {
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1.5px solid #bdc3c7;
-      background: white;
+      padding: 7px 16px;
+      border-radius: 6px;
+      border: 1.5px solid rgba(155, 89, 182, 0.35);
+      background: linear-gradient(135deg, rgba(20,15,40,0.9), rgba(40,25,65,0.9));
       font-size: 0.8em;
       cursor: pointer;
-      color: #7f8c8d;
+      color: rgba(255,215,180,0.85);
       font-weight: bold;
-      transition: all 0.15s;
+      transition: all 0.18s;
       font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     .story-cmd-btn:hover {
-      border-color: #9b59b6;
-      color: #9b59b6;
+      border-color: rgba(255, 215, 100, 0.5);
+      color: rgba(255, 215, 100, 0.9);
+      background: linear-gradient(135deg, rgba(40,25,65,0.95), rgba(60,35,85,0.95));
+      box-shadow: 0 2px 10px rgba(155, 89, 182, 0.3);
     }
 
     .story-extra-box {
       display: none;
-      background: #fef9e7;
-      border: 1.5px solid #f9e79f;
+      background: linear-gradient(135deg, rgba(20,15,40,0.9), rgba(35,22,55,0.9));
+      border: 1px solid rgba(255, 215, 100, 0.2);
       border-radius: 10px;
       padding: 12px 16px;
       margin-bottom: 14px;
       font-size: 0.88em;
       line-height: 1.85;
-      color: #5d4e37;
+      color: rgba(255,215,180,0.85);
       animation: storyFadeIn 0.3s ease;
     }
 
@@ -928,26 +947,31 @@
     }
 
     .story-q-card {
-      background: white;
+      background: linear-gradient(135deg, #1a1030, #251845);
       border-radius: 12px;
       padding: 18px 22px;
       margin-bottom: 14px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-      border-left: 5px solid #9b59b6;
+      box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      border-left: 4px solid rgba(255, 215, 100, 0.5);
+      border: 1px solid rgba(155, 89, 182, 0.3);
+      border-left: 4px solid rgba(255, 215, 100, 0.5);
     }
 
     .story-q-label {
       font-size: 0.74em;
       font-weight: bold;
-      color: #9b59b6;
-      letter-spacing: 1px;
+      color: rgba(255, 215, 100, 0.85);
+      letter-spacing: 2px;
       margin-bottom: 8px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     .story-q-text {
       font-size: 0.95em;
-      color: #2c3e50;
-      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.92);
+      line-height: 1.85;
     }
 
     .story-tf-buttons {
@@ -959,33 +983,38 @@
 
     .story-tf-btn {
       padding: 12px 38px;
-      border-radius: 10px;
-      border: 2.5px solid #bdc3c7;
-      background: white;
+      border-radius: 8px;
+      border: 2px solid rgba(155, 89, 182, 0.4);
+      background: linear-gradient(135deg, rgba(20,15,40,0.9), rgba(40,25,65,0.9));
       font-size: 1.1em;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.18s;
       font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
     .story-tf-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 4px 14px rgba(155, 89, 182, 0.3);
+      border-color: rgba(255, 215, 100, 0.4);
     }
 
     .story-tf-btn.story-O:hover,
     .story-tf-btn.story-O.sel {
-      border-color: #27ae60;
-      background: #27ae60;
+      border-color: rgba(46, 204, 113, 0.8);
+      background: linear-gradient(135deg, #1a5c35, #27ae60);
       color: white;
+      box-shadow: 0 4px 16px rgba(46, 204, 113, 0.4);
     }
 
     .story-tf-btn.story-X:hover,
     .story-tf-btn.story-X.sel {
-      border-color: #e74c3c;
-      background: #e74c3c;
+      border-color: rgba(231, 76, 60, 0.8);
+      background: linear-gradient(135deg, #7b241c, #e74c3c);
       color: white;
+      box-shadow: 0 4px 16px rgba(231, 76, 60, 0.4);
     }
 
     .story-mc-options {
@@ -1000,25 +1029,25 @@
       align-items: flex-start;
       gap: 10px;
       padding: 11px 13px;
-      border-radius: 10px;
-      border: 2px solid #c8d0dc;
-      background: white;
+      border-radius: 8px;
+      border: 1.5px solid rgba(155, 89, 182, 0.35);
+      background: linear-gradient(135deg, rgba(20,15,40,0.85), rgba(35,22,55,0.85));
       font-size: 0.9em;
       cursor: pointer;
       transition: all 0.18s;
-      color: #34495e;
+      color: rgba(255,255,255,0.88);
       text-align: left;
       line-height: 1.6;
       font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
     }
 
     .story-mc-btn:hover {
-      border-color: #9b59b6;
-      background: #f5eef8;
+      border-color: rgba(255, 215, 100, 0.5);
+      background: linear-gradient(135deg, rgba(40,25,65,0.9), rgba(60,35,85,0.9));
     }
 
     .story-mc-label {
-      background: #95a5a6;
+      background: rgba(155, 89, 182, 0.5);
       color: white;
       border-radius: 50%;
       width: 24px;
@@ -1034,8 +1063,9 @@
     }
 
     .story-mc-btn.smc-correct {
-      border-color: #27ae60;
-      background: #eafaf1;
+      border-color: rgba(46, 204, 113, 0.7);
+      background: linear-gradient(135deg, rgba(15,40,25,0.9), rgba(20,55,35,0.9));
+      color: rgba(100, 230, 140, 0.95);
     }
 
     .story-mc-btn.smc-correct .story-mc-label {
@@ -1043,8 +1073,9 @@
     }
 
     .story-mc-btn.smc-wrong {
-      border-color: #e74c3c;
-      background: #fdf0f0;
+      border-color: rgba(231, 76, 60, 0.7);
+      background: linear-gradient(135deg, rgba(40,15,15,0.9), rgba(55,20,20,0.9));
+      color: rgba(230, 100, 100, 0.95);
     }
 
     .story-mc-btn.smc-wrong .story-mc-label {
@@ -1060,46 +1091,48 @@
     }
 
     .story-reaction-box.sreact-correct {
-      background: #f0fff4;
-      border: 1.5px solid #a9dfbf;
+      background: linear-gradient(135deg, rgba(10,30,18,0.95), rgba(15,45,25,0.95));
+      border: 1.5px solid rgba(46, 204, 113, 0.45);
     }
 
     .story-reaction-box.sreact-wrong {
-      background: #fff5f5;
-      border: 1.5px solid #f1948a;
+      background: linear-gradient(135deg, rgba(35,10,10,0.95), rgba(50,15,15,0.95));
+      border: 1.5px solid rgba(231, 76, 60, 0.45);
     }
 
     .story-reaction-badge {
       font-size: 1.05em;
       font-weight: bold;
       margin-bottom: 10px;
+      color: white;
     }
 
     .story-reaction-line {
       font-size: 0.9em;
-      color: #555;
+      color: rgba(255, 215, 180, 0.85);
       line-height: 1.85;
       padding: 4px 0;
     }
 
     .story-exp-box {
-      background: #f8f9fa;
-      border-left: 4px solid #9b59b6;
+      background: rgba(10, 10, 30, 0.6);
+      border-left: 4px solid rgba(255, 215, 100, 0.5);
       border-radius: 0 8px 8px 0;
       padding: 12px 16px;
       font-size: 0.87em;
-      color: #34495e;
+      color: rgba(220, 210, 190, 0.92);
       line-height: 1.85;
       margin-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
     }
 
     .story-next-btn {
       display: none;
       width: 100%;
       padding: 14px;
-      border-radius: 10px;
-      border: none;
-      background: linear-gradient(135deg, #9b59b6, #6c3483);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 215, 100, 0.3);
+      background: linear-gradient(135deg, #3a1078, #6c3483, #9b59b6);
       color: white;
       font-size: 1em;
       font-weight: bold;
@@ -1107,21 +1140,26 @@
       margin-bottom: 14px;
       transition: transform 0.15s, box-shadow 0.15s;
       font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
     }
 
     .story-next-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 14px rgba(155, 89, 182, 0.4);
+      box-shadow: 0 6px 20px rgba(155, 89, 182, 0.5);
+      border-color: rgba(255, 215, 100, 0.5);
     }
 
     .story-end-panel {
       display: none;
-      background: linear-gradient(135deg, #6c3483, #9b59b6);
+      background: linear-gradient(135deg, #1a0530, #3a1078, #6c3483);
       color: white;
       border-radius: 14px;
       padding: 28px 24px;
       text-align: center;
       margin-top: 10px;
+      border: 1px solid rgba(255, 215, 100, 0.2);
+      box-shadow: 0 8px 32px rgba(108, 52, 131, 0.5);
     }
 
     .story-end-title {
@@ -1172,46 +1210,52 @@
     }
 
     .story-lock-box {
-      background: white;
+      background: linear-gradient(135deg, rgba(20,15,40,0.95), rgba(40,25,65,0.95));
       border-radius: 14px;
       padding: 40px 24px;
       text-align: center;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(155, 89, 182, 0.3);
+      color: white;
     }
 
     .story-day-select-btn {
       width: 100%;
       padding: 18px 22px;
-      border-radius: 14px;
-      border: 2px solid #d2b4de;
-      background: white;
+      border-radius: 10px;
+      border: 1.5px solid rgba(155, 89, 182, 0.35);
+      background: linear-gradient(135deg, rgba(20,15,40,0.92), rgba(40,25,65,0.92));
       text-align: left;
       cursor: pointer;
-      color: #2c3e50;
+      color: rgba(255,255,255,0.92);
       transition: all 0.2s;
       font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .story-day-select-btn:hover {
-      border-color: #9b59b6;
-      background: #f5eef8;
+      border-color: rgba(255, 215, 100, 0.5);
+      background: linear-gradient(135deg, rgba(40,25,65,0.95), rgba(60,35,85,0.95));
       transform: translateY(-2px);
-      box-shadow: 0 4px 14px rgba(155, 89, 182, 0.2);
+      box-shadow: 0 6px 20px rgba(155, 89, 182, 0.35);
     }
 
     /* ══════════════════════════════════════
-     VN 視覺小說全幅舞台
+     VN 視覺小說全幅舞台 — RPG風格
   ══════════════════════════════════════ */
     .story-vn-stage {
       position: relative;
-      height: 420px;
+      height: 480px;
       border-radius: 14px;
       overflow: hidden;
       margin-bottom: 14px;
-      box-shadow: 0 6px 28px rgba(0, 0, 0, 0.35);
+      box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
       cursor: default;
       user-select: none;
+      border: 2px solid rgba(255, 215, 100, 0.15);
     }
 
     /* 背景層 */
@@ -1219,70 +1263,150 @@
       position: absolute;
       inset: 0;
       z-index: 0;
-      transition: background 0.5s ease;
+      transition: background 0.6s ease;
     }
 
-    /* 邊緣暗角 */
+    /* 大氣疊層 — 左側漸暗遮罩（覆蓋角色圖白邊） */
+    .story-vn-stage::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 300px;
+      z-index: 4;
+      background: linear-gradient(
+        to right,
+        rgba(8, 8, 25, 0.5) 0%,
+        rgba(8, 8, 25, 0.15) 55%,
+        transparent 100%
+      );
+      pointer-events: none;
+    }
+
+    /* 邊緣暗角 + 底部漸暗 */
     .story-vn-bg::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.35) 100%);
+      background:
+        linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%),
+        radial-gradient(ellipse at 50% 30%, transparent 35%, rgba(0, 0, 0, 0.4) 100%);
     }
 
-    /* 場景說明文字（左上角浮板） */
+    /* ── 粒子效果（雪花/光點）── */
+    .story-vn-particles {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .story-vn-particles .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+      animation: sparkleFloat linear infinite;
+      opacity: 0;
+    }
+    @keyframes sparkleFloat {
+      0%   { opacity: 0; transform: translateY(0) translateX(0) scale(0.3); }
+      15%  { opacity: 0.9; }
+      50%  { opacity: 0.6; transform: translateY(200px) translateX(-30px) scale(1); }
+      85%  { opacity: 0.3; }
+      100% { opacity: 0; transform: translateY(480px) translateX(20px) scale(0.5); }
+    }
+    .story-vn-particles .sparkle:nth-child(1) { left: 10%; top: -5%; animation-duration: 6s; animation-delay: 0s; width:3px; height:3px; }
+    .story-vn-particles .sparkle:nth-child(2) { left: 25%; top: -8%; animation-duration: 8s; animation-delay: 1.2s; width:5px; height:5px; }
+    .story-vn-particles .sparkle:nth-child(3) { left: 40%; top: -3%; animation-duration: 7s; animation-delay: 0.5s; }
+    .story-vn-particles .sparkle:nth-child(4) { left: 55%; top: -10%; animation-duration: 9s; animation-delay: 2s; width:6px; height:6px; }
+    .story-vn-particles .sparkle:nth-child(5) { left: 70%; top: -4%; animation-duration: 6.5s; animation-delay: 0.8s; width:3px; height:3px; }
+    .story-vn-particles .sparkle:nth-child(6) { left: 85%; top: -7%; animation-duration: 7.5s; animation-delay: 1.8s; }
+    .story-vn-particles .sparkle:nth-child(7) { left: 15%; top: -6%; animation-duration: 10s; animation-delay: 3s; width:4px; height:4px; }
+    .story-vn-particles .sparkle:nth-child(8) { left: 60%; top: -2%; animation-duration: 8.5s; animation-delay: 0.3s; width:5px; height:5px; }
+    .story-vn-particles .sparkle:nth-child(9) { left: 35%; top: -9%; animation-duration: 7s; animation-delay: 2.5s; width:3px; height:3px; }
+    .story-vn-particles .sparkle:nth-child(10) { left: 90%; top: -5%; animation-duration: 9.5s; animation-delay: 1s; }
+    .story-vn-particles .sparkle:nth-child(11) { left: 5%; top: -3%; animation-duration: 11s; animation-delay: 4s; width:6px; height:6px; }
+    .story-vn-particles .sparkle:nth-child(12) { left: 48%; top: -8%; animation-duration: 6s; animation-delay: 1.5s; width:3px; height:3px; }
+
+    /* 場景說明文字（右上角RPG風格浮板） */
     .story-vn-setup {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      top: 10px;
       right: 12px;
-      z-index: 3;
-      background: rgba(0, 0, 0, 0.52);
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
-      border-radius: 8px;
-      padding: 9px 14px;
+      left: auto;
+      max-width: 55%;
+      z-index: 5;
+      background: rgba(10, 10, 35, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 6px 6px 6px 6px;
+      border: 1px solid rgba(255, 215, 100, 0.25);
+      border-top: 2px solid rgba(255, 215, 100, 0.45);
+      padding: 8px 14px;
       color: rgba(255, 255, 255, 0.92);
-      font-size: 0.78em;
-      line-height: 1.78;
+      font-size: 0.74em;
+      line-height: 1.7;
       white-space: pre-line;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
-    /* 角色大圖（浮立於中央，下移與對話條交疊） */
+    /* 角色大圖（左側立繪 — RPG VN 風格） */
     .story-vn-sprite {
       position: absolute;
-      left: 50%;
-      top: 44%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
+      left: 0;
+      bottom: 0;
+      z-index: 3;
       animation: storyCharIn 0.5s ease-out;
+      width: 260px;
+      height: 340px;
+      /* 底部漸隱遮罩，讓立繪自然融入對話框 */
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
     }
 
     .story-vn-sprite img {
-      width: 230px;
-      height: 230px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.92);
-      border: 3px solid rgba(255, 255, 255, 0.55);
-      box-shadow:
-        0 12px 40px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(255, 255, 255, 0.08);
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
       display: block;
     }
 
-    /* 底部半透明對話條 */
+    /* 底部對話框 — RPG 遊戲風格 */
     .story-vn-dbox {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      z-index: 4;
-      background: rgba(6, 6, 20, 0.84);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 11px 16px 14px;
-      animation: storyDialogueIn 0.4s ease-out 0.2s backwards;
+      z-index: 6;
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 15, 40, 0.75) 0%,
+        rgba(10, 10, 30, 0.92) 30%,
+        rgba(5, 5, 20, 0.96) 100%
+      );
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 2px solid rgba(255, 215, 100, 0.3);
+      padding: 14px 20px 16px;
+      min-height: 130px;
+      animation: storyDialogueIn 0.4s ease-out 0.15s backwards;
+    }
+    .story-vn-dbox::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 20px;
+      right: 20px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,215,100,0.4), transparent);
     }
 
     .story-vn-namerow {
@@ -1292,68 +1416,94 @@
       margin-bottom: 8px;
     }
 
-    /* 對話條左側小頭像 */
+    /* 對話框左側小頭像 — RPG 風格帶邊框 */
     .story-vn-mini {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
       flex-shrink: 0;
       background: rgba(255, 255, 255, 0.9);
-      border: 2.5px solid rgba(255, 255, 255, 0.45);
+      border: 2px solid rgba(255, 215, 100, 0.5);
       overflow: hidden;
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.4),
+        0 0 0 1px rgba(255,255,255,0.1);
     }
 
     .story-vn-mini img {
       width: 100%;
       height: 100%;
-      border-radius: 50%;
+      border-radius: 6px;
+      object-fit: cover;
     }
 
-    /* 角色名牌 */
+    /* 角色名牌 — RPG 風格金框 */
     .story-vn-namebox {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 5px 14px;
-      border-radius: 20px;
+      gap: 8px;
+      padding: 5px 16px;
+      border-radius: 4px;
       font-weight: bold;
       color: white;
-      font-size: 0.9em;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      font-size: 0.92em;
+      letter-spacing: 1px;
+      box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
 
     .story-vn-title {
-      font-size: 0.74em;
-      opacity: 0.82;
+      font-size: 0.72em;
+      opacity: 0.75;
       font-weight: normal;
+      color: rgba(255,215,180,0.85);
     }
 
-    /* 對話文字 */
+    /* 對話文字 — RPG 字型風格 */
     .story-vn-line {
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 0.93em;
-      line-height: 1.82;
-      padding-left: 52px;
+      color: rgba(255, 255, 255, 0.96);
+      font-size: 0.95em;
+      line-height: 1.9;
+      padding-left: 58px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── 對話框底部三角指標（像RPG對話箭頭）── */
+    .story-vn-dbox-arrow {
+      position: absolute;
+      bottom: 8px;
+      right: 18px;
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid rgba(255,215,100,0.6);
+      animation: arrowBounce 1s ease-in-out infinite;
+    }
+    @keyframes arrowBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
     }
 
     @keyframes storyCharIn {
       from {
         opacity: 0;
-        transform: translate(-50%, -46%) scale(0.95);
+        transform: translateX(-30px) scale(0.96);
       }
-
       to {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
+        transform: translateX(0) scale(1);
       }
     }
 
     @keyframes storyDialogueIn {
       from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(12px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -1362,16 +1512,27 @@
 
     @media (max-width: 600px) {
       .story-vn-stage {
-        height: 380px;
+        height: 440px;
       }
-
-      .story-vn-sprite img {
+      .story-vn-sprite {
         width: 190px;
-        height: 190px;
+        height: 270px;
       }
-
       .story-vn-line {
         padding-left: 0;
+        font-size: 0.88em;
+      }
+      .story-vn-mini {
+        width: 38px;
+        height: 38px;
+      }
+      .story-vn-setup {
+        max-width: 65%;
+        font-size: 0.7em;
+      }
+      .story-vn-dbox {
+        min-height: 110px;
+        padding: 10px 14px 12px;
       }
     }
 
@@ -1380,7 +1541,6 @@
         opacity: 0;
         transform: translateY(8px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -3577,35 +3737,35 @@
        如需替換為自製角色圖，把 avatar 改成本地路徑即可，例如 './images/boss.png' */
     const storyCharacters = {
       '王鐵嘴主任': {
-        avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=WangBossFury&backgroundColor=c0392b',
+        avatar: './images/boss.png',
         color: '#c0392b', emoji: '😤', title: '律師事務所主任'
       },
       '林酸酸': {
-        avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=SuanSuanCold&backgroundColor=34495e',
+        avatar: './images/sour.png',
         color: '#34495e', emoji: '🧊', title: '資深律師'
       },
       '阿肥': {
-        avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=AFeiIntern2024&backgroundColor=f39c12',
+        avatar: './images/intern.png',
         color: '#e67e22', emoji: '😊', title: '實習生'
       },
       '陳經理': {
-        avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=ChenPharmaMgr&backgroundColor=27ae60',
+        avatar: './images/pharma.png',
         color: '#27ae60', emoji: '💊', title: '藥廠業務經理'
       },
       '電視台業務小陳': {
-        avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=XiaoChenTVBiz&backgroundColor=3498db',
+        avatar: './images/tv_biz.png',
         color: '#3498db', emoji: '📺', title: '電視台業務'
       },
       '林法務': {
-        avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=LinLegalTVDept&backgroundColor=8e44ad',
+        avatar: './images/legal.png',
         color: '#8e44ad', emoji: '⚖️', title: '全台電視法務'
       },
       '圈圈': {
-        avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=CircleCircleStreamer&backgroundColor=e91e63',
+        avatar: './images/beauty.png',
         color: '#e91e63', emoji: '💄', title: '美妝直播主'
       },
       '何副理': {
-        avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=HoShoppingMgr&backgroundColor=ff5722',
+        avatar: './images/shopping.png',
         color: '#ff5722', emoji: '🛒', title: '購物頻道副理'
       }
     };
@@ -3697,21 +3857,21 @@
       <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">${dayData.dayTitle}</div>
     </div>
     <div class="story-intro-box" id="story-intro">
-      <div style="font-size:0.88em;color:#5d4e37;white-space:pre-line;line-height:1.95;">${dayData.dayIntro}</div>
+      <div style="font-size:0.88em;color:rgba(255,215,180,0.9);white-space:pre-line;line-height:1.95;">${dayData.dayIntro}</div>
       <button class="story-next-btn" style="display:block;margin-top:16px;" onclick="storyDismissIntro()">${startLabel}</button>
     </div>
     <div id="story-game" style="display:none;">
       <div class="story-status-bar">
         <div>
-          <div style="font-size:0.72em;color:#95a5a6;font-weight:bold;margin-bottom:3px;">主任好感度</div>
+          <div style="font-size:0.72em;color:rgba(255,215,180,0.6);font-weight:bold;margin-bottom:3px;">主任好感度</div>
           <div class="story-hearts" id="s-hearts">${sHearts(3)}</div>
         </div>
         <div style="text-align:center;">
-          <div style="font-size:0.72em;color:#95a5a6;font-weight:bold;margin-bottom:3px;">連對</div>
+          <div style="font-size:0.72em;color:rgba(255,215,180,0.6);font-weight:bold;margin-bottom:3px;">連對</div>
           <div class="story-streak" id="s-streak">－</div>
         </div>
         <div style="text-align:right;">
-          <div style="font-size:0.72em;color:#95a5a6;font-weight:bold;margin-bottom:3px;">進度</div>
+          <div style="font-size:0.72em;color:rgba(255,215,180,0.6);font-weight:bold;margin-bottom:3px;">進度</div>
           <div class="story-progress-text" id="s-progress">1 / ${dayData.questions.length}</div>
         </div>
       </div>
@@ -3774,6 +3934,12 @@
       document.getElementById('s-content').innerHTML = `
     <div class="story-vn-stage">
       <div class="story-vn-bg" style="background:${bg}"></div>
+      <div class="story-vn-particles">
+        <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+        <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+        <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+        <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+      </div>
       <div class="story-vn-setup">${q.setup}</div>
       ${spriteHTML}
       <div class="story-vn-dbox">
@@ -3784,6 +3950,7 @@
           </span>
         </div>
         <div class="story-vn-line">${q.clientLine}</div>
+        <div class="story-vn-dbox-arrow"></div>
       </div>
     </div>
     <div class="story-q-card">
