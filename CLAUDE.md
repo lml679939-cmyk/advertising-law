@@ -469,11 +469,47 @@ npx http-server . -p 8888
 
 - **方式**：前端 `fetch` → Google Apps Script → Google Sheets
 - **TRACK_URL**：已填入 `index.html`（`const TRACK_URL = '...'`）
-- **試算表欄位**：`timestamp | sid | mode | qType | qIdx | userAns | correct`
-- **session ID**：`crypto.randomUUID()` 存於 `localStorage._sid`，匿名識別，重開瀏覽器後同一人仍為同一 sid
-- **涵蓋範圍**：學習模式（是非）、選擇題模式、填充題模式、劇情模式（是非＋選擇）
-- **注意**：不蒐集個人資訊；傳送失敗（網路問題）靜默忽略，不影響答題體驗
+- **TRACK_TOKEN**：`adlaw2026`（寫死於 `index.html`，Apps Script 端驗證；擋機器人灌水用）
+- **試算表欄位（H欄已加）**：`timestamp | sid | mode | qType | qIdx | userAns | correct | 解鎖?`
+  - `correct`：✓ / ✗
+  - `解鎖?`：🔓（解鎖用戶）或空白（一般學生）；可用來篩除自己的測試資料
+- **session ID**：`crypto.randomUUID()` 存於 `localStorage._sid`，匿名識別
+- **涵蓋範圍**：學習模式（是非）、**傳統模式**（對答案時批次送出）、選擇題模式、填充題模式、劇情模式（是非＋選擇）
+- **注意**：不蒐集個人資訊；傳送失敗靜默忽略，不影響答題體驗
 - **後台查看**：直接開啟 Google Sheet；可用 `COUNTIF(G:G,"✓")` 計算正確次數
+
+### Apps Script 最新版本（版本 3，2026-04-20）
+
+```javascript
+const SHEET_ID = '1F7KSmq4hft6c864do6LWUMhstu-6VTcujHeEEopmBWE';
+const TOKEN = 'adlaw2026';
+
+function doPost(e) {
+  try {
+    const d = JSON.parse(e.postData.contents);
+    if (d.token !== TOKEN) return ContentService.createTextOutput('forbidden');
+    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
+    sheet.appendRow([
+      new Date(d.ts),
+      d.sid,
+      d.mode,
+      d.qType,
+      d.qIdx,
+      d.userAns,
+      d.correct ? '✓' : '✗',
+      d.unlocked ? '🔓' : ''
+    ]);
+  } catch(err) {}
+  return ContentService.createTextOutput('ok');
+}
+```
+
+> ⚠️ 修改 Apps Script 後務必：部署 → 管理部署 → 編輯（✏️）→ **版本選「新版本」** → 部署
+
+### 資安說明
+- **html2canvas**：已加 SRI（`integrity` + `crossorigin`），防 CDN 被篡改
+- **隱藏題目答案**：仍暴露於原始碼，密碼鎖只擋 UI；如需真正保護須改後端 API
+- **TRACK_URL 暴露**：Token 只能擋隨機灌水，無法擋刻意攻擊；若遭汙染可重新部署 Apps Script 換 URL
 
 ---
 
