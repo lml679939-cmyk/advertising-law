@@ -2646,6 +2646,17 @@
       document.getElementById('btn-mode-story').style.display = '';
     }
 
+    /* ─── 匿名答題追蹤 ─── */
+    const TRACK_URL = 'https://script.google.com/macros/s/AKfycby1OBl_GcVcmUvz4jcdL-KnufhZRs9wadvrUT82IHC9U8Elal-2fBuJp1JvB9aNzAeA/exec';
+    const _sid = localStorage.getItem('_sid') || (() => {
+      const s = crypto.randomUUID(); localStorage.setItem('_sid', s); return s;
+    })();
+    function trackAnswer(mode, qType, qIdx, userAns, correct) {
+      if (!TRACK_URL) return;
+      const body = JSON.stringify({ sid: _sid, mode, qType, qIdx, userAns: String(userAns), correct, ts: Date.now() });
+      fetch(TRACK_URL, { method: 'POST', body, headers: { 'Content-Type': 'application/json' } }).catch(() => {});
+    }
+
     /* ─── 依解鎖狀態篩選題目 ─── */
     const activeQuestions = questions.filter(q => isUnlocked || !q.hidden);
     const activeMCQuestions = mcQuestions.filter(q => isUnlocked || !q.hidden);
@@ -2838,6 +2849,7 @@
 
       mcUserAnswers[idx] = chosen;
       const correct = chosen === correctMapped;
+      trackAnswer('mc', 'mc', idx, chosen, correct);
 
       // 鎖定猜的按鈕
       const gbtn = document.getElementById('gbtn-' + idx);
@@ -2935,6 +2947,7 @@
 
       if (prev !== null) { if (prev) fillCorrectCount--; else fillWrongCount--; }
       fillUserAnswers[idx] = allOk;
+      trackAnswer('fill', 'fill', idx, null, allOk);
       if (allOk) fillCorrectCount++; else fillWrongCount++;
 
       q.blanks.forEach((_, j) => {
@@ -3015,6 +3028,7 @@
 
       userAnswers[idx] = chosen;
       const correct = chosen === q.ans;
+      trackAnswer('learn', 'tf', idx, chosen, correct);
 
       // 重設按鈕樣式（不 disable，讓使用者可以改答）
       document.getElementById('btn-O-' + idx).className = 'choice-btn';
@@ -4057,6 +4071,7 @@
       if (storyState.answered) return;
       storyState.answered = true;
       const q = currentDay.questions[storyState.qIdx];
+      trackAnswer('story', 'tf', storyState.qIdx, choice, choice === q.ans);
       ['sbO', 'sbX'].forEach(id => { const b = document.getElementById(id); if (b) { b.style.pointerEvents = 'none'; } });
       const winBtn = document.getElementById('sb' + q.ans);
       if (winBtn) winBtn.classList.add('sel');
@@ -4067,6 +4082,7 @@
       if (storyState.answered) return;
       storyState.answered = true;
       const q = currentDay.questions[storyState.qIdx];
+      trackAnswer('story', 'mc', storyState.qIdx, opt, opt === q.ans);
       for (let i = 0; i < q.options.length; i++) {
         const b = document.getElementById('smc' + i);
         if (!b) continue;
