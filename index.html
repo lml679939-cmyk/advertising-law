@@ -2654,7 +2654,7 @@
     function trackAnswer(mode, qType, qIdx, userAns, correct) {
       if (!TRACK_URL) return;
       const body = JSON.stringify({ sid: _sid, mode, qType, qIdx, userAns: String(userAns), correct, ts: Date.now() });
-      fetch(TRACK_URL, { method: 'POST', body, headers: { 'Content-Type': 'application/json' } }).catch(() => {});
+      fetch(TRACK_URL, { method: 'POST', body, mode: 'no-cors', headers: { 'Content-Type': 'text/plain' } }).catch(() => {});
     }
 
     /* ─── 依解鎖狀態篩選題目 ─── */
