@@ -465,6 +465,18 @@ npx http-server . -p 8888
 
 ---
 
+## 匿名答題追蹤系統（2026-04-19 已上線）
+
+- **方式**：前端 `fetch` → Google Apps Script → Google Sheets
+- **TRACK_URL**：已填入 `index.html`（`const TRACK_URL = '...'`）
+- **試算表欄位**：`timestamp | sid | mode | qType | qIdx | userAns | correct`
+- **session ID**：`crypto.randomUUID()` 存於 `localStorage._sid`，匿名識別，重開瀏覽器後同一人仍為同一 sid
+- **涵蓋範圍**：學習模式（是非）、選擇題模式、填充題模式、劇情模式（是非＋選擇）
+- **注意**：不蒐集個人資訊；傳送失敗（網路問題）靜默忽略，不影響答題體驗
+- **後台查看**：直接開啟 Google Sheet；可用 `COUNTIF(G:G,"✓")` 計算正確次數
+
+---
+
 ## 下一步可能的工作
 - 繼續新增隱藏題目（使用者會提供題目內容）
 - NotebookLM 驗證後修正錯誤答案或解析
