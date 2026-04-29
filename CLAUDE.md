@@ -470,15 +470,18 @@ npx http-server . -p 8888
 - **方式**：前端 `fetch` → Google Apps Script → Google Sheets
 - **TRACK_URL**：已填入 `index.html`（`const TRACK_URL = '...'`）
 - **TRACK_TOKEN**：`adlaw2026`（寫死於 `index.html`，Apps Script 端驗證；擋機器人灌水用）
-- **試算表欄位（H欄已加）**：`timestamp | sid | mode | qType | qIdx | userAns | correct | 解鎖?`
-  - `correct`：✓ / ✗
-  - `解鎖?`：🔓（解鎖用戶）或空白（一般學生）；可用來篩除自己的測試資料
+- **試算表欄位（共 10 欄）**：`時間 | 用戶ID | 模式 | 題型 | 題號 | 題目ID | 題目片段 | 作答 | 正確與否 | 解鎖與否`
+  - `題號`（qIdx）：洗牌後的位置，**不穩定**
+  - `題目ID`（qId）：用題目文字算出的 8 字元 hash，**同一題永遠同一個 ID**（用來做正確率統計）
+  - `題目片段`（qSnippet）：題目前 30 字，方便人工辨識
+  - `正確與否`：✓ / ✗
+  - `解鎖與否`：🔓（解鎖用戶）或空白（一般學生）；可用來篩除自己的測試資料
 - **session ID**：`crypto.randomUUID()` 存於 `localStorage._sid`，匿名識別
 - **涵蓋範圍**：學習模式（是非）、**傳統模式**（對答案時批次送出）、選擇題模式、填充題模式、劇情模式（是非＋選擇）
 - **注意**：不蒐集個人資訊；傳送失敗靜默忽略，不影響答題體驗
-- **後台查看**：直接開啟 Google Sheet；可用 `COUNTIF(G:G,"✓")` 計算正確次數
+- **後台查看**：直接開啟 Google Sheet；可用 `COUNTIF(I:I,"✓")` 計算正確次數，或用 `=QUERY(...)` GROUP BY `題目ID` 做每題正確率分析
 
-### Apps Script 最新版本（版本 3，2026-04-20）
+### Apps Script 最新版本（版本 4，2026-04-29）
 
 ```javascript
 const SHEET_ID = '1F7KSmq4hft6c864do6LWUMhstu-6VTcujHeEEopmBWE';
@@ -495,6 +498,8 @@ function doPost(e) {
       d.mode,
       d.qType,
       d.qIdx,
+      d.qId || '',
+      d.qSnippet || '',
       d.userAns,
       d.correct ? '✓' : '✗',
       d.unlocked ? '🔓' : ''
@@ -503,6 +508,17 @@ function doPost(e) {
   return ContentService.createTextOutput('ok');
 }
 ```
+
+### qId 產生邏輯（前端 `index.html`）
+
+```javascript
+function makeQId(text) {
+  let h = 0;
+  for (let i = 0; i < text.length; i++) h = ((h << 5) - h + text.charCodeAt(i)) | 0;
+  return Math.abs(h).toString(36).padStart(7, '0').slice(0, 8);
+}
+```
+所有 `trackAnswer(...)` 呼叫都會帶 `q.q`（題目原文）做為第 6 個參數，由 `trackAnswer` 內部產生 qId 與 qSnippet。
 
 > ⚠️ 修改 Apps Script 後務必：部署 → 管理部署 → 編輯（✏️）→ **版本選「新版本」** → 部署
 
@@ -513,7 +529,35 @@ function doPost(e) {
 
 ---
 
+## 期末考題庫規劃（2026-04-29 規劃中）
+
+期中考已考完，期末題庫採用**獨立資料夾**方式建置：
+
+```
+advertising-law/
+├── index.html          ← 期中（保持原樣，不再大改）
+├── final/
+│   └── index.html      ← 期末（複製 index.html 後改題庫）
+└── images/             ← 共用角色立繪
+```
+
+- **網址**：`https://lml679939-cmyk.github.io/advertising-law/final/`
+- **追蹤資料分離**：在 `final/index.html` 把 `trackAnswer(...)` 的 `mode` 參數加前綴（例如 `final-learn`、`final-mc`、`final-classic`、`final-fill`、`final-story`），這樣試算表用 `模式` 欄就能自動區分期中／期末
+- **共用元件**：`images/`、追蹤系統（同一個 Apps Script、同一個 Google Sheet）、密碼鎖機制
+- **獨立元件**：題庫陣列、劇情模式關卡、頁面標題
+
+實作步驟（待使用者下指令時執行）：
+1. 建立 `final/` 資料夾
+2. 複製 `index.html` → `final/index.html`
+3. 替換題庫（`questions`、`mcQuestions`、`fillQuestions`）
+4. 替換劇情模式關卡（`storyDay1` ~ `storyDay4` 重新撰寫）
+5. 把所有 `trackAnswer('learn',...)` 改為 `trackAnswer('final-learn',...)`，其他模式類推
+6. 修改頁面標題為「廣告法規期末考」
+
+---
+
 ## 下一步可能的工作
+- 期末考題庫建置（見上方規劃）
 - 繼續新增隱藏題目（使用者會提供題目內容）
 - NotebookLM 驗證後修正錯誤答案或解析
 - 角色立繪優化（目前因 PNG 有白底，以左側大氣遮罩補救；可換用去背 PNG 以達完美效果）
