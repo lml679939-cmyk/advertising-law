@@ -1,0 +1,2897 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>廣告法規期末考</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      background: #f0f3f8;
+      color: #2c3e50;
+      padding: 20px;
+      line-height: 1.8;
+    }
+
+    /* ── Mode Toggle ── */
+    .mode-toggle-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .mode-toggle {
+      display: inline-flex;
+      background: #dce3ed;
+      border-radius: 30px;
+      padding: 4px;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+    }
+
+    .mode-btn {
+      padding: 9px 24px;
+      border-radius: 26px;
+      border: none;
+      background: transparent;
+      font-size: 0.95em;
+      font-weight: bold;
+      cursor: pointer;
+      color: #5a6a7e;
+      transition: all 0.22s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .mode-btn.active {
+      background: white;
+      color: #1a3c6e;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
+    }
+
+    .mode-desc {
+      text-align: center;
+      font-size: 0.82em;
+      color: #7f8c8d;
+      margin-bottom: 16px;
+      min-height: 1.4em;
+    }
+
+    /* ── Header ── */
+    .exam-header {
+      background: linear-gradient(135deg, #1a3c6e, #2e6da4);
+      color: white;
+      border-radius: 14px;
+      padding: 26px 32px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+      text-align: center;
+    }
+
+    .exam-header h1 {
+      font-size: 1.75em;
+      letter-spacing: 4px;
+      margin-bottom: 6px;
+    }
+
+    .exam-header p {
+      font-size: 0.9em;
+      opacity: 0.88;
+      margin-top: 4px;
+    }
+
+    /* ── Sticky bar ── */
+    .sticky-bar {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: sticky;
+      top: 8px;
+      z-index: 100;
+    }
+
+    .bar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .bar-score {
+      font-size: 1em;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .bar-score span {
+      color: #2e6da4;
+      font-size: 1.3em;
+    }
+
+    .bar-correct {
+      color: #27ae60;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+
+    .bar-wrong {
+      color: #e74c3c;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+
+    .bar-guessed {
+      color: #f0a500;
+      font-weight: bold;
+      font-size: 0.9em;
+      display: none;
+    }
+
+    .progress-wrap {
+      height: 6px;
+      background: #ecf0f1;
+      border-radius: 3px;
+      overflow: hidden;
+      width: 140px;
+      margin-top: 5px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #27ae60, #2ecc71);
+      border-radius: 3px;
+      transition: width 0.35s;
+      width: 0%;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-check {
+      background: linear-gradient(135deg, #27ae60, #1e8449);
+      color: white;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+      transition: transform 0.1s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .btn-check:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-reset {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 0.9em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.1s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .btn-reset:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-shuffle {
+      background: white;
+      color: #7f8c8d;
+      border: 2px solid #bdc3c7;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 0.9em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.18s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .btn-shuffle:hover {
+      border-color: #8e44ad;
+      color: #8e44ad;
+    }
+
+    .btn-shuffle.active {
+      background: #8e44ad;
+      color: white;
+      border-color: #8e44ad;
+    }
+
+    /* ── MC Options ── */
+    .mc-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+      margin-left: 40px;
+    }
+
+    .mc-option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 9px;
+      border: 2px solid #c8d0dc;
+      background: white;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: all 0.18s;
+      color: #34495e;
+      text-align: left;
+      line-height: 1.6;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .mc-option-btn:hover {
+      border-color: #2e6da4;
+      background: #eaf3fb;
+    }
+
+    .mc-label {
+      background: #95a5a6;
+      color: white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78em;
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .mc-option-btn:hover .mc-label {
+      background: #2e6da4;
+    }
+
+    .mc-option-btn.mc-correct {
+      border-color: #27ae60;
+      background: #eafaf1;
+    }
+
+    .mc-option-btn.mc-correct .mc-label {
+      background: #27ae60;
+    }
+
+    .mc-option-btn.mc-wrong {
+      border-color: #e74c3c;
+      background: #fdf0f0;
+    }
+
+    .mc-option-btn.mc-wrong .mc-label {
+      background: #e74c3c;
+    }
+
+    .mc-option-btn.mc-show-correct {
+      border-color: #27ae60;
+      background: #eafaf1;
+    }
+
+    .mc-option-btn.mc-show-correct .mc-label {
+      background: #27ae60;
+    }
+
+    @media (max-width: 620px) {
+      .mc-options-grid {
+        grid-template-columns: 1fr;
+        margin-left: 0;
+      }
+    }
+
+    /* ── Card ── */
+    .question-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      border-left: 5px solid #bdc3c7;
+      transition: border-color 0.25s, background 0.25s;
+    }
+
+    .question-card.correct-card {
+      border-left-color: #27ae60;
+      background: #f2fff6;
+    }
+
+    .question-card.wrong-card {
+      border-left-color: #e74c3c;
+      background: #fff4f4;
+    }
+
+    .question-card.unanswered {
+      border-left-color: #f39c12;
+    }
+
+    .question-card.guessed-card {
+      background: #fffdf0;
+    }
+
+    .question-card.guessed-card.correct-card {
+      background: #f2fff6;
+    }
+
+    .question-card.guessed-card.wrong-card {
+      background: #fff4f4;
+    }
+
+    .question-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .q-num {
+      background: #2e6da4;
+      color: white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.82em;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .q-num.answered-correct {
+      background: #27ae60;
+    }
+
+    .q-num.answered-wrong {
+      background: #e74c3c;
+    }
+
+    .q-text {
+      font-size: 0.96em;
+      flex: 1;
+    }
+
+    /* ── Choices row ── */
+    .choices-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      margin-left: 40px;
+      flex-wrap: wrap;
+    }
+
+    .choice-btn {
+      padding: 8px 26px;
+      border-radius: 9px;
+      border: 2px solid #c8d0dc;
+      background: white;
+      font-size: 1.05em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.18s;
+      color: #555;
+      min-width: 100px;
+      text-align: center;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .choice-btn:hover:not(:disabled) {
+      border-color: #2e6da4;
+      color: #2e6da4;
+      background: #eaf3fb;
+    }
+
+    .choice-btn:disabled {
+      cursor: default;
+    }
+
+    /* 傳統模式選中狀態 */
+    .choice-btn.selected-O {
+      border-color: #2e6da4;
+      background: #2e6da4;
+      color: white;
+    }
+
+    .choice-btn.selected-X {
+      border-color: #e74c3c;
+      background: #e74c3c;
+      color: white;
+    }
+
+    /* 學習模式結果狀態 */
+    .choice-btn.selected-correct {
+      border-color: #27ae60;
+      background: #27ae60;
+      color: white;
+    }
+
+    .choice-btn.selected-wrong {
+      border-color: #e74c3c;
+      background: #e74c3c;
+      color: white;
+    }
+
+    .choice-btn.show-correct {
+      border-color: #27ae60;
+      background: #e8f8ee;
+      color: #27ae60;
+      font-weight: bold;
+    }
+
+    /* ── Guess btn ── */
+    .guess-btn {
+      padding: 6px 13px;
+      border-radius: 8px;
+      border: 2px solid #f0a500;
+      background: white;
+      color: #f0a500;
+      font-size: 0.83em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .guess-btn:hover:not(:disabled) {
+      background: #fff3cd;
+    }
+
+    .guess-btn.active {
+      background: #f0a500;
+      color: white;
+    }
+
+    .guess-btn:disabled {
+      cursor: default;
+    }
+
+    .guess-label {
+      display: none;
+      font-size: 0.78em;
+      color: #856404;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 5px;
+      padding: 2px 9px;
+      font-weight: bold;
+    }
+
+    .guess-label.show {
+      display: inline-block;
+    }
+
+    /* ── Result row (學習模式 instant feedback) ── */
+    .result-row {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      margin-left: 40px;
+      flex-wrap: wrap;
+    }
+
+    .result-row.show {
+      display: flex;
+    }
+
+    /* ── Result badge ── */
+    .result-badge {
+      display: none;
+      font-weight: bold;
+      font-size: 0.93em;
+      padding: 5px 14px;
+      border-radius: 7px;
+    }
+
+    .result-badge.show {
+      display: inline-block;
+    }
+
+    .result-badge.correct-badge {
+      background: #d4efdf;
+      color: #1a7a3c;
+      animation: popIn 0.25s ease;
+    }
+
+    .result-badge.wrong-badge {
+      background: #fadbd8;
+      color: #b03030;
+      animation: popIn 0.25s ease;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* ── Explanation ── */
+    .explanation {
+      display: none;
+      margin-top: 12px;
+      margin-left: 40px;
+      background: #f5f7fa;
+      border-left: 4px solid #2e6da4;
+      padding: 12px 16px;
+      border-radius: 0 9px 9px 0;
+      font-size: 0.88em;
+      color: #34495e;
+      line-height: 1.9;
+      animation: fadeSlide 0.3s ease;
+    }
+
+    .explanation.show {
+      display: block;
+    }
+
+    @keyframes fadeSlide {
+      0% {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .explanation strong {
+      color: #1a3c6e;
+    }
+
+    .explanation .law-ref {
+      display: inline-block;
+      background: #eaf3fb;
+      color: #2e6da4;
+      padding: 1px 8px;
+      border-radius: 4px;
+      font-size: 0.87em;
+      font-weight: bold;
+      margin-right: 4px;
+    }
+
+    .page-ref {
+      margin-top: 10px;
+      padding: 6px 12px;
+      background: #f0f7ff;
+      border-left: 3px solid #2e6da4;
+      border-radius: 4px;
+      font-size: 0.88em;
+      color: #1a3c6e;
+    }
+
+    /* ── Note (removed) ── */
+    .note-area {
+      display: none;
+    }
+
+    .note-textarea {
+      width: 100%;
+      min-height: 68px;
+      border: 1.5px solid #d0d7e3;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 0.87em;
+      resize: vertical;
+      outline: none;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      color: #34495e;
+      background: #fafcff;
+      line-height: 1.7;
+      transition: border-color 0.2s;
+    }
+
+    .note-textarea:focus {
+      border-color: #2e6da4;
+      background: #fff;
+    }
+
+    .note-textarea::placeholder {
+      color: #b0bec5;
+    }
+
+    .note-saved {
+      font-size: 0.75em;
+      color: #2e6da4;
+      margin-top: 3px;
+      display: none;
+    }
+
+    .note-saved.show {
+      display: block;
+    }
+
+    /* ── Final summary ── */
+    .final-box {
+      display: none;
+      text-align: center;
+      padding: 28px 24px;
+      background: linear-gradient(135deg, #1a3c6e, #2e6da4);
+      color: white;
+      border-radius: 14px;
+      margin-top: 24px;
+    }
+
+    .final-box h2 {
+      font-size: 2.2em;
+      margin-bottom: 10px;
+    }
+
+    .final-box p {
+      font-size: 0.95em;
+      opacity: 0.9;
+      margin-top: 6px;
+    }
+
+    .final-stats {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+
+    .final-stat {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 10px 20px;
+    }
+
+    .final-stat .num {
+      font-size: 2em;
+      font-weight: bold;
+      display: block;
+    }
+
+    .final-stat .lbl {
+      font-size: 0.8em;
+      opacity: 0.85;
+    }
+
+    /* ── Fill mode ── */
+    .fill-input {
+      display: inline-block;
+      border: none;
+      border-bottom: 2.5px solid #8e44ad;
+      padding: 1px 6px;
+      font-size: 0.95em;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      color: #1a3c6e;
+      background: rgba(142, 68, 173, 0.05);
+      outline: none;
+      min-width: 90px;
+      max-width: 220px;
+      transition: border-color 0.2s;
+      vertical-align: middle;
+      border-radius: 3px 3px 0 0;
+    }
+
+    .fill-input:focus {
+      border-bottom-color: #5b2c8d;
+      background: rgba(142, 68, 173, 0.1);
+    }
+
+    .fill-input.fill-correct {
+      border-bottom-color: #27ae60;
+      color: #1e8449;
+      background: rgba(39, 174, 96, 0.08);
+    }
+
+    .fill-input.fill-wrong {
+      border-bottom-color: #e74c3c;
+      color: #c0392b;
+      background: rgba(231, 76, 60, 0.08);
+    }
+
+    .fill-check-row {
+      margin-top: 12px;
+      margin-left: 40px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-fill-check {
+      padding: 7px 18px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #8e44ad, #6c3483);
+      color: white;
+      font-size: 0.9em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.1s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .btn-fill-check:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-retry {
+      background: linear-gradient(135deg, #e67e22, #d35400);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-size: 0.95em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.1s;
+      margin-top: 10px;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .btn-retry:hover {
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 600px) {
+
+      .choices-row,
+      .note-toggle,
+      .note-area,
+      .result-row,
+      .explanation {
+        margin-left: 0;
+      }
+
+      .progress-wrap {
+        width: 100px;
+      }
+
+      .mode-btn {
+        padding: 8px 14px;
+        font-size: 0.88em;
+      }
+    }
+
+    /* ══════════════════════════════════════
+     劇情模式 — 菜鳥律師小廣的廣告法求生記
+  ══════════════════════════════════════ */
+    #story-panel {
+      display: none;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .story-day-header {
+      background: linear-gradient(135deg, #1a0530, #3a1078, #6c3483, #9b59b6);
+      color: white;
+      border-radius: 14px;
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      text-align: center;
+      box-shadow:
+        0 6px 24px rgba(108, 52, 131, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+      border: 1px solid rgba(255, 215, 100, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .story-day-header::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 10%, rgba(255,215,100,0.5) 50%, transparent 90%);
+    }
+
+    .story-intro-box {
+      background: linear-gradient(135deg, rgba(25,18,45,0.95), rgba(40,28,65,0.95));
+      border: 1px solid rgba(155, 89, 182, 0.3);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .story-status-bar {
+      background: linear-gradient(135deg, rgba(15,15,40,0.95), rgba(30,20,55,0.95));
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 14px;
+      box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 1px solid rgba(155, 89, 182, 0.3);
+      color: white;
+    }
+
+    .story-hearts {
+      font-size: 1.2em;
+      letter-spacing: 1px;
+    }
+
+    .story-streak {
+      font-size: 0.9em;
+      font-weight: bold;
+      color: #e67e22;
+    }
+
+    .story-progress-text {
+      font-size: 0.9em;
+      color: rgba(255,255,255,0.75);
+      font-weight: bold;
+    }
+
+    .story-command-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .story-cmd-btn {
+      padding: 7px 16px;
+      border-radius: 6px;
+      border: 1.5px solid rgba(155, 89, 182, 0.35);
+      background: linear-gradient(135deg, rgba(20,15,40,0.9), rgba(40,25,65,0.9));
+      font-size: 0.8em;
+      cursor: pointer;
+      color: rgba(255,215,180,0.85);
+      font-weight: bold;
+      transition: all 0.18s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .story-cmd-btn:hover {
+      border-color: rgba(255, 215, 100, 0.5);
+      color: rgba(255, 215, 100, 0.9);
+      background: linear-gradient(135deg, rgba(40,25,65,0.95), rgba(60,35,85,0.95));
+      box-shadow: 0 2px 10px rgba(155, 89, 182, 0.3);
+    }
+
+    .story-extra-box {
+      display: none;
+      background: linear-gradient(135deg, rgba(20,15,40,0.9), rgba(35,22,55,0.9));
+      border: 1px solid rgba(255, 215, 100, 0.2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      font-size: 0.88em;
+      line-height: 1.85;
+      color: rgba(255,215,180,0.85);
+      animation: storyFadeIn 0.3s ease;
+    }
+
+    .story-lucky-event {
+      display: none;
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: white;
+      border-radius: 12px;
+      padding: 14px 18px;
+      text-align: center;
+      margin-bottom: 14px;
+      font-weight: bold;
+      font-size: 0.9em;
+      animation: storyFadeIn 0.3s ease;
+    }
+
+    .story-scene-card {
+      background: #fef9f0;
+      border: 1.5px solid #f0e3c8;
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .story-setup-text {
+      font-size: 0.88em;
+      color: #5d4e37;
+      line-height: 1.9;
+      white-space: pre-line;
+      margin-bottom: 12px;
+    }
+
+    .story-dialogue-box {
+      background: white;
+      border: 2px solid #f0a500;
+      border-radius: 0 12px 12px 12px;
+      padding: 12px 16px;
+      position: relative;
+      font-size: 0.93em;
+      color: #2c3e50;
+      line-height: 1.8;
+    }
+
+    .story-client-name {
+      font-size: 0.75em;
+      font-weight: bold;
+      color: #f0a500;
+      margin-bottom: 5px;
+    }
+
+    .story-q-card {
+      background: linear-gradient(135deg, #1a1030, #251845);
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
+      box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      border-left: 4px solid rgba(255, 215, 100, 0.5);
+      border: 1px solid rgba(155, 89, 182, 0.3);
+      border-left: 4px solid rgba(255, 215, 100, 0.5);
+    }
+
+    .story-q-label {
+      font-size: 0.74em;
+      font-weight: bold;
+      color: rgba(255, 215, 100, 0.85);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .story-q-text {
+      font-size: 0.95em;
+      color: rgba(255, 255, 255, 0.92);
+      line-height: 1.85;
+    }
+
+    .story-tf-buttons {
+      display: flex;
+      gap: 14px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    .story-tf-btn {
+      padding: 12px 38px;
+      border-radius: 8px;
+      border: 2px solid rgba(155, 89, 182, 0.4);
+      background: linear-gradient(135deg, rgba(20,15,40,0.9), rgba(40,25,65,0.9));
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .story-tf-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(155, 89, 182, 0.3);
+      border-color: rgba(255, 215, 100, 0.4);
+    }
+
+    .story-tf-btn.story-O:hover,
+    .story-tf-btn.story-O.sel {
+      border-color: rgba(46, 204, 113, 0.8);
+      background: linear-gradient(135deg, #1a5c35, #27ae60);
+      color: white;
+      box-shadow: 0 4px 16px rgba(46, 204, 113, 0.4);
+    }
+
+    .story-tf-btn.story-X:hover,
+    .story-tf-btn.story-X.sel {
+      border-color: rgba(231, 76, 60, 0.8);
+      background: linear-gradient(135deg, #7b241c, #e74c3c);
+      color: white;
+      box-shadow: 0 4px 16px rgba(231, 76, 60, 0.4);
+    }
+
+    .story-mc-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .story-mc-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 13px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(155, 89, 182, 0.35);
+      background: linear-gradient(135deg, rgba(20,15,40,0.85), rgba(35,22,55,0.85));
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: all 0.18s;
+      color: rgba(255,255,255,0.88);
+      text-align: left;
+      line-height: 1.6;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .story-mc-btn:hover {
+      border-color: rgba(255, 215, 100, 0.5);
+      background: linear-gradient(135deg, rgba(40,25,65,0.9), rgba(60,35,85,0.9));
+    }
+
+    .story-mc-label {
+      background: rgba(155, 89, 182, 0.5);
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8em;
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .story-mc-btn.smc-correct {
+      border-color: rgba(46, 204, 113, 0.7);
+      background: linear-gradient(135deg, rgba(15,40,25,0.9), rgba(20,55,35,0.9));
+      color: rgba(100, 230, 140, 0.95);
+    }
+
+    .story-mc-btn.smc-correct .story-mc-label {
+      background: #27ae60;
+    }
+
+    .story-mc-btn.smc-wrong {
+      border-color: rgba(231, 76, 60, 0.7);
+      background: linear-gradient(135deg, rgba(40,15,15,0.9), rgba(55,20,20,0.9));
+      color: rgba(230, 100, 100, 0.95);
+    }
+
+    .story-mc-btn.smc-wrong .story-mc-label {
+      background: #e74c3c;
+    }
+
+    .story-reaction-box {
+      display: none;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      animation: storyFadeIn 0.35s ease;
+    }
+
+    .story-reaction-box.sreact-correct {
+      background: linear-gradient(135deg, rgba(10,30,18,0.95), rgba(15,45,25,0.95));
+      border: 1.5px solid rgba(46, 204, 113, 0.45);
+    }
+
+    .story-reaction-box.sreact-wrong {
+      background: linear-gradient(135deg, rgba(35,10,10,0.95), rgba(50,15,15,0.95));
+      border: 1.5px solid rgba(231, 76, 60, 0.45);
+    }
+
+    .story-reaction-badge {
+      font-size: 1.05em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .story-reaction-line {
+      font-size: 0.9em;
+      color: rgba(255, 215, 180, 0.85);
+      line-height: 1.85;
+      padding: 4px 0;
+    }
+
+    .story-exp-box {
+      background: rgba(10, 10, 30, 0.6);
+      border-left: 4px solid rgba(255, 215, 100, 0.5);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      font-size: 0.87em;
+      color: rgba(220, 210, 190, 0.92);
+      line-height: 1.85;
+      margin-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .story-next-btn {
+      display: none;
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 215, 100, 0.3);
+      background: linear-gradient(135deg, #3a1078, #6c3483, #9b59b6);
+      color: white;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 14px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
+    }
+
+    .story-next-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(155, 89, 182, 0.5);
+      border-color: rgba(255, 215, 100, 0.5);
+    }
+
+    .story-end-panel {
+      display: none;
+      background: linear-gradient(135deg, #1a0530, #3a1078, #6c3483);
+      color: white;
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-align: center;
+      margin-top: 10px;
+      border: 1px solid rgba(255, 215, 100, 0.2);
+      box-shadow: 0 8px 32px rgba(108, 52, 131, 0.5);
+    }
+
+    .story-end-title {
+      font-size: 1.8em;
+      margin-bottom: 10px;
+    }
+
+    .story-end-score {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      opacity: 0.9;
+    }
+
+    .story-end-verdict {
+      font-size: 1em;
+      margin-bottom: 18px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 12px 18px;
+    }
+
+    .story-end-recap {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+      text-align: left;
+      font-size: 0.86em;
+      line-height: 1.85;
+    }
+
+    .story-restart-btn {
+      padding: 11px 28px;
+      border-radius: 10px;
+      border: 2px solid white;
+      background: transparent;
+      color: white;
+      font-size: 0.92em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .story-restart-btn:hover {
+      background: white;
+      color: #6c3483;
+    }
+
+    .story-lock-box {
+      background: linear-gradient(135deg, rgba(20,15,40,0.95), rgba(40,25,65,0.95));
+      border-radius: 14px;
+      padding: 40px 24px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(155, 89, 182, 0.3);
+      color: white;
+    }
+
+    .story-day-select-btn {
+      width: 100%;
+      padding: 18px 22px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(155, 89, 182, 0.35);
+      background: linear-gradient(135deg, rgba(20,15,40,0.92), rgba(40,25,65,0.92));
+      text-align: left;
+      cursor: pointer;
+      color: rgba(255,255,255,0.92);
+      transition: all 0.2s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .story-day-select-btn:hover {
+      border-color: rgba(255, 215, 100, 0.5);
+      background: linear-gradient(135deg, rgba(40,25,65,0.95), rgba(60,35,85,0.95));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(155, 89, 182, 0.35);
+    }
+
+    /* ══════════════════════════════════════
+     VN 視覺小說全幅舞台 — RPG風格
+  ══════════════════════════════════════ */
+    .story-vn-stage {
+      position: relative;
+      height: 480px;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      cursor: default;
+      user-select: none;
+      border: 2px solid rgba(255, 215, 100, 0.15);
+    }
+
+    /* 背景層 */
+    .story-vn-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      transition: background 0.6s ease;
+    }
+
+    /* 大氣疊層 — 左側漸暗遮罩（覆蓋角色圖白邊） */
+    .story-vn-stage::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 300px;
+      z-index: 4;
+      background: linear-gradient(
+        to right,
+        rgba(8, 8, 25, 0.5) 0%,
+        rgba(8, 8, 25, 0.15) 55%,
+        transparent 100%
+      );
+      pointer-events: none;
+    }
+
+    /* 邊緣暗角 + 底部漸暗 */
+    .story-vn-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.55) 100%),
+        radial-gradient(ellipse at 50% 30%, transparent 35%, rgba(0, 0, 0, 0.4) 100%);
+    }
+
+    /* ── 粒子效果（雪花/光點）── */
+    .story-vn-particles {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .story-vn-particles .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+      animation: sparkleFloat linear infinite;
+      opacity: 0;
+    }
+    @keyframes sparkleFloat {
+      0%   { opacity: 0; transform: translateY(0) translateX(0) scale(0.3); }
+      15%  { opacity: 0.9; }
+      50%  { opacity: 0.6; transform: translateY(200px) translateX(-30px) scale(1); }
+      85%  { opacity: 0.3; }
+      100% { opacity: 0; transform: translateY(480px) translateX(20px) scale(0.5); }
+    }
+    .story-vn-particles .sparkle:nth-child(1) { left: 10%; top: -5%; animation-duration: 6s; animation-delay: 0s; width:3px; height:3px; }
+    .story-vn-particles .sparkle:nth-child(2) { left: 25%; top: -8%; animation-duration: 8s; animation-delay: 1.2s; width:5px; height:5px; }
+    .story-vn-particles .sparkle:nth-child(3) { left: 40%; top: -3%; animation-duration: 7s; animation-delay: 0.5s; }
+    .story-vn-particles .sparkle:nth-child(4) { left: 55%; top: -10%; animation-duration: 9s; animation-delay: 2s; width:6px; height:6px; }
+    .story-vn-particles .sparkle:nth-child(5) { left: 70%; top: -4%; animation-duration: 6.5s; animation-delay: 0.8s; width:3px; height:3px; }
+    .story-vn-particles .sparkle:nth-child(6) { left: 85%; top: -7%; animation-duration: 7.5s; animation-delay: 1.8s; }
+    .story-vn-particles .sparkle:nth-child(7) { left: 15%; top: -6%; animation-duration: 10s; animation-delay: 3s; width:4px; height:4px; }
+    .story-vn-particles .sparkle:nth-child(8) { left: 60%; top: -2%; animation-duration: 8.5s; animation-delay: 0.3s; width:5px; height:5px; }
+    .story-vn-particles .sparkle:nth-child(9) { left: 35%; top: -9%; animation-duration: 7s; animation-delay: 2.5s; width:3px; height:3px; }
+    .story-vn-particles .sparkle:nth-child(10) { left: 90%; top: -5%; animation-duration: 9.5s; animation-delay: 1s; }
+    .story-vn-particles .sparkle:nth-child(11) { left: 5%; top: -3%; animation-duration: 11s; animation-delay: 4s; width:6px; height:6px; }
+    .story-vn-particles .sparkle:nth-child(12) { left: 48%; top: -8%; animation-duration: 6s; animation-delay: 1.5s; width:3px; height:3px; }
+
+    /* 場景說明文字（右上角RPG風格浮板） */
+    .story-vn-setup {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      left: auto;
+      max-width: 55%;
+      z-index: 5;
+      background: rgba(10, 10, 35, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 6px 6px 6px 6px;
+      border: 1px solid rgba(255, 215, 100, 0.25);
+      border-top: 2px solid rgba(255, 215, 100, 0.45);
+      padding: 8px 14px;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.74em;
+      line-height: 1.7;
+      white-space: pre-line;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    /* 角色大圖（左側立繪 — RPG VN 風格） */
+    .story-vn-sprite {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      z-index: 3;
+      animation: storyCharIn 0.5s ease-out;
+      width: 260px;
+      height: 340px;
+      /* 底部漸隱遮罩，讓立繪自然融入對話框 */
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+    }
+
+    .story-vn-sprite img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      display: block;
+    }
+
+    /* 底部對話框 — RPG 遊戲風格 */
+    .story-vn-dbox {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 6;
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 15, 40, 0.75) 0%,
+        rgba(10, 10, 30, 0.92) 30%,
+        rgba(5, 5, 20, 0.96) 100%
+      );
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 2px solid rgba(255, 215, 100, 0.3);
+      padding: 14px 20px 16px;
+      min-height: 130px;
+      animation: storyDialogueIn 0.4s ease-out 0.15s backwards;
+    }
+    .story-vn-dbox::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 20px;
+      right: 20px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,215,100,0.4), transparent);
+    }
+
+    .story-vn-namerow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    /* 對話框左側小頭像 — RPG 風格帶邊框 */
+    .story-vn-mini {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid rgba(255, 215, 100, 0.5);
+      overflow: hidden;
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.4),
+        0 0 0 1px rgba(255,255,255,0.1);
+    }
+
+    .story-vn-mini img {
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+
+    /* 角色名牌 — RPG 風格金框 */
+    .story-vn-namebox {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 16px;
+      border-radius: 4px;
+      font-weight: bold;
+      color: white;
+      font-size: 0.92em;
+      letter-spacing: 1px;
+      box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .story-vn-title {
+      font-size: 0.72em;
+      opacity: 0.75;
+      font-weight: normal;
+      color: rgba(255,215,180,0.85);
+    }
+
+    /* 對話文字 — RPG 字型風格 */
+    .story-vn-line {
+      color: rgba(255, 255, 255, 0.96);
+      font-size: 0.95em;
+      line-height: 1.9;
+      padding-left: 58px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── 對話框底部三角指標（像RPG對話箭頭）── */
+    .story-vn-dbox-arrow {
+      position: absolute;
+      bottom: 8px;
+      right: 18px;
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid rgba(255,215,100,0.6);
+      animation: arrowBounce 1s ease-in-out infinite;
+    }
+    @keyframes arrowBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
+    }
+
+    @keyframes storyCharIn {
+      from {
+        opacity: 0;
+        transform: translateX(-30px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    @keyframes storyDialogueIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .story-vn-stage {
+        height: 440px;
+      }
+      .story-vn-sprite {
+        width: 190px;
+        height: 270px;
+      }
+      .story-vn-line {
+        padding-left: 0;
+        font-size: 0.88em;
+      }
+      .story-vn-mini {
+        width: 38px;
+        height: 38px;
+      }
+      .story-vn-setup {
+        max-width: 65%;
+        font-size: 0.7em;
+      }
+      .story-vn-dbox {
+        min-height: 110px;
+        padding: 10px 14px 12px;
+      }
+    }
+
+    @keyframes storyFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .story-mc-options {
+        grid-template-columns: 1fr;
+      }
+
+      .story-tf-buttons {
+        gap: 10px;
+      }
+
+      .story-tf-btn {
+        padding: 10px 26px;
+      }
+    }
+
+    /* ── 存圖按鈕 ── */
+    .save-png-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      margin-top: 10px;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      border: 1.5px solid #cfd8dc;
+      background: transparent;
+      color: #90a4ae;
+      cursor: pointer;
+      transition: all 0.18s;
+      vertical-align: middle;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .save-png-btn:hover {
+      border-color: #6c3483;
+      color: #6c3483;
+      background: #f5eef8;
+    }
+
+    .save-png-btn:active {
+      transform: scale(0.92);
+    }
+
+    .save-png-btn.saving {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .save-png-btn svg {
+      display: block;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+
+  <!-- 模式切換 -->
+  <div class="mode-toggle-wrap">
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-mode-learn" onclick="switchMode('learn')">📖 學習模式</button>
+      <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
+      <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
+      <button class="mode-btn" id="btn-mode-fill" onclick="switchMode('fill')">✏️ 填空題</button>
+      <button class="mode-btn" id="btn-mode-story" onclick="switchMode('story')" style="display:none;">🎭 劇情模式</button>
+    </div>
+  </div>
+  <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
+
+  <div class="exam-header">
+    <h1>廣告法規期末考</h1>
+    <p id="header-sub">選擇答案後，<strong>立即顯示對錯與詳解</strong>・不確定可標記「🎲 猜的」・每題可新增個人筆記</p>
+  </div>
+
+  <div class="sticky-bar">
+    <div class="bar-left">
+      <div>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+          <div class="bar-score">進度 <span id="answered-count">0</span> / <span id="total-count">0</span></div>
+          <div class="bar-correct" id="correct-stat">✅ <span id="correct-count">0</span></div>
+          <div class="bar-wrong" id="wrong-stat">❌ <span id="wrong-count">0</span></div>
+          <div class="bar-guessed" id="guess-chip">🎲 猜的：<span id="guess-count">0</span></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button class="btn-shuffle" id="btn-shuffle" onclick="toggleShuffle()">🔀 隨機排序</button>
+      <button class="btn-check" id="btn-check-all" onclick="checkAll()" style="display:none">✅ 對答案 &amp; 看詳解</button>
+      <button class="btn-reset" onclick="resetAll()">🔄 重新作答</button>
+    </div>
+  </div>
+
+  <div id="quiz-container"></div>
+  <div id="story-panel"></div>
+
+  <div class="final-box" id="final-box">
+    <h2 id="final-score-text"></h2>
+    <div class="final-stats">
+      <div class="final-stat"><span class="num" id="fs-correct">0</span><span class="lbl">答對</span></div>
+      <div class="final-stat"><span class="num" id="fs-wrong">0</span><span class="lbl">答錯</span></div>
+      <div class="final-stat" id="fs-guess-wrap"><span class="num" id="fs-guess">0</span><span class="lbl">猜對（共猜 <span
+            id="fs-guessed-total">0</span> 題）</span></div>
+    </div>
+    <p id="final-msg"></p>
+    <p style="margin-top:14px;font-size:0.85em;opacity:0.75;" id="final-hint"></p>
+    <div id="retry-wrap" style="display:none">
+      <button class="btn-retry" id="btn-retry" onclick="retryWrong()">🔁 重新練習答錯題目</button>
+    </div>
+  </div>
+
+  <script>
+    /* ─── 題目資料 ─── */
+    const questions = [
+      // ── 衛星廣播電視法 ──
+      { q: "衛星廣播電視法第24條規定：「直播衛星廣播電視服務事業及經營直播衛星廣播電視服務事業之境外衛星廣播電視事業分公司播出之購物頻道數，應低於頻道總數百分之十五。」", ans: "X", exp: "依衛廣法§24，購物頻道數應低於頻道總數<b>十分之一</b>（10%），非15%。", page: "衛廣法§24" },
+      { q: "衛星廣播電視法第31條第二項規定：「衛星廣播電視事業及境外衛星廣播電視事業分公司或代理商不得於新聞評論及兒童節目為置入性行銷。」", ans: "X", exp: "依衛廣法§31第2項，禁止置入性行銷之節目為<b>新聞節目</b>及兒童節目，非「新聞評論」。", page: "衛廣法§31" },
+      { q: "衛星廣播電視法第36條第一項規定：「衛星廣播電視事業及境外衛星廣播電視事業分公司或代理商播送之廣告時間，不得超過每一節目播送時間六分之一。」", ans: "O", exp: "衛廣法§36第1項明定廣告時間上限為每一節目播送時間之<b>六分之一</b>，本題敘述正確。", page: "衛廣法§36" },
+      { q: "衛星廣播電視法第36條第二項規定：「單則廣告時間超過二分鐘或廣告以節目型態播送者，應於播送畫面上標示廣告二字。」", ans: "X", exp: "依衛廣法§36第2項，單則廣告時間超過<b>三分鐘</b>者始須標示，非二分鐘。", page: "衛廣法§36" },
+      { q: "衛星廣播電視法第35條第一項規定：「衛星廣播電視事業播送依法應經目的事業主管機關核定之廣告內容，應先取得目的事業主管機關核定之證明文件，始得播送。」", ans: "X", exp: "依衛廣法§35第1項，應先取得目的事業主管機關<b>核准</b>之證明文件，而非「核定」。", page: "衛廣法§35" },
+      { q: "衛星廣播電視法第39條規定：「主管機關認為有必要時，得於節目或廣告播送前二十日向衛星廣播電視事業、境外衛星廣播電視事業之分公司或代理商索取該節目、廣告及其他相關資料。」", ans: "O", exp: "衛廣法§39明定主管機關得於播送前20日索取相關資料，本題敘述正確。", page: "衛廣法§39" },
+      { q: "衛星廣播電視法第44條規定：「對於衛星廣播電視之節目或廣告，利害關係人認有錯誤，得於播送之日起二十日內要求更正；衛星廣播電視事業應於接到要求後二十日內，在同一時間之節目或廣告中加以更正。」", ans: "O", exp: "衛廣法§44規定利害關係人得於播送後20日內要求更正，事業應於接到後20日內更正，本題敘述正確。此為利害關係人之媒體近用權保障。", page: "衛廣法§44" },
+      { q: "衛星廣播電視法施行細則第11條第一項規定：「本法第三十三條第一項及第三十六條第一項所定廣告時間，包括同家族頻道節目之預告。」", ans: "X", exp: "依衛廣法施行細則§11第1項，廣告時間<b>不包括</b>同家族頻道節目之預告，本題「包括」之敘述錯誤。", page: "衛廣法施行細則§11" },
+      { q: "衛星廣播電視法施行細則第12條規定：「依本法第四十條規定，被評論者要求衛星廣播電視事業給予相當答辯之機會，應在節目評論播出之日起三個月內為之。」", ans: "O", exp: "衛廣法施行細則§12明定被評論者應於播出後3個月內提出要求，本題敘述正確。", page: "衛廣法施行細則§12" },
+      { q: "衛星廣播電視法第28條第一項規定：「衛星廣播電視事業及境外衛星廣播電視事業之分公司或代理商，應就其播送之電視節目予以分級。」", ans: "O", exp: "衛廣法§28第1項明定衛星廣播電視事業對電視節目應予分級，本題敘述正確。", page: "衛廣法§28" },
+      { q: "衛星廣播電視法第29條第二項規定：「衛星廣播電視事業及境外衛星廣播電視事業之分公司或代理商應將廣告內容以書面方式報請主管機關核備。」", ans: "O", exp: "衛廣法§29第2項要求廣告內容以書面報請主管機關核備，本題敘述正確。", page: "衛廣法§29" },
+      { q: "衛星頻道節目供應事業播送本國節目管理辦法第5條第一項規定：「衛星頻道供應事業經營之個別頻道於指定時段播送下列類型節目，本國節目比率不得低於百分之二十五，其新播比率不得低於百分之四十。」", ans: "O", exp: "依該辦法§5第1項，本國節目比率下限25%，新播比率下限40%，本題敘述正確。", page: "衛廣法相關辦法§5" },
+      { q: "衛星廣播電視節目廣告起訖時間認定與廣告播送方式及數量分配辦法第3條規定：「節目播送時間達三十分鐘者，得插播廣告二次；達四十五分鐘者，得插播廣告三次；達六十分鐘者，得插播廣告四次。」", ans: "O", exp: "依廣告插播辦法§3，30分鐘2次、45分鐘3次、60分鐘4次，本題敘述正確。", page: "廣告插播辦法§3" },
+
+      // ── 公平交易法基礎 ──
+      { q: "公平交易法第一條立法目的中明訂「保護消費者為其直接目的」。", ans: "X", exp: "公平法§1之立法目的為<b>維護交易秩序與消費者利益</b>，但通說認為保護消費者係<b>間接目的</b>，直接目的是維護公平競爭與交易秩序。", page: "公平法§1" },
+      { q: "公平交易法第45條規定，依著作權法、商品標示法、專利法或其他智慧財產權法規行使權利之正當行為，不適用本法之規定。", ans: "X", exp: "公平法§45列舉的是依<b>著作權法、商標法、專利法</b>行使正當權利之行為，不包含「商品標示法」，本題以「商品標示法」替換「商標法」，敘述錯誤。", page: "公平法§45" },
+      { q: "公平法第2條所稱之事業包括：公司、獨資或合夥之工商行號、同業公會及其他提供商品或服務從事交易之人或團體。", ans: "X", exp: "公平法§2第4款為「其他提供商品或服務交易之<b>人</b>」，不包含「團體」二字，本題多加「團體」故錯誤。", page: "公平法§2" },
+      { q: "公平交易法第31條規定：「法院因前條被害人之請求，如為事業之故意行為，得依侵害情節，酌定損害額以上之賠償，但不得超過已證明損害額之三倍。」", ans: "O", exp: "公平法§31明定故意行為之懲罰性賠償，上限為已證明損害額之<b>三倍</b>，本題敘述正確。", page: "公平法§31" },
+      { q: "公平交易法第29條規定：「事業違反本法之規定，致侵害他人權益者，被侵害人得請求除去之；有侵害之虞者，並得請求防止之。」此為民事責任之防止及除去侵害請求權。", ans: "O", exp: "公平法§29明定侵害排除及防止請求權，本題敘述正確。", page: "公平法§29" },
+      { q: "公平交易法第32條規定：「本法所定之請求權，自請求權人知有行為及賠償義務人時起，二年間不行使而消滅；自行為時起，過十年者亦同。」", ans: "O", exp: "公平法§32規定損害賠償請求權消滅時效：知悉時起<b>2年</b>，行為時起<b>10年</b>，本題敘述正確。", page: "公平法§32" },
+      { q: "公平交易法第8條第二項規定，三事業全體於相關市場占有率未達四分之三，不列入前項條款獨占事業認定範圍；第三款：三事業全體於相關市場之占有率有未達四分之三者。", ans: "X", exp: "公平法§8：三事業合計市占率達<b>四分之三</b>者適用獨占規定，但個別事業市占率未達<b>十分之一</b>者除外。本題敘述邏輯相反，故錯誤。", page: "公平法§8" },
+      { q: "公平交易法第11條第一項第一款規定：「事業結合時，有下列情形之一，應先向主管機關提出申報：一、事業因結合而使其市場占有率達四分之一。」", ans: "X", exp: "公平法§11第1項第1款規定，事業因結合使市場占有率達<b>三分之一</b>者應申報，非四分之一。", page: "公平法§11" },
+      { q: "公平交易法第13條第一項規定：「對於事業結合之申報，如其結合，對整體經濟利益大於限制競爭之不利益者，主管機關不得禁止其結合。」", ans: "X", exp: "公平法§13第1項是主管機關<b>得</b>（有裁量空間）不禁止，並非「不得禁止」，語意有差異。本題以強制性規定描述裁量規定，故錯誤。", page: "公平法§13" },
+      { q: "公平交易法第42條規定，主管機關關對於違反第二十一條、第二十三條至第二十五條規定之事業，得處新臺幣五萬元以上二千五百萬元以下罰鍰；屆期仍不停止，得繼續限期令停止、改正其行為，並按次處新臺幣十萬元以上五千萬元以上罰鍰，至停止、改正其行為為止。", ans: "X", exp: "公平法§42對違反§21、§23至§25之事業，罰鍰為5萬以上<b>2,500萬</b>以下；按次罰則之上限為<b>5,000萬以下</b>（非5,000萬以上）。本題末段「五千萬元以上」敘述錯誤。", page: "公平法§42" },
+
+      // ── 贈品贈獎辦法 ──
+      { q: "公平交易委員會對於贈品贈獎額度辦法第六條，事業辦理贈獎，其最大獎項之金額，不得超過新台幣五百萬元。", ans: "O", exp: "贈品贈獎辦法§6規定最大獎項金額上限為新臺幣<b>500萬元</b>，本題敘述正確。", page: "贈品贈獎辦法§6" },
+      { q: "公平交易委員會對於贈品贈獎額度辦法第五條規定：「事業辦理贈獎，其全年贈獎總額之上限，上一會計年度之銷售金額在新台幣三十億元以上者，為新台幣五億元。」", ans: "X", exp: "贈品贈獎辦法§5規定，年銷售金額30億以上者，全年贈獎總額上限為新臺幣<b>7.5億元</b>，非5億元。", page: "贈品贈獎辦法§5" },
+      { q: "公平交易委員會對於贈品贈獎額度辦法第四條：「事業銷售商品或服務附送贈品，商品或服務價值在新台幣一百元以下者，為新台幣五十元。」", ans: "O", exp: "贈品贈獎辦法§4規定，商品/服務價值在100元以下者，贈品上限為<b>50元</b>，本題敘述正確。", page: "贈品贈獎辦法§4" },
+
+      // ── 公平法§21案件處理原則 ──
+      { q: "行政院公平交易委員會對於公平交易法第二十一條案件之處理原則第四條規定：本法第二十一條所稱表示或表徵，係指以文字、語言、聲響、圖形、記號、數字、圖案、顏色、形狀、動作、物體或其他方式足以表達或傳播具商業價值之訊息或觀念之行為。", ans: "O", exp: "公平法§21案件處理原則§4對「表示或表徵」之定義，列舉各種型態，本題敘述正確。", page: "處理原則§4" },
+      { q: "公平交易委員會對於公平交易法第二十一條案件之處理原則第六條規定：「本法第二十一條所稱引人錯誤，係指表示或表徵與事實相符，而有引起一般或相關大眾錯誤之認知或決定之虞者。」", ans: "X", exp: "依處理原則§6，「引人錯誤」係指表示或表徵與事實<b>不符</b>（或雖與事實相符，但以足以引人錯誤之方式表達），本題說「相符」，錯誤。", page: "處理原則§6" },
+      { q: "行政院公平交易委員會對於公平交易法第二十一條案件之處理原則第七條規定：虛偽不實或引人錯誤之表示或表徵判斷原則如下：(六)表示或表徵客觀上具有多重合理的解釋時，其中一義為真者，即無不實。但其引人錯誤之意圖明顯者，不在此限。", ans: "O", exp: "處理原則§7第(六)款規定，多重合理解釋中一義為真即無不實，但故意引人錯誤者例外，本題敘述正確。", page: "處理原則§7" },
+      { q: "公平交易委員會對於公平交易法第二十一條案件之處理原則第八條第二項規定：廣告主使用廣告時，如預知或可得知其日後給付之內容無法與廣告相符，則其廣告有虛偽不實或引人錯誤之表示。", ans: "O", exp: "處理原則§8第2項規定，廣告主預知或可得知給付內容將與廣告不符，即構成虛偽不實，本題敘述正確。", page: "處理原則§8" },
+      { q: "公平交易委員會對於另為刊登更正廣告案件之處理原則第七點：「更正廣告之刊登，應命被處分人於限期或指定日期為之，以不逾處分書送達後二十日為限，以免行為之危害程度繼續擴大。」", ans: "X", exp: "更正廣告處理原則第7點規定，命刊登更正廣告以不逾處分書送達後<b>三十日</b>為限，非二十日。", page: "更正廣告處理原則" },
+      { q: "公平交易委員會對於命為刊登更正廣告案件之處理原則第二條規定：「對於違反公平交易法第二十一條第一項至第三項之事業，倘命其刊登更正廣告，可防止、除去或補救其行為所造成下列危害之一者，得命其刊登更正廣告。」", ans: "X", exp: "更正廣告處理原則第2條適用對象為違反公平法§21第<b>一項至第二項</b>之事業（廣告主），並非至第三項（廣告代理業）。", page: "更正廣告處理原則" },
+
+      // ── 薦證廣告規範 ──
+      { q: "公平交易委員會對於薦證廣告之規範說明第4條，薦證廣告之商品或服務有下列虛偽不實或引人錯誤之表示或表徵者，涉及違反公平交易法第二十一條之規定：「經目的事業主管機關認定為誇大不實。」", ans: "O", exp: "薦證廣告規範說明§4明定，經目的事業主管機關認定為誇大不實者，涉及違反公平法§21，本題敘述正確。", page: "薦證廣告規範§4" },
+      { q: "公平交易委員會對於薦證廣告之規範說明第6條：「廣告媒體業在明知或可得而知其所傳播或刊載之廣告有引人錯誤之虞，仍予傳播或刊載，依本法第二十一條第四項後段規定與廣告代理業負連帶損害賠償責任。」", ans: "O", exp: "薦證廣告規範說明§6，廣告媒體業明知引人錯誤仍刊播，依公平法§21第4項後段負連帶賠償，本題敘述正確。", page: "薦證廣告規範§6" },
+      { q: "公平交易委員會對於薦證廣告之規範說明第6條：「薦證者明知或可得而知其所從事之薦證有虛偽不實或引人錯誤之虞，而仍為薦證者，依本法第二十一條第五項後段規定，與廣告主負連帶損害賠償責任。」", ans: "O", exp: "薦證廣告規範說明§6，薦證者明知有虛偽仍薦證，依公平法§21第5項後段負連帶賠償，本題敘述正確。", page: "薦證廣告規範§6" },
+      { q: "公平交易委員會對於薦證廣告之規範說明第6條：「薦證者非屬知名公眾人物或專業人士（機構），依本法第二十一條第五項後書規定，僅於受廣告主報酬之範圍內，與廣告主負連帶損害賠償責任。」", ans: "X", exp: "依公平法§21第5項，非屬知名公眾人物之薦證者（素人），連帶賠償上限為<b>所受報酬之10倍</b>，而非「報酬範圍內」，本題敘述錯誤。", page: "薦證廣告規範§6" },
+      { q: "公平交易委員會對於薦證廣告之規範說明第5條：「薦證廣告以社群網站推文方式為之，如薦證者與廣告主間具有非一般大眾可合理預期之利益關係，而未於廣告中充分揭露，且以影響交易秩序者，涉及違反本法第三十四條規定。」", ans: "X", exp: "薦證廣告規範說明§5，社群推文薦證未揭露利益關係，涉及違反公平法<b>第二十一條</b>（虛偽不實廣告），非第三十四條。", page: "薦證廣告規範§5" },
+      { q: "公平交易委員會對於薦證廣告之規範說明第3條，廣告主對於薦證廣告行為，應依下列原則處理，其中即應即刻應對違反本規定之虞：「(二)以知名公眾人物或專業人士（機構）從事薦證廣告，薦證廣告商品或服務之內容或品質變更時，廣告主需有正當理由足以確信該薦證者於廣告刊播期間內，並未變更其於廣告中對所薦證商品或服務所表達之見解。」", ans: "O", exp: "薦證廣告規範說明§3規定廣告主對薦證廣告之管理義務，本題敘述正確。", page: "薦證廣告規範§3" },
+      { q: "公平交易委員會對於薦證廣告之規範說明第6條，關於薦證者違反本法規之罰則與法律責任：「(二)薦證者倘為商品或服務之提供者或銷售者，即為本規範說明所稱廣告主之之一，適用有關廣告主之規範。」", ans: "O", exp: "薦證廣告規範說明§6，薦證者若同時為商品銷售者，即視為廣告主，適用廣告主規範，本題敘述正確。", page: "薦證廣告規範§6" },
+
+      // ── 網路廣告處理原則 ──
+      { q: "公平交易委員會對於網路廣告案件之處理原則第4條規定：「由供貨商與網站經營者共同合作完成之購物網站廣告，其提供商品或服務資訊之供貨商，及以自身名義對外刊播並從事銷售之網站經營者，均為該網路廣告之廣告主。」", ans: "O", exp: "網路廣告處理原則§4明定供貨商與網站經營者各自視情況均可為廣告主，本題敘述正確。", page: "網路廣告處理原則§4" },
+      { q: "公平交易委員會對於網路廣告案件之處理原則第9條規定：「網路廣告以他人薦證或社群網站用戶（含部落客）撰文之方式推廣商品護服務者，廣告主應確保其內容與事實相符，違反者，可能構成公平交易法第二十一條之違反。」", ans: "O", exp: "網路廣告處理原則§9規定廣告主對他人薦證內容之確保義務，本題敘述正確。", page: "網路廣告處理原則§9" },
+      { q: "公平交易委員會對於網路廣告案件之處理原則第10條第一項，事業違反第八點及第九點，可能構成公平交易法第二十一條之違反。", ans: "O", exp: "網路廣告處理原則§10第1項規定，違反第8、9點者可能違反公平法§21，本題敘述正確。", page: "網路廣告處理原則§10" },
+      { q: "公平交易委員會對於網路廣告案件之處理原則第10條第二項，網路廣告違反第九點者，與廣告主故意共同實施之薦證者或社群網站用戶（含部落客、網紅、直播主等），得依廣告主所違反條文併同罰之。", ans: "O", exp: "網路廣告處理原則§10第2項，故意共同實施之薦證者或社群用戶可與廣告主一同被處罰，本題敘述正確。", page: "網路廣告處理原則§10" },
+
+      // ── 比較廣告處理原則 ──
+      { q: "行政院公平交易委員會對於比較廣告案件之處理原則第5條規定：「事業不得於比較廣告，就自身或他事業商品為虛偽不實或引人錯誤之表示或表徵。」事業違反第五點者，可能構成公平交易法第二十一條之違反。", ans: "O", exp: "比較廣告處理原則§5規定，比較廣告中對自身或他事業商品不得虛偽不實，違反者構成公平法§21之違反，本題敘述正確。", page: "比較廣告處理原則§5" },
+      { q: "行政院公平交易委員會對於比較廣告案件之處理原則第5條規定：事業於比較廣告無論是否指明被比較事業，不得就他事業商品之比較項目，為下列欺罔或顯失公平之行為：(三)對相同商品之比較採不同基準或條件。違反者，可能構成公平交易法第二十二條之違反。", ans: "X", exp: "比較廣告處理原則§5關於對相同商品採不同基準之比較，構成的是公平法<b>第二十一條</b>（虛偽不實廣告）之違反，非第二十二條。", page: "比較廣告處理原則§5" },
+      { q: "行政院公平交易委員會對於比較廣告案件之處理原則第6條規定：「事業於比較廣告，不得為競爭之目的，陳述或散布不實之情事，對明示或可得特定之他事業營業信譽產生貶損之比較結果。」違反者可能構成公平交易法第二十二條之違反。", ans: "X", exp: "比較廣告處理原則§6，競爭目的陳述不實貶損他事業商業信譽，構成的是公平法<b>第二十五條</b>（一般不公平競爭條款）之違反，而非第二十二條。", page: "比較廣告處理原則§6" },
+      { q: "公平交易委員會對於事業發侵害著作權、商標權或專利權警告函案件之處理原則第三條規定：「事業踐行下列確認權利受侵害程序之一，始發警告告函者，為依照著作權法、商標法或專利法行使權利之正當行為：(一) 經法院一審判決確屬著作權、商標權或專利權受侵害者。」", ans: "O", exp: "警告函處理原則§3規定，踐行確認侵害程序（如法院一審判決）後再發警告函，為正當行使IP權利之行為，本題敘述正確。", page: "警告函處理原則§3" },
+      { q: "公平交易委員會對於事業發侵害著作權、商標權或專利權警告函案件之處理原則第五條規定：事業未踐行第三點或第四點規定之先行程序，逕發警告函，且為足以影響交易秩序之欺罔或顯失公平行為者，構成公平交易法第二十一條之違反。", ans: "X", exp: "警告函處理原則§5，未踐行先行程序逕發警告函，且足以影響交易秩序者，構成的是公平法<b>第二十五條</b>（一般不公平競爭）之違反，非第二十一條（廣告不實）。", page: "警告函處理原則§5" },
+
+      // ── 移送主管機關案件類型表 ──
+      { q: "依公平會「移送各主管機關處理之案件類型表」，「農產品廣告、於零售市場階段之農產品標示、市售包裝米之廣告」之主管機關為行政院農業委員會。", ans: "O", exp: "移送主管機關案件類型表，農產品廣告等案件主管機關為<b>行政院農業委員會</b>（現已改制為農業部）。", page: "移送主管機關類型表" },
+      { q: "依公平會「移送各主管機關處理之案件類型表」，「菸酒標示、酒品廣告」之主管機關為財政部國庫署。", ans: "O", exp: "移送主管機關案件類型表，菸酒標示、酒品廣告之主管機關為<b>財政部國庫署</b>，本題敘述正確。", page: "移送主管機關類型表" },
+      { q: "公平交易委員會移送各主管機關處理之案件類型表第8項：「於批發市場階段之農產品廣告、產銷履歷之標示、有機食品之標示及廣告」，主管機關為行政院農業委員會。", ans: "X", exp: "批發市場農產品廣告、產銷履歷、有機食品之主管機關為<b>農業部</b>（原農委會，但依現行移送表，有機食品另屬農業部食品安全管理相關單位負責），本題所列主管機關有誤。", page: "移送主管機關類型表" },
+      { q: "依「移送各主管機關處理之案件類型表」第14點「職業訓練機構之招訓廣告或簡章內容不實者」，主管機關為勞工局。", ans: "O", exp: "職業訓練機構招訓廣告不實，主管機關為<b>勞工局</b>（地方主管機關），本題敘述正確。", page: "移送主管機關類型表" },
+
+      // ── 消費者保護法 ──
+      { q: "消費者保護法第9條規定：「輸入商品或服務之企業經營者，視為該商品之設計、生產、製造者或服務之提供者，負本法第七條之製造者責任。」", ans: "O", exp: "消保法§9規定輸入商品之企業視為製造者，負§7之嚴格責任，本題敘述正確。", page: "消保法§9" },
+      { q: "消費者保護法第11-1條第一項規定：「企業經營者與消費者訂立定型化契約前，應有三十日以內之合理期間，供消費者審閱全部條款內容。」", ans: "O", exp: "消保法§11-1第1項規定，定型化契約簽訂前應給予消費者<b>30日以內</b>之合理審閱期，本題敘述正確。", page: "消保法§11-1" },
+      { q: "消費者保護法第19條規定：「企業經營者對消費者收受商品或接受服務時，未依前條第一項第三款規定提供消費者解除契約相關資訊者，第一項七日期間自提供之次日起算。但自第一項七日期間開始起算，已逾三個月者，解除權消滅。」", ans: "O", exp: "消保法§19關於通訊/訪問交易解除權起算，若未告知相關資訊則從提供次日起算，但超過3個月者消滅，本題敘述正確。", page: "消保法§19" },
+      { q: "消費者保護法第19-2條第一項規定：「消費者依第十九條第一項或第三項規定，以書面通知解除契約者，除當事人另有個別議定外，企業經營者應於收到通知之次日起十五日內，至原交付處所或約定處所取回商品。」", ans: "O", exp: "消保法§19-2第1項規定，解除契約後企業應於收到通知次日起<b>15日內</b>取回商品，本題敘述正確。", page: "消保法§19-2" },
+      { q: "消費者保護法第21條第三項規定：「企業經營者未依前項規定記載利率者，其利率按現金交易價格逾年利率百分之二十計算之。」", ans: "O", exp: "消保法§21第3項規定，企業未記載利率者，按現金交易價格年利率<b>20%</b>計算，本題敘述正確。", page: "消保法§21" },
+      { q: "消費者保護法第45-5條第一項規定：「當事人對前條之方案，得於送達後十日之不變期間內，提出異議；未於異議期間內提出異議者，推定已依該方案成立調解。」", ans: "X", exp: "消保法§45-5第1項，當事人對調解方案之異議期間為送達後<b>十日</b>，但「推定已依方案成立調解」的前提是未異議，本題敘述基本正確但部分文字有誤。需確認具體題目文字。", page: "消保法§45-5" },
+      { q: "消費者保護法第51條規定：「依本法所提之訴訟，因企業經營者之故意所致之損害，消費者得請求損害額三倍以下之懲罰性賠償金；但因重大過失所致之損害，得請求三倍以下之懲罰性賠償金，因過失所致之損害，得請求損害額一倍以下之懲罰性賠償金。」", ans: "X", exp: "消保法§51：故意 → <b>三倍以下</b>；重大過失 → <b>三倍以下</b>；（一般）過失 → <b>一倍以下</b>。本題將「重大過失三倍以下」列為正確但題目敘述本身有問題，需比對原題。標準版本：故意可請求三倍，重大過失可請求三倍，一般過失只能一倍，三者有所區分。", page: "消保法§51" }
+    ];
+
+    /* ─── 選擇題資料（45題）─── */
+    const mcQuestions = [
+    ];
+
+    /* ─── 填空題資料（30題）─── */
+    const fillQuestions = [
+    ];
+
+    /* ─── 解鎖檢查 ─── */
+    // 密碼以 SHA-256 hash 儲存，不在原始碼中保留明文
+    const UNLOCK_HASH = '175917e084446d364d5a393b25cddb3a0d0a71b6745b0a120b77e925518c112e';
+    const SESSION_FLAG = 'adlaw_ok';
+
+    // 同步：從 sessionStorage 恢復解鎖狀態（僅儲存旗標，不儲存原始密碼）
+    let isUnlocked = sessionStorage.getItem(SESSION_FLAG) === '1';
+
+    // 非同步：首次以 URL key 解鎖（hash 比對後 reload 以套用狀態）
+    (async () => {
+      const urlKey = new URLSearchParams(window.location.search).get('key');
+      if (urlKey && !isUnlocked) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(urlKey));
+        const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+        if (hex === UNLOCK_HASH) {
+          sessionStorage.setItem(SESSION_FLAG, '1');
+          location.href = location.pathname; // 移除 URL 中的密碼，並重新載入套用解鎖
+        }
+      }
+    })();
+
+    if (isUnlocked) {
+      document.querySelector('.exam-header h1').innerHTML = '廣告法規期末考 <span style="font-size:0.6em;opacity:0.8;">🔓</span>';
+      document.getElementById('btn-mode-story').style.display = '';
+    }
+
+    /* ─── 匿名答題追蹤 ─── */
+    const TRACK_URL = 'https://script.google.com/macros/s/AKfycby1OBl_GcVcmUvz4jcdL-KnufhZRs9wadvrUT82IHC9U8Elal-2fBuJp1JvB9aNzAeA/exec';
+    const TRACK_TOKEN = 'adlaw2026';
+    const _sid = localStorage.getItem('_sid') || (() => {
+      const s = crypto.randomUUID(); localStorage.setItem('_sid', s); return s;
+    })();
+    function makeQId(text) {
+      let h = 0;
+      for (let i = 0; i < text.length; i++) h = ((h << 5) - h + text.charCodeAt(i)) | 0;
+      return Math.abs(h).toString(36).padStart(7, '0').slice(0, 8);
+    }
+    function trackAnswer(mode, qType, qIdx, userAns, correct, qText) {
+      if (!TRACK_URL) return;
+      const body = JSON.stringify({
+        sid: _sid, mode, qType, qIdx,
+        qId: qText ? makeQId(qText) : '',
+        qSnippet: qText ? qText.slice(0, 30) : '',
+        userAns: String(userAns), correct, ts: Date.now(),
+        token: TRACK_TOKEN, unlocked: isUnlocked
+      });
+      fetch(TRACK_URL, { method: 'POST', body, mode: 'no-cors', headers: { 'Content-Type': 'text/plain' } }).catch(() => {});
+    }
+
+    /* ─── 依解鎖狀態篩選題目 ─── */
+    const activeQuestions = questions.filter(q => isUnlocked || !q.hidden);
+    const activeMCQuestions = mcQuestions.filter(q => isUnlocked || !q.hidden);
+    const activeFillQuestions = fillQuestions.filter(q => isUnlocked || !q.hidden);
+
+    /* ─── 模式狀態 ─── */
+    let currentMode = 'learn'; // 'learn' | 'classic'
+    let userAnswers = Array(activeQuestions.length).fill(null);
+    let guessFlags = Array(activeQuestions.length).fill(false);
+    let correctCount = 0, wrongCount = 0;
+    let classicChecked = false;
+    let shuffleEnabled = false;
+    let displayQuestions = [...activeQuestions];
+    let displayMCQuestions = [...activeMCQuestions];
+    let mcUserAnswers = Array(activeMCQuestions.length).fill(null);
+    let mcCorrectCount = 0, mcWrongCount = 0;
+    let mcGuessFlags = Array(activeMCQuestions.length).fill(false);
+    let mcOptionOrders = []; // shuffled option order per question [0-3]
+    let mcMappedAns = []; // correct answer index after shuffling options
+    const TOTAL = activeQuestions.length;
+    const MC_TOTAL = activeMCQuestions.length;
+    let fillUserAnswers = Array(activeFillQuestions.length).fill(null);
+    let fillCorrectCount = 0, fillWrongCount = 0;
+    let displayFillQuestions = [...activeFillQuestions];
+    const FILL_TOTAL = activeFillQuestions.length;
+
+    /* ─── 隨機排序 ─── */
+    function toggleShuffle() {
+      shuffleEnabled = !shuffleEnabled;
+      document.getElementById('btn-shuffle').classList.toggle('active', shuffleEnabled);
+      resetAll();
+    }
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    /* ─── 切換模式 ─── */
+    function switchMode(mode) {
+      if (currentMode === mode) return;
+      currentMode = mode;
+      document.getElementById('btn-mode-learn').classList.toggle('active', mode === 'learn');
+      document.getElementById('btn-mode-classic').classList.toggle('active', mode === 'classic');
+      document.getElementById('btn-mode-mc').classList.toggle('active', mode === 'mc');
+      document.getElementById('btn-mode-fill').classList.toggle('active', mode === 'fill');
+      document.getElementById('btn-mode-story').classList.toggle('active', mode === 'story');
+
+      // 劇情模式：顯示 story-panel，隱藏其他主要 UI
+      const isStory = mode === 'story';
+      document.getElementById('story-panel').style.display = isStory ? 'block' : 'none';
+      document.getElementById('quiz-container').style.display = isStory ? 'none' : '';
+      document.getElementById('final-box').style.display = 'none';
+      document.querySelector('.sticky-bar').style.display = isStory ? 'none' : '';
+      document.querySelector('.exam-header').style.display = isStory ? 'none' : '';
+
+      if (isStory) {
+        document.getElementById('mode-desc').textContent = '🔒 限密碼解鎖者遊玩・菜鳥律師小廣的廣告法求生記';
+        resetAll();
+        return;
+      }
+
+      const desc = document.getElementById('mode-desc');
+      const headerSub = document.getElementById('header-sub');
+      const btnCheck = document.getElementById('btn-check-all');
+
+      if (mode === 'learn') {
+        document.getElementById('total-count').textContent = TOTAL;
+        desc.textContent = '答題後立即顯示對錯與詳解，隨時掌握學習進度';
+        headerSub.innerHTML = '選擇答案後，<strong>立即顯示對錯與詳解</strong>・不確定可標記「🎲 猜的」・每題可新增個人筆記';
+        btnCheck.style.display = 'none';
+        document.getElementById('correct-stat').style.display = '';
+        document.getElementById('wrong-stat').style.display = '';
+      } else if (mode === 'classic') {
+        document.getElementById('total-count').textContent = TOTAL;
+        desc.textContent = '作答完所有題目後，點「對答案」一次看完所有結果與詳解';
+        headerSub.innerHTML = '選擇 ○（正確）或 ✕（錯誤）・不確定時可點「🎲 猜的」標記・作答後點<strong>「✅ 對答案」</strong>查看結果';
+        btnCheck.style.display = '';
+        document.getElementById('correct-stat').style.display = 'none';
+        document.getElementById('wrong-stat').style.display = 'none';
+      } else if (mode === 'mc') {
+        document.getElementById('total-count').textContent = MC_TOTAL;
+        desc.textContent = '共 ' + MC_TOTAL + ' 題四選一，融會貫通易混淆觀念・答題後立即顯示詳解';
+        headerSub.innerHTML = '從判斷題中精選<strong>最容易混淆的觀念</strong>，製成四選一選擇題・答題後<strong>立即顯示正確答案與詳解</strong>';
+        btnCheck.style.display = 'none';
+        document.getElementById('correct-stat').style.display = '';
+        document.getElementById('wrong-stat').style.display = '';
+      } else { // fill
+        document.getElementById('total-count').textContent = FILL_TOTAL;
+        desc.textContent = '填入關鍵數字與詞彙，強化法條細節記憶・答對才算完成';
+        headerSub.innerHTML = '從法條中挖空<strong>最容易記錯的數字與關鍵詞</strong>・輸入答案後按「✅ 確認答案」・<strong>答對才算完成</strong>';
+        btnCheck.style.display = 'none';
+        document.getElementById('correct-stat').style.display = '';
+        document.getElementById('wrong-stat').style.display = '';
+      }
+      resetAll();
+    }
+
+    /* ─── 建立題目 ─── */
+    function buildQuiz() {
+      if (currentMode === 'story') return;
+      if (currentMode === 'mc') { buildMCQuiz(); return; }
+      if (currentMode === 'fill') { buildFillQuiz(); return; }
+      const c = document.getElementById('quiz-container');
+      c.innerHTML = '';
+      displayQuestions.forEach((q, i) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = 'card-' + i;
+        card.innerHTML = `
+      <div class="question-top">
+        <div class="q-num" id="qnum-${i}">${i + 1}</div>
+        <div class="q-text">${q.q}</div>
+      </div>
+      <div class="choices-row">
+        <button class="choice-btn" id="btn-O-${i}" onclick="handleAnswer(${i},'O')">○ 正確</button>
+        <button class="choice-btn" id="btn-X-${i}" onclick="handleAnswer(${i},'X')">✕ 錯誤</button>
+        <button class="guess-btn"  id="gbtn-${i}"  onclick="toggleGuess(${i})">🎲 猜的</button>
+        <span  class="guess-label" id="glabel-${i}">⚠️ 我猜的</span>
+      </div>
+      <div class="result-row" id="rrow-${i}">
+        <div class="result-badge" id="rbadge-${i}"></div>
+      </div>
+      <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
+      </div>
+    `;
+        c.appendChild(card);
+      });
+    }
+
+    /* ─── 選擇題模式：建立 ─── */
+    function buildMCQuiz() {
+      const c = document.getElementById('quiz-container');
+      c.innerHTML = '';
+      mcOptionOrders = [];
+      mcMappedAns = [];
+      displayMCQuestions.forEach((q, i) => {
+        const LABELS = ['A', 'B', 'C', 'D'];
+        // 每題選項都重新洗牌，增加隨機感
+        const order = shuffleArray([0, 1, 2, 3]);
+        mcOptionOrders.push(order);
+        mcMappedAns.push(order.indexOf(q.ans));
+
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = 'card-' + i;
+        card.innerHTML = `
+      <div class="question-top">
+        <div class="q-num" id="qnum-${i}">${i + 1}</div>
+        <div class="q-text">${q.q}</div>
+      </div>
+      <div class="mc-options-grid" id="opts-${i}">
+        ${order.map((origIdx, j) => `
+          <button class="mc-option-btn" id="mc-btn-${i}-${j}" onclick="answerMC(${i},${j})">
+            <span class="mc-label">${LABELS[j]}</span>
+            <span>${q.options[origIdx]}</span>
+          </button>`).join('')}
+      </div>
+      <div class="choices-row" style="margin-top:8px">
+        <button class="guess-btn" id="gbtn-${i}" onclick="toggleGuess(${i})">🎲 猜的</button>
+        <span class="guess-label" id="glabel-${i}">⚠️ 我猜的</span>
+      </div>
+      <div class="result-row" id="rrow-${i}">
+        <div class="result-badge" id="rbadge-${i}"></div>
+      </div>
+      <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
+      </div>
+    `;
+        c.appendChild(card);
+      });
+    }
+
+    /* ─── 選擇題模式：作答 ─── */
+    function answerMC(idx, chosen) {
+      const q = displayMCQuestions[idx];
+      const correctMapped = mcMappedAns[idx];
+      const prev = mcUserAnswers[idx];
+      if (prev === chosen) return;
+
+      if (prev !== null) {
+        if (prev === correctMapped) mcCorrectCount--;
+        else mcWrongCount--;
+      }
+
+      mcUserAnswers[idx] = chosen;
+      const correct = chosen === correctMapped;
+      trackAnswer('final-mc', 'mc', idx, chosen, correct, q.q);
+
+      // 鎖定猜的按鈕
+      const gbtn = document.getElementById('gbtn-' + idx);
+      if (gbtn) { gbtn.disabled = true; }
+
+      // 重設所有選項樣式
+      q.options.forEach((_, j) => {
+        document.getElementById(`mc-btn-${idx}-${j}`).className = 'mc-option-btn';
+      });
+      if (correct) {
+        document.getElementById(`mc-btn-${idx}-${chosen}`).className = 'mc-option-btn mc-correct';
+      } else {
+        document.getElementById(`mc-btn-${idx}-${chosen}`).className = 'mc-option-btn mc-wrong';
+        document.getElementById(`mc-btn-${idx}-${correctMapped}`).className = 'mc-option-btn mc-show-correct';
+      }
+
+      const rbadge = document.getElementById('rbadge-' + idx);
+      const LABELS = ['A', 'B', 'C', 'D'];
+      const isGuess = mcGuessFlags[idx];
+      const guessTag = isGuess ? ' <span style="font-size:0.82em;opacity:0.8;">🎲 猜的</span>' : '';
+      if (correct) {
+        mcCorrectCount++;
+        rbadge.className = 'result-badge correct-badge show';
+        rbadge.innerHTML = '✅ 答對了！' + guessTag;
+      } else {
+        mcWrongCount++;
+        rbadge.className = 'result-badge wrong-badge show';
+        rbadge.innerHTML = `❌ 答錯了，正確答案是「${LABELS[correctMapped]}」` + guessTag;
+      }
+      document.getElementById('rrow-' + idx).classList.add('show');
+      document.getElementById('exp-' + idx).classList.add('show');
+
+      const card = document.getElementById('card-' + idx);
+      card.classList.remove('correct-card', 'wrong-card');
+      card.classList.add(correct ? 'correct-card' : 'wrong-card');
+      const qnum = document.getElementById('qnum-' + idx);
+      qnum.classList.remove('answered-correct', 'answered-wrong');
+      qnum.classList.add(correct ? 'answered-correct' : 'answered-wrong');
+
+      updateBar();
+      if (mcUserAnswers.filter(a => a !== null).length === displayMCQuestions.length) showFinal();
+    }
+
+    /* ─── 填空題模式：建立 ─── */
+    function buildFillQuiz() {
+      const c = document.getElementById('quiz-container');
+      c.innerHTML = '';
+      displayFillQuestions.forEach((q, i) => {
+        const parts = q.q.split('___');
+        let qHtml = '';
+        parts.forEach((part, j) => {
+          qHtml += part;
+          if (j < parts.length - 1) {
+            const w = Math.max(90, Math.min(220, (q.answers[j] || '').length * 18));
+            qHtml += `<input class="fill-input" id="fill-input-${i}-${j}" type="text" style="width:${w}px" placeholder="填入答案" onkeydown="if(event.key==='Enter'){checkFill(${i})}">`;
+          }
+        });
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = 'card-' + i;
+        card.innerHTML = `
+      <div class="question-top">
+        <div class="q-num" id="qnum-${i}">${i + 1}</div>
+        <div class="q-text" style="line-height:2">${qHtml}</div>
+      </div>
+      <div class="fill-check-row">
+        <button class="btn-fill-check" id="fill-check-${i}" onclick="checkFill(${i})">✅ 確認答案</button>
+      </div>
+      <div class="result-row" id="rrow-${i}">
+        <div class="result-badge" id="rbadge-${i}"></div>
+      </div>
+      <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
+      </div>`;
+        c.appendChild(card);
+      });
+    }
+
+    /* ─── 填空題：確認答案 ─── */
+    function normFill(s) {
+      return s.trim().replace(/\s/g, '').replace(/％/g, '%').replace(/（/g, '(').replace(/）/g, ')').toLowerCase();
+    }
+    function checkFill(idx) {
+      const q = displayFillQuestions[idx];
+      const prev = fillUserAnswers[idx];
+      let allOk = true;
+      const res = q.blanks.map((accept, j) => {
+        const inp = document.getElementById(`fill-input-${idx}-${j}`);
+        if (!inp || !inp.value.trim()) { allOk = false; return false; }
+        const ok = accept.some(a => normFill(a) === normFill(inp.value));
+        if (!ok) allOk = false;
+        return ok;
+      });
+
+      if (prev !== null) { if (prev) fillCorrectCount--; else fillWrongCount--; }
+      fillUserAnswers[idx] = allOk;
+      trackAnswer('final-fill', 'fill', idx, null, allOk, q.q);
+      if (allOk) fillCorrectCount++; else fillWrongCount++;
+
+      q.blanks.forEach((_, j) => {
+        const inp = document.getElementById(`fill-input-${idx}-${j}`);
+        inp.className = 'fill-input ' + (res[j] ? 'fill-correct' : 'fill-wrong');
+      });
+
+      const rbadge = document.getElementById('rbadge-' + idx);
+      document.getElementById('rrow-' + idx).classList.add('show');
+      document.getElementById('exp-' + idx).classList.add('show');
+      const card = document.getElementById('card-' + idx);
+      card.classList.remove('correct-card', 'wrong-card');
+      card.classList.add(allOk ? 'correct-card' : 'wrong-card');
+      const qnum = document.getElementById('qnum-' + idx);
+      qnum.classList.remove('answered-correct', 'answered-wrong');
+      qnum.classList.add(allOk ? 'answered-correct' : 'answered-wrong');
+
+      const btn = document.getElementById(`fill-check-${idx}`);
+      if (allOk) {
+        rbadge.className = 'result-badge correct-badge show';
+        rbadge.innerHTML = '✅ 完全正確！';
+        btn.style.display = 'none';
+      } else {
+        const hints = q.blanks.map((_, j) => !res[j] ? `<strong>${q.answers[j]}</strong>` : null).filter(Boolean).join('、');
+        rbadge.className = 'result-badge wrong-badge show';
+        rbadge.innerHTML = `❌ 有填錯　正確答案：${hints}`;
+        btn.textContent = '🔄 清空重試';
+        btn.onclick = () => clearFill(idx);
+      }
+
+      updateBar();
+      if (fillUserAnswers.filter(a => a !== null).length === displayFillQuestions.length) showFinal();
+    }
+
+    /* ─── 填空題：清空重試 ─── */
+    function clearFill(idx) {
+      const q = displayFillQuestions[idx];
+      q.blanks.forEach((_, j) => {
+        const inp = document.getElementById(`fill-input-${idx}-${j}`);
+        inp.disabled = false; inp.value = ''; inp.className = 'fill-input';
+      });
+      if (fillUserAnswers[idx] !== null) {
+        if (fillUserAnswers[idx]) fillCorrectCount--; else fillWrongCount--;
+      }
+      fillUserAnswers[idx] = null;
+      document.getElementById('rrow-' + idx).classList.remove('show');
+      document.getElementById('exp-' + idx).classList.remove('show');
+      const card = document.getElementById('card-' + idx);
+      card.classList.remove('correct-card', 'wrong-card');
+      document.getElementById('qnum-' + idx).classList.remove('answered-correct', 'answered-wrong');
+      const btn = document.getElementById(`fill-check-${idx}`);
+      btn.style.display = ''; btn.textContent = '✅ 確認答案';
+      btn.onclick = () => checkFill(idx);
+      updateBar();
+      document.getElementById(`fill-input-${idx}-0`).focus();
+    }
+
+    /* ─── 答題處理（依模式分流）─── */
+    function handleAnswer(idx, chosen) {
+      if (currentMode === 'learn') {
+        answerLearn(idx, chosen);
+      } else {
+        answerClassic(idx, chosen);
+      }
+    }
+
+    /* ─── 學習模式：即時回饋（可改答） ─── */
+    function answerLearn(idx, chosen) {
+      const q = displayQuestions[idx];
+      const prev = userAnswers[idx];
+      if (prev === chosen) return; // 點同一個不動
+
+      // 調整計數（如果之前有答過）
+      if (prev !== null) {
+        if (prev === q.ans) correctCount--;
+        else wrongCount--;
+      }
+
+      userAnswers[idx] = chosen;
+      const correct = chosen === q.ans;
+      trackAnswer('final-learn', 'tf', idx, chosen, correct, q.q);
+
+      // 重設按鈕樣式（不 disable，讓使用者可以改答）
+      document.getElementById('btn-O-' + idx).className = 'choice-btn';
+      document.getElementById('btn-X-' + idx).className = 'choice-btn';
+      if (correct) {
+        document.getElementById('btn-' + chosen + '-' + idx).className = 'choice-btn selected-correct';
+      } else {
+        document.getElementById('btn-' + chosen + '-' + idx).className = 'choice-btn selected-wrong';
+        document.getElementById('btn-' + q.ans + '-' + idx).className = 'choice-btn show-correct';
+      }
+
+      const rbadge = document.getElementById('rbadge-' + idx);
+      const isGuess = guessFlags[idx];
+      const guessTag = isGuess ? ' <span style="font-size:0.82em;opacity:0.8;">🎲 猜的</span>' : '';
+      if (correct) {
+        rbadge.className = 'result-badge correct-badge show';
+        rbadge.innerHTML = '✅ 答對了！' + guessTag;
+        correctCount++;
+      } else {
+        rbadge.className = 'result-badge wrong-badge show';
+        rbadge.innerHTML = `❌ 答錯了，正確答案是「${q.ans === 'O' ? '○ 正確' : '✕ 錯誤'}」` + guessTag;
+        wrongCount++;
+      }
+      document.getElementById('rrow-' + idx).classList.add('show');
+      document.getElementById('exp-' + idx).classList.add('show');
+
+      const card = document.getElementById('card-' + idx);
+      card.classList.remove('correct-card', 'wrong-card');
+      card.classList.add(correct ? 'correct-card' : 'wrong-card');
+      const qnum = document.getElementById('qnum-' + idx);
+      qnum.classList.remove('answered-correct', 'answered-wrong');
+      qnum.classList.add(correct ? 'answered-correct' : 'answered-wrong');
+
+      updateBar();
+      if (userAnswers.filter(a => a !== null).length === displayQuestions.length) showFinal();
+    }
+
+    /* ─── 傳統模式：選擇不立即批改 ─── */
+    function answerClassic(idx, chosen) {
+      if (classicChecked) return;
+      userAnswers[idx] = chosen;
+      document.getElementById('btn-O-' + idx).className = 'choice-btn' + (chosen === 'O' ? ' selected-O' : '');
+      document.getElementById('btn-X-' + idx).className = 'choice-btn' + (chosen === 'X' ? ' selected-X' : '');
+      updateBar();
+    }
+
+    /* ─── 傳統模式：對答案 ─── */
+    function checkAll() {
+      if (currentMode !== 'classic') return;
+      classicChecked = true;
+      let score = 0, guessCorrect = 0, guessWrong = 0;
+
+      displayQuestions.forEach((q, i) => {
+        const card = document.getElementById('card-' + i);
+        const rbadge = document.getElementById('rbadge-' + i);
+        const isGuess = guessFlags[i];
+        ['btn-O-' + i, 'btn-X-' + i, 'gbtn-' + i].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) { el.style.cursor = 'default'; el.style.pointerEvents = 'none'; }
+        });
+        const guessTag = isGuess ? ' <span style="font-size:0.82em;opacity:0.85;">🎲 猜的</span>' : '';
+        card.classList.remove('guessed-card');
+
+        if (userAnswers[i] === null) {
+          card.classList.add('unanswered');
+          rbadge.className = 'result-badge wrong-badge show';
+          rbadge.innerHTML = `⚠️ 未作答，正確答案：${q.ans === 'O' ? '○ 正確' : '✕ 錯誤'}${guessTag}`;
+        } else if (userAnswers[i] === q.ans) {
+          score++;
+          if (isGuess) guessCorrect++;
+          card.classList.add('correct-card');
+          rbadge.className = 'result-badge correct-badge show';
+          rbadge.innerHTML = `✅ 答對了！${guessTag}`;
+        } else {
+          if (isGuess) guessWrong++;
+          card.classList.add('wrong-card');
+          rbadge.className = 'result-badge wrong-badge show';
+          rbadge.innerHTML = `❌ 答錯了，正確答案：${q.ans === 'O' ? '○ 正確' : '✕ 錯誤'}${guessTag}`;
+        }
+        trackAnswer('final-classic', 'tf', i, userAnswers[i], userAnswers[i] === q.ans, q.q);
+        document.getElementById('rrow-' + i).classList.add('show');
+        document.getElementById('exp-' + i).classList.add('show');
+      });
+
+      correctCount = score;
+      wrongCount = displayQuestions.length - score;
+
+      const totalGuess = guessFlags.filter(Boolean).length;
+      document.getElementById('fs-guess-wrap').style.display = totalGuess > 0 ? '' : 'none';
+      document.getElementById('fs-guess').textContent = guessCorrect;
+      document.getElementById('fs-guessed-total').textContent = totalGuess;
+      document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+      updateBar();
+      showFinal();
+    }
+
+    /* ─── 猜題標記 ─── */
+    function toggleGuess(idx) {
+      if (currentMode === 'fill') return;
+      if (currentMode === 'mc') {
+        // 答題後不能再標記（已鎖定按鈕）
+        if (mcUserAnswers[idx] !== null) return;
+        mcGuessFlags[idx] = !mcGuessFlags[idx];
+        document.getElementById('gbtn-' + idx).classList.toggle('active', mcGuessFlags[idx]);
+        document.getElementById('glabel-' + idx).classList.toggle('show', mcGuessFlags[idx]);
+        document.getElementById('card-' + idx).classList.toggle('guessed-card', mcGuessFlags[idx]);
+        updateBar();
+        return;
+      }
+      // 傳統模式：答題後或對答案後不能改；學習模式：任何時候都可以標記
+      if (currentMode === 'classic') {
+        if (userAnswers[idx] !== null || classicChecked) return;
+      }
+      guessFlags[idx] = !guessFlags[idx];
+      document.getElementById('gbtn-' + idx).classList.toggle('active', guessFlags[idx]);
+      document.getElementById('glabel-' + idx).classList.toggle('show', guessFlags[idx]);
+      document.getElementById('card-' + idx).classList.toggle('guessed-card', guessFlags[idx]);
+      updateBar();
+    }
+
+
+    /* ─── 進度條 ─── */
+    function updateBar() {
+      if (currentMode === 'story') return;
+      let answered, total, corr, wrng, gCount = 0;
+      if (currentMode === 'mc') {
+        total = displayMCQuestions.length; answered = mcUserAnswers.filter(a => a !== null).length;
+        corr = mcCorrectCount; wrng = mcWrongCount;
+        gCount = mcGuessFlags.filter(Boolean).length;
+      } else if (currentMode === 'fill') {
+        total = displayFillQuestions.length; answered = fillUserAnswers.filter(a => a !== null).length;
+        corr = fillCorrectCount; wrng = fillWrongCount;
+      } else {
+        total = displayQuestions.length; answered = userAnswers.filter(a => a !== null).length;
+        corr = correctCount; wrng = wrongCount;
+        gCount = guessFlags.filter(Boolean).length;
+      }
+      document.getElementById('total-count').textContent = total;
+      document.getElementById('answered-count').textContent = answered;
+      document.getElementById('correct-count').textContent = corr;
+      document.getElementById('wrong-count').textContent = wrng;
+      document.getElementById('progress-fill').style.width = (answered / total * 100) + '%';
+      const chip = document.getElementById('guess-chip');
+      chip.style.display = gCount > 0 ? 'inline' : 'none';
+      document.getElementById('guess-count').textContent = gCount;
+    }
+
+    /* ─── 最終結果 ─── */
+    function showFinal() {
+      let score, total, retryCount = 0;
+      const fb = document.getElementById('final-box');
+
+      if (currentMode === 'mc') {
+        total = displayMCQuestions.length; score = mcCorrectCount;
+        const mcTotalGuess = mcGuessFlags.filter(Boolean).length;
+        const mcGuessCorrect = displayMCQuestions.reduce((n, _, i) => n + (mcGuessFlags[i] && mcUserAnswers[i] === mcMappedAns[i] ? 1 : 0), 0);
+        document.getElementById('fs-guess-wrap').style.display = mcTotalGuess > 0 ? '' : 'none';
+        document.getElementById('fs-guess').textContent = mcGuessCorrect;
+        document.getElementById('fs-guessed-total').textContent = mcTotalGuess;
+        document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+        const p = score / total;
+        document.getElementById('final-msg').textContent = p >= 0.9 ? '🏆 優秀！選擇題觀念已完全融會貫通！' : p >= 0.7 ? '🎯 良好！再加強幾個易混淆數字就滿分了！' : p >= 0.5 ? '📖 尚可！建議重點複習罰鍰金額與定義條文。' : '💪 加油！多對照判斷題詳解，釐清每個關鍵數字。';
+        retryCount = displayMCQuestions.filter((_, i) => mcUserAnswers[i] !== mcMappedAns[i]).length;
+      } else if (currentMode === 'fill') {
+        total = displayFillQuestions.length; score = fillCorrectCount;
+        document.getElementById('fs-guess-wrap').style.display = 'none';
+        document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+        const p = score / total;
+        document.getElementById('final-msg').textContent = p >= 0.9 ? '🏆 優秀！關鍵數字與法條細節已完全掌握！' : p >= 0.7 ? '🎯 良好！再多背幾個關鍵數字就完美了！' : p >= 0.5 ? '📖 尚可！建議重點複習容易填錯的數字條文。' : '💪 加油！多練幾次，關鍵數字一定能記住！';
+        retryCount = displayFillQuestions.filter((_, i) => fillUserAnswers[i] !== true).length;
+      } else {
+        total = displayQuestions.length; score = correctCount;
+        const totalGuess = guessFlags.filter(Boolean).length;
+        const guessCorrect = displayQuestions.reduce((n, q, i) => n + (guessFlags[i] && userAnswers[i] === q.ans ? 1 : 0), 0);
+        if (currentMode === 'learn' || currentMode === 'classic') {
+          document.getElementById('fs-guess-wrap').style.display = totalGuess > 0 ? '' : 'none';
+          document.getElementById('fs-guess').textContent = guessCorrect;
+          document.getElementById('fs-guessed-total').textContent = totalGuess;
+        }
+        document.getElementById('final-hint').textContent = '詳解已全部顯示於各題目下方，可往上滾動複習';
+        const p = score / total;
+        document.getElementById('final-msg').textContent = p >= 0.9 ? '🏆 優秀！廣告法規熟悉度極高！' : p >= 0.7 ? '🎯 良好！繼續加強幾個易混淆條文就更完美了！' : p >= 0.5 ? '📖 尚可！建議重點複習罰則金額與定義條文。' : '💪 加油！多多複習法條原文，尤其注意數字與主詞。';
+        if (currentMode === 'learn') retryCount = displayQuestions.filter((q, i) => userAnswers[i] !== q.ans || guessFlags[i]).length;
+      }
+
+      document.getElementById('final-score-text').textContent = `得分：${score} / ${total}`;
+      document.getElementById('fs-correct').textContent = score;
+      document.getElementById('fs-wrong').textContent = total - score;
+
+      const retryWrap = document.getElementById('retry-wrap');
+      const btnRetry = document.getElementById('btn-retry');
+      if (retryCount > 0 && currentMode !== 'classic') {
+        const label = currentMode === 'learn' ? '答錯＆猜的' : '答錯';
+        btnRetry.textContent = `🔁 重新練習${label}題目（共 ${retryCount} 題）`;
+        retryWrap.style.display = 'block';
+      } else {
+        retryWrap.style.display = 'none';
+      }
+
+      fb.style.display = 'block';
+      fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    /* ─── 重置 ─── */
+    function resetAll() {
+      document.getElementById('final-box').style.display = 'none';
+      if (currentMode === 'story') { initStoryMode(); return; }
+      document.getElementById('answered-count').textContent = '0';
+      document.getElementById('correct-count').textContent = '0';
+      document.getElementById('wrong-count').textContent = '0';
+      document.getElementById('progress-fill').style.width = '0%';
+      document.getElementById('guess-chip').style.display = 'none';
+      if (document.getElementById('retry-wrap')) document.getElementById('retry-wrap').style.display = 'none';
+
+      if (currentMode === 'mc') {
+        displayMCQuestions = shuffleEnabled ? shuffleArray([...activeMCQuestions]) : [...activeMCQuestions];
+        mcUserAnswers = Array(displayMCQuestions.length).fill(null);
+        mcGuessFlags = Array(displayMCQuestions.length).fill(false);
+        mcOptionOrders = []; mcMappedAns = [];
+        mcCorrectCount = 0; mcWrongCount = 0;
+      } else if (currentMode === 'fill') {
+        displayFillQuestions = shuffleEnabled ? shuffleArray([...activeFillQuestions]) : [...activeFillQuestions];
+        fillUserAnswers = Array(displayFillQuestions.length).fill(null);
+        fillCorrectCount = 0; fillWrongCount = 0;
+      } else {
+        displayQuestions = shuffleEnabled ? shuffleArray([...activeQuestions]) : [...activeQuestions];
+        userAnswers = Array(TOTAL).fill(null);
+        guessFlags = Array(TOTAL).fill(false);
+        correctCount = 0; wrongCount = 0;
+        classicChecked = false;
+      }
+      buildQuiz();
+      updateBar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ─── 重新練習答錯題目 ─── */
+    function retryWrong() {
+      let retryList;
+      if (currentMode === 'learn') {
+        retryList = displayQuestions.filter((q, i) => userAnswers[i] !== q.ans || guessFlags[i]);
+        if (shuffleEnabled) shuffleArray(retryList);
+        displayQuestions = retryList;
+        userAnswers = Array(retryList.length).fill(null);
+        guessFlags = Array(retryList.length).fill(false);
+        correctCount = 0; wrongCount = 0;
+      } else if (currentMode === 'mc') {
+        retryList = displayMCQuestions.filter((_, i) => mcUserAnswers[i] !== mcMappedAns[i] || mcGuessFlags[i]);
+        if (shuffleEnabled) shuffleArray(retryList);
+        displayMCQuestions = retryList;
+        mcUserAnswers = Array(retryList.length).fill(null);
+        mcGuessFlags = Array(retryList.length).fill(false);
+        mcOptionOrders = []; mcMappedAns = [];
+        mcCorrectCount = 0; mcWrongCount = 0;
+      } else if (currentMode === 'fill') {
+        retryList = displayFillQuestions.filter((_, i) => fillUserAnswers[i] !== true);
+        if (shuffleEnabled) shuffleArray(retryList);
+        displayFillQuestions = retryList;
+        fillUserAnswers = Array(retryList.length).fill(null);
+        fillCorrectCount = 0; fillWrongCount = 0;
+      }
+      if (!retryList || retryList.length === 0) return;
+      document.getElementById('final-box').style.display = 'none';
+      document.getElementById('answered-count').textContent = '0';
+      document.getElementById('correct-count').textContent = '0';
+      document.getElementById('wrong-count').textContent = '0';
+      document.getElementById('progress-fill').style.width = '0%';
+      document.getElementById('guess-chip').style.display = 'none';
+      buildQuiz();
+      updateBar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       劇情模式 — 菜鳥律師小廣的廣告法求生記
+       Day 1：藥事法（共 10 題）
+       🔒 密碼解鎖（?key=More1620）才可遊玩
+    ══════════════════════════════════════════════════════════════ */
+
+    const storyDay1 = { dayTitle: 'Day 1 ── 期末關卡（開發中）', daySubtitle: '菜鳥律師小廣的廣告法求生記', dayIntro: '期末關卡即將推出，敬請期待！', questions: [] };
+    const storyDay2 = { dayTitle: 'Day 2 ── 期末關卡（開發中）', daySubtitle: '菜鳥律師小廣的廣告法求生記', dayIntro: '期末關卡即將推出，敬請期待！', questions: [] };
+    const storyDay3 = { dayTitle: 'Day 3 ── 期末關卡（開發中）', daySubtitle: '菜鳥律師小廣的廣告法求生記', dayIntro: '期末關卡即將推出，敬請期待！', questions: [] };
+    const storyDay4 = { dayTitle: 'Day 4 ── 期末關卡（開發中）', daySubtitle: '菜鳥律師小廣的廣告法求生記', dayIntro: '期末關卡即將推出，敬請期待！', questions: [] };
+
+    /* ── 狀態 ── */
+    let storyState = { qIdx: 0, score: 0, hearts: 3, streak: 0, answered: false, wrongList: [] };
+    let currentDay = storyDay1;
+
+    /* ── 角色圖像（DiceBear Avataaars）──
+       如需替換為自製角色圖，把 avatar 改成本地路徑即可，例如 './images/boss.png' */
+    const storyCharacters = {
+      '王鐵嘴主任': {
+        avatar: './images/boss.png',
+        color: '#c0392b', emoji: '😤', title: '律師事務所主任'
+      },
+      '林酸酸': {
+        avatar: './images/sour.png',
+        color: '#34495e', emoji: '🧊', title: '資深律師'
+      },
+      '阿肥': {
+        avatar: './images/intern.png',
+        color: '#e67e22', emoji: '😊', title: '實習生'
+      },
+      '陳經理': {
+        avatar: './images/pharma.png',
+        color: '#27ae60', emoji: '💊', title: '藥廠業務經理'
+      },
+      '電視台業務小陳': {
+        avatar: './images/tv_biz.png',
+        color: '#3498db', emoji: '📺', title: '電視台業務'
+      },
+      '林法務': {
+        avatar: './images/legal.png',
+        color: '#8e44ad', emoji: '⚖️', title: '全台電視法務'
+      },
+      '圈圈': {
+        avatar: './images/beauty.png',
+        color: '#e91e63', emoji: '💄', title: '美妝直播主'
+      },
+      '何副理': {
+        avatar: './images/shopping.png',
+        color: '#ff5722', emoji: '🛒', title: '購物頻道副理'
+      }
+    };
+
+    /* 依角色名稱找對應資料，自動忽略「陳經理（驚慌失措）」這種括號補述 */
+    function getCharacter(name) {
+      if (!name) return null;
+      const cleanName = name.replace(/[（(][^）)]*[）)]/g, '').trim();
+      return storyCharacters[cleanName] || storyCharacters[name] || null;
+    }
+
+    /* 依 setup 文字中的時間判斷背景漸層
+       早上(藍天曙光) → 中午(暖金陽光) → 下午(午後藍天) → 傍晚(橘紅夕陽) → 夜晚(深藍夜空) */
+    function getSceneBackground(setupText) {
+      const t = setupText || '';
+      if (/下午 5|傍晚|夜|晚/.test(t))
+        return 'linear-gradient(170deg,#0a0a2e 0%,#1a1a4e 40%,#162447 70%,#0f3460 100%)';
+      if (/下午 4/.test(t))
+        return 'linear-gradient(170deg,#1a0533 0%,#8e1c4c 20%,#d45d2a 45%,#f39c12 70%,#ffd57e 100%)';
+      if (/下午 [23]/.test(t))
+        return 'linear-gradient(170deg,#1565c0 0%,#1976d2 25%,#42a5f5 55%,#bbdefb 85%,#e3f2fd 100%)';
+      if (/中午|12:|午休|午餐/.test(t))
+        return 'linear-gradient(170deg,#e65100 0%,#f57c00 20%,#ffa726 45%,#ffcc80 75%,#fff8e1 100%)';
+      if (/早上|上午|9:|10:|11:/.test(t))
+        return 'linear-gradient(170deg,#1a237e 0%,#283593 15%,#5c6bc0 40%,#90caf9 70%,#e3f2fd 100%)';
+      return 'linear-gradient(170deg,#0a0a2e 0%,#16213e 50%,#0f3460 100%)';
+    }
+    const S_MAX_HEARTS = 5;
+    const S_LABELS = ['A', 'B', 'C', 'D'];
+    function sHearts(n) { return '❤️'.repeat(Math.max(0, Math.min(n, S_MAX_HEARTS))) + '🖤'.repeat(S_MAX_HEARTS - Math.max(0, Math.min(n, S_MAX_HEARTS))); }
+    function sRand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    /* ── 初始化：顯示關卡選擇 ── */
+    function initStoryMode() {
+      const panel = document.getElementById('story-panel');
+
+      /* 密碼鎖 */
+      if (!isUnlocked) {
+        panel.innerHTML = `
+      <div class="story-day-header">
+        <div style="font-size:0.8em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${storyDay1.daySubtitle}</div>
+        <div style="font-size:1.25em;font-weight:bold;letter-spacing:2px;">${storyDay1.dayTitle}</div>
+      </div>
+      <div class="story-lock-box">
+        <div style="font-size:2.5em;margin-bottom:12px;">🔒</div>
+        <div style="font-size:1.1em;font-weight:bold;color:#6c3483;margin-bottom:8px;">劇情模式限密碼解鎖者遊玩</div>
+        <div style="font-size:0.88em;color:#7f8c8d;line-height:1.8;">請在網址後方加上密碼參數<br><code style="background:#f0e6f9;padding:2px 8px;border-radius:4px;color:#6c3483;">?key=（密碼）</code><br>解鎖後即可進入小廣的求生日常！</div>
+      </div>`;
+        return;
+      }
+
+      /* 關卡選擇畫面 */
+      panel.innerHTML = `
+    <div class="story-day-header">
+      <div style="font-size:0.78em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${storyDay1.daySubtitle}</div>
+      <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">⚖️ 選擇今日關卡</div>
+    </div>
+    <div style="padding:20px 16px;display:flex;flex-direction:column;gap:14px;max-width:480px;margin:0 auto;">
+      <button class="story-day-select-btn" onclick="startStoryDay(storyDay1)">
+        <div style="font-size:1.05em;font-weight:bold;margin-bottom:5px;">⚗️ Day 1 ── 藥廠客戶的緊急求助</div>
+        <div style="font-size:0.82em;opacity:0.75;">藥事法・藥物廣告・罰則・釋字414 vs 744</div>
+      </button>
+      <button class="story-day-select-btn" onclick="startStoryDay(storyDay2)">
+        <div style="font-size:1.05em;font-weight:bold;margin-bottom:5px;">📡 Day 2 ── 廣電法的試煉</div>
+        <div style="font-size:0.82em;opacity:0.75;">廣播電視法・有線廣電法・衛星廣電法・置入 vs 贊助</div>
+      </button>
+      <button class="story-day-select-btn" onclick="startStoryDay(storyDay3)">
+        <div style="font-size:1.05em;font-weight:bold;margin-bottom:5px;">💄 Day 3 ── 化粧品廣告的雷區</div>
+        <div style="font-size:0.82em;opacity:0.75;">化粧品衛生安全管理法・虛偽誇大・醫療效能・釋字744</div>
+      </button>
+      <button class="story-day-select-btn" onclick="startStoryDay(storyDay4)">
+        <div style="font-size:1.05em;font-weight:bold;margin-bottom:5px;">🛒 Day 4 ── 購物頻道的大混戰</div>
+        <div style="font-size:0.82em;opacity:0.75;">衛星廣電法・消保法・NCC組織法・公平交易法・釋字364</div>
+      </button>
+    </div>`;
+    }
+
+    /* ── 開始指定關卡 ── */
+    function startStoryDay(dayData) {
+      currentDay = dayData;
+      storyState = { qIdx: 0, score: 0, hearts: 3, streak: 0, answered: false, wrongList: [] };
+      const panel = document.getElementById('story-panel');
+      const dayNum = dayData === storyDay1 ? 1 : dayData === storyDay2 ? 2 : dayData === storyDay3 ? 3 : 4;
+      const startLabel = dayNum === 1 ? '⚖️ 開始第一天上班！' : dayNum === 2 ? '📡 開始第二天上班！' : dayNum === 3 ? '💄 開始第三天上班！' : '🛒 開始第四天上班！';
+
+      panel.innerHTML = `
+    <div class="story-day-header">
+      <div style="font-size:0.78em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${dayData.daySubtitle}</div>
+      <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">${dayData.dayTitle}</div>
+    </div>
+    <div class="story-intro-box" id="story-intro">
+      <div style="font-size:0.88em;color:rgba(255,215,180,0.9);white-space:pre-line;line-height:1.95;">${dayData.dayIntro}</div>
+      <button class="story-next-btn" style="display:block;margin-top:16px;" onclick="storyDismissIntro()">${startLabel}</button>
+    </div>
+    <div id="story-game" style="display:none;">
+      <div class="story-status-bar">
+        <div>
+          <div style="font-size:0.72em;color:rgba(255,215,180,0.6);font-weight:bold;margin-bottom:3px;">主任好感度</div>
+          <div class="story-hearts" id="s-hearts">${sHearts(3)}</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:0.72em;color:rgba(255,215,180,0.6);font-weight:bold;margin-bottom:3px;">連對</div>
+          <div class="story-streak" id="s-streak">－</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.72em;color:rgba(255,215,180,0.6);font-weight:bold;margin-bottom:3px;">進度</div>
+          <div class="story-progress-text" id="s-progress">1 / ${dayData.questions.length}</div>
+        </div>
+      </div>
+      <div class="story-command-strip">
+        <button class="story-cmd-btn" onclick="storyCmd('sour')">🧊 酸酸講解</button>
+        <button class="story-cmd-btn" onclick="storyCmd('rage')">😡 主任發飆</button>
+        <button class="story-cmd-btn" onclick="storyCmd('end')">🏠 今天先到這裡</button>
+      </div>
+      <div id="s-extra" class="story-extra-box"></div>
+      <div id="s-lucky" class="story-lucky-event"></div>
+      <div id="s-content"></div>
+    </div>
+    <div id="s-end" class="story-end-panel"></div>`;
+    }
+
+    function storyDismissIntro() {
+      document.getElementById('story-intro').style.display = 'none';
+      document.getElementById('story-game').style.display = 'block';
+      storyBuildScene(0);
+    }
+
+    /* ── 建立題目場景 ── */
+    function storyBuildScene(idx) {
+      const day = currentDay;
+      if (idx >= day.questions.length) { storyShowEnd(); return; }
+      const q = day.questions[idx];
+      storyState.answered = false;
+
+      document.getElementById('s-hearts').textContent = sHearts(storyState.hearts);
+      document.getElementById('s-streak').textContent = storyState.streak >= 2 ? `🔥 ${storyState.streak}連對` : storyState.streak === 1 ? '🔥 1連對' : '－';
+      document.getElementById('s-progress').textContent = `${idx + 1} / ${day.questions.length}`;
+      document.getElementById('s-extra').style.display = 'none';
+      document.getElementById('s-lucky').style.display = 'none';
+
+      const btnArea = q.type === 'tf'
+        ? `<div class="story-tf-buttons">
+         <button class="story-tf-btn story-O" id="sbO" onclick="storyTF('O')">○ 正確</button>
+         <button class="story-tf-btn story-X" id="sbX" onclick="storyTF('X')">✕ 錯誤</button>
+       </div>`
+        : `<div class="story-mc-options">${q.options.map((o, i) => `
+         <button class="story-mc-btn" id="smc${i}" onclick="storyMC(${i})">
+           <span class="story-mc-label">${S_LABELS[i]}</span><span>${o}</span>
+         </button>`).join('')}</div>`;
+
+      const char = getCharacter(q.client);
+      const charColor = char ? char.color : '#9b59b6';
+      const charAvatar = char ? char.avatar : '';
+      const charTitle = char ? char.title : '';
+      const bg = getSceneBackground(q.setup);
+
+      const spriteHTML = charAvatar
+        ? `<div class="story-vn-sprite">
+         <img src="${charAvatar}" alt="${q.client}" onerror="this.parentElement.style.display='none'" />
+       </div>`
+        : '';
+      const miniHTML = charAvatar
+        ? `<div class="story-vn-mini"><img src="${charAvatar}" alt="" onerror="this.parentElement.style.display='none'"/></div>`
+        : '';
+
+      document.getElementById('s-content').innerHTML = `
+    <div class="story-vn-stage">
+      <div class="story-vn-bg" style="background:${bg}"></div>
+      <div class="story-vn-particles">
+        <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+        <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+        <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+        <div class="sparkle"></div><div class="sparkle"></div><div class="sparkle"></div>
+      </div>
+      <div class="story-vn-setup">${q.setup}</div>
+      ${spriteHTML}
+      <div class="story-vn-dbox">
+        <div class="story-vn-namerow">
+          ${miniHTML}
+          <span class="story-vn-namebox" style="background:${charColor}">
+            ${q.client}${charTitle ? `<span class="story-vn-title">${charTitle}</span>` : ''}
+          </span>
+        </div>
+        <div class="story-vn-line">${q.clientLine}</div>
+        <div class="story-vn-dbox-arrow"></div>
+      </div>
+    </div>
+    <div class="story-q-card">
+      <div class="story-q-label">⚖️ 法律判斷</div>
+      <div class="story-q-text">${q.q}</div>
+      ${btnArea}
+    </div>
+    <div class="story-reaction-box" id="s-react"></div>
+    <button class="story-next-btn" id="s-next" onclick="storyNext()">
+      ${idx + 1 < day.questions.length ? '▶ 下一題' : '📋 結算今日成績'}
+    </button>`;
+    }
+
+    /* ── 作答 ── */
+    function storyTF(choice) {
+      if (storyState.answered) return;
+      storyState.answered = true;
+      const q = currentDay.questions[storyState.qIdx];
+      trackAnswer('final-story', 'tf', storyState.qIdx, choice, choice === q.ans, q.q);
+      ['sbO', 'sbX'].forEach(id => { const b = document.getElementById(id); if (b) { b.style.pointerEvents = 'none'; } });
+      const winBtn = document.getElementById('sb' + q.ans);
+      if (winBtn) winBtn.classList.add('sel');
+      storyProcess(choice === q.ans, q);
+    }
+
+    function storyMC(opt) {
+      if (storyState.answered) return;
+      storyState.answered = true;
+      const q = currentDay.questions[storyState.qIdx];
+      trackAnswer('final-story', 'mc', storyState.qIdx, opt, opt === q.ans, q.q);
+      for (let i = 0; i < q.options.length; i++) {
+        const b = document.getElementById('smc' + i);
+        if (!b) continue;
+        b.style.pointerEvents = 'none';
+        if (i === q.ans) b.classList.add('smc-correct');
+        else if (i === opt) b.classList.add('smc-wrong');
+      }
+      storyProcess(opt === q.ans, q);
+    }
+
+    function storyProcess(ok, q) {
+      if (ok) {
+        storyState.score++;
+        storyState.streak++;
+        if (storyState.streak === 3) {
+          storyState.hearts = Math.min(S_MAX_HEARTS, storyState.hearts + 1);
+          const msgs = [
+            '🎉 【幸運事件】阿肥端來咖啡：「學長！連對三題！拿鐵是我親手泡的！」',
+            '🎉 【幸運事件】主任突然說：「表現不錯，下午可以早走五分鐘。」',
+            '🎉 【幸運事件】酸酸難得說了句：「……今天狀態還可以。」（這大概是她能說出口最好的讚美了。）'
+          ];
+          const el = document.getElementById('s-lucky');
+          el.textContent = sRand(msgs); el.style.display = 'block';
+        }
+      } else {
+        storyState.streak = 0;
+        storyState.hearts = Math.max(0, storyState.hearts - 1);
+        storyState.wrongList.push({ no: storyState.qIdx + 1, q: q.q, ans: q.ans, type: q.type, options: q.options });
+      }
+      document.getElementById('s-hearts').textContent = sHearts(storyState.hearts);
+      document.getElementById('s-streak').textContent = storyState.streak >= 2 ? `🔥 ${storyState.streak}連對` : storyState.streak === 1 ? '🔥 1連對' : '－';
+
+      const badge = ok
+        ? '✅ 答對了！'
+        : `❌ 答錯了！正確答案：${q.type === 'tf' ? (q.ans === 'O' ? '○ 正確' : '✕ 錯誤') : S_LABELS[q.ans] + '. ' + q.options[q.ans]}`;
+      const react = document.getElementById('s-react');
+      react.className = 'story-reaction-box ' + (ok ? 'sreact-correct' : 'sreact-wrong');
+      react.style.display = 'block';
+      react.innerHTML = `
+    <div class="story-reaction-badge">${badge}</div>
+    <div class="story-reaction-line">${sRand(ok ? q.correctR : q.wrongR)}</div>
+    <div class="story-exp-box">${q.exp}</div>`;
+      document.getElementById('s-next').style.display = 'block';
+      setTimeout(() => { react.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+    }
+
+    /* ── 特殊指令 ── */
+    function storyCmd(cmd) {
+      if (cmd === 'end') { storyShowEnd(true); return; }
+      const q = currentDay.questions[storyState.qIdx];
+      const box = document.getElementById('s-extra');
+      box.style.display = 'block';
+      if (cmd === 'sour') box.innerHTML = `<strong>🧊 林酸酸講解：</strong><br>${q.sour || '（酸酸今天不想開口。）'}`;
+      if (cmd === 'rage') box.innerHTML = `<strong>😡 王鐵嘴主任發飆：</strong><br>${q.rage || '（主任今天難得沒發飆，珍惜吧。）'}`;
+    }
+
+    /* ── 下一題 ── */
+    function storyNext() {
+      storyState.qIdx++;
+      storyBuildScene(storyState.qIdx);
+      const game = document.getElementById('story-game');
+      if (game) window.scrollTo({ top: game.offsetTop - 20, behavior: 'smooth' });
+    }
+
+    /* ── 結算 ── */
+    function storyShowEnd(early = false) {
+      const gameEl = document.getElementById('story-game');
+      const introEl = document.getElementById('story-intro');
+      if (gameEl) gameEl.style.display = 'none';
+      if (introEl) introEl.style.display = 'none';
+      const total = currentDay.questions.length;
+      const score = storyState.score;
+      const pct = score / total;
+      const hearts = storyState.hearts;
+      let verdict;
+      if (pct >= 0.9) verdict = hearts >= 4 ? '🏆 主任要給你加薪！（才怪，但至少今天沒被開除，而且主任心情很好！）' : '🏆 優秀！今晚可以正常下班！';
+      else if (pct >= 0.7) verdict = '🎯 還算能看的新人，至少沒讓事務所被客訴。繼續加油。';
+      else if (pct >= 0.5) verdict = '📖 勉強沒被開除，但主任說你明天要寫三份反省書。';
+      else verdict = '💀 王鐵嘴主任：「你確定你有法學院畢業嗎？！我要查你的畢業證書真偽！」';
+
+      const recapHTML = storyState.wrongList.length > 0 ? `
+    <div class="story-end-recap">
+      <strong>📋 今日錯題回顧（酸酸毒舌版）：</strong><br><br>
+      ${storyState.wrongList.map(w => `
+        <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.15);">
+          <span style="opacity:0.7;font-size:0.85em;">第 ${w.no} 題</span><br>${w.q}<br>
+          <span style="color:#a9dfbf;">正確答案：${w.type === 'tf' ? (w.ans === 'O' ? '○ 正確' : '✕ 錯誤') : S_LABELS[w.ans] + '. ' + w.options[w.ans]}</span>
+        </div>`).join('')}
+    </div>` : '';
+
+      const endEl = document.getElementById('s-end');
+      endEl.style.display = 'block';
+      const dayLabel = currentDay === storyDay1 ? 'Day 1' : currentDay === storyDay2 ? 'Day 2' : currentDay === storyDay3 ? 'Day 3' : 'Day 4';
+      endEl.innerHTML = `
+    <div class="story-end-title">${dayLabel} 結束！</div>
+    ${early ? '<div style="font-size:0.82em;opacity:0.7;margin-bottom:10px;">（提前離場）</div>' : ''}
+    <div class="story-end-score">得分：${score} / ${total}　${sHearts(hearts)}</div>
+    <div class="story-end-verdict">${verdict}</div>
+    ${recapHTML}
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="story-restart-btn" onclick="startStoryDay(currentDay)">🔄 重新挑戰 ${dayLabel}</button>
+      <button class="story-restart-btn" onclick="initStoryMode()">📋 選擇關卡</button>
+    </div>`;
+      endEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    /* ─── 複製題目為圖片到剪貼簿 ─── */
+    function captureCard(idx) {
+      const card = document.getElementById('card-' + idx);
+      const btn = document.getElementById('savebtn-' + idx);
+      if (!card) return;
+
+      if (btn) btn.style.visibility = 'hidden';
+      btn && btn.classList.add('saving');
+
+      // 確保詳解可見
+      const expEl = document.getElementById('exp-' + idx);
+      const wasHidden = expEl && !expEl.classList.contains('show');
+      if (wasHidden) expEl.classList.add('show');
+
+      html2canvas(card, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        logging: false
+      }).then(canvas => {
+        canvas.toBlob(blob => {
+          if (!blob) return;
+          try {
+            navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]).then(() => {
+              // 短暫閃綠色提示複製成功
+              if (btn) {
+                btn.style.visibility = '';
+                btn.style.borderColor = '#27ae60';
+                btn.style.color = '#27ae60';
+                setTimeout(() => {
+                  btn.style.borderColor = '';
+                  btn.style.color = '';
+                }, 1200);
+              }
+            }).catch(() => fallbackDownload(canvas, idx));
+          } catch (e) { fallbackDownload(canvas, idx); }
+        }, 'image/png');
+      }).finally(() => {
+        btn && btn.classList.remove('saving');
+        if (wasHidden) expEl.classList.remove('show');
+      });
+    }
+    function fallbackDownload(canvas, idx) {
+      // 瀏覽器不支援剪貼簿時，顯示彈窗讓使用者右鍵複製
+      const btn = document.getElementById('savebtn-' + idx);
+      if (btn) btn.style.visibility = '';
+      const dataUrl = canvas.toDataURL('image/png');
+
+      // 建立遮罩
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;';
+
+      const hint = document.createElement('div');
+      hint.textContent = '在圖片上按右鍵 → 複製圖片，即可貼到 Word';
+      hint.style.cssText = 'color:#fff;font-size:1rem;background:#333;padding:8px 16px;border-radius:8px;';
+
+      const img = document.createElement('img');
+      img.src = dataUrl;
+      img.style.cssText = 'max-width:90vw;max-height:75vh;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.5);';
+
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = '關閉';
+      closeBtn.style.cssText = 'padding:8px 28px;border:none;border-radius:8px;background:#555;color:#fff;font-size:0.95rem;cursor:pointer;';
+      closeBtn.onclick = () => document.body.removeChild(overlay);
+      overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+
+      overlay.append(hint, img, closeBtn);
+      document.body.appendChild(overlay);
+    }
+
+    /* ─── 初始化 ─── */
+    switchMode('learn');
+    buildQuiz();
+  </script>
+  <footer style="text-align:center; padding: 24px 0 18px; font-size: 0.82em; color: #a0aab8;">
+    © 2026 Yeah Yo.
+  </footer>
+</body>
+
+</html>
