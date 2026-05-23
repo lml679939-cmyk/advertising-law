@@ -1,16 +1,23 @@
-# 廣告法規期中考題庫 — Claude Code 交接文件
+# 廣告法規題庫 — Claude Code 交接文件
 
 ## 專案概覽
-這是一個單頁 HTML 廣告法規練習題庫，部署於 GitHub Pages。
+這是一個單頁 HTML 廣告法規練習題庫（含期中＆期末），部署於 GitHub Pages。
 
-- **本地路徑**：`C:\Users\user\Downloads\廣告法規\advertising-law\index.html`
-- **GitHub Pages**：https://lml679939-cmyk.github.io/advertising-law/
+| 項目 | 期中考 | 期末考 |
+|------|--------|--------|
+| **本地路徑** | `advertising-law/index.html` | `advertising-law/final/index.html` |
+| **GitHub Pages** | https://lml679939-cmyk.github.io/advertising-law/ | https://lml679939-cmyk.github.io/advertising-law/final/ |
+| **題庫資料夾** | `midterm-exam/` | `final-exam/` |
+
+- **本地根目錄**：`C:\Users\user\Downloads\廣告法規\advertising-law`
 - **GitHub Repo**：https://github.com/lml679939-cmyk/advertising-law
 - **本地預覽**：`python -m http.server 7788 --directory C:/Users/user/Downloads/廣告法規/advertising-law`（launch.json 已設定，可用 `quiz` 啟動）
 
 ---
 
-## 題庫現況（2026-04-19）
+## 題庫現況（2026-05-23）
+
+### 期中考（`index.html`）
 
 | 模式 | 公開題 | 隱藏題 | 合計 |
 |------|--------|--------|------|
@@ -18,6 +25,17 @@
 | 選擇題 | 48 | 41 | **89** |
 | 填充題 | 30 | 25 | **55** |
 | **合計** | **132** | **107** | **239** |
+
+### 期末考（`final/index.html`）
+
+| 模式 | 公開題 | 隱藏題 | 合計 |
+|------|--------|--------|------|
+| 是非題 | 59 | 0 | **59** |
+| 選擇題 | 0 | 0 | **0**（待建置）|
+| 填充題 | 0 | 0 | **0**（待建置）|
+| **合計** | **59** | **0** | **59** |
+
+> 期末劇情模式 Day 1–4 目前為「開發中」佔位符，題目尚未撰寫。
 
 ---
 
@@ -67,10 +85,10 @@
 - `mcMappedAns[]`：洗牌後正確答案的位置索引
 
 ### 複製為圖片功能
-- 每張題目卡右下角有複製 icon（雙頁圖示）
+- 複製按鈕（雙頁圖示）位於 **「猜的」按鈕右側**（是非題）及「確認答案」按鈕右側（填充題）
 - 點擊後呼叫 `captureCard(idx)`，使用 `html2canvas` 擷取題目卡
 - 擷取結果透過 `navigator.clipboard.write()` 複製到剪貼簿，可直接 `Ctrl+V` 貼上
-- 依賴：`html2canvas 1.4.1`（CDN）
+- 依賴：`html2canvas 1.4.1`（CDN，已加 SRI 雜湊保護）
 
 ### 重要函式守則
 - `updateBar()`：story 模式開頭有 `if (currentMode === 'story') return;`
@@ -81,12 +99,16 @@
 
 ## 劇情模式架構（多關卡 VN 視覺小說系統）
 
-### 已完成關卡
+### 已完成關卡（期中考）
 
 | 關卡 | 常數 | 主題 | 題數 | 客戶角色 |
 |------|------|------|------|---------|
 | Day 1 | `storyDay1` | 藥事法・藥物廣告・釋字414/744 | 10 | 藥廠業務陳經理、電視台業務小陳 |
 | Day 2 | `storyDay2` | 廣播電視法・有線廣電法・衛星廣電法 | 10 | 全台電視林法務 |
+| Day 3 | `storyDay3` | 化粧品衛生安全管理法・釋字744 | 10 | 美妝直播主圈圈 |
+| Day 4 | `storyDay4` | 衛星廣電法・消保法・NCC組織法・公平交易法 | 10 | 購物頻道副理何副理 |
+
+> 期末考的 `storyDay1–4` 目前為「開發中」佔位符，尚待撰寫。
 
 ### 固定角色陣容
 | 角色 | 功能 |
@@ -206,15 +228,36 @@ function getCharacter(name) → storyCharacters 物件 | null
 ## 題庫匯出腳本（供 NotebookLM）
 
 ```
-C:\Users\user\Downloads\廣告法規\advertising-law\quiz_export\
-├── export_all.py                  ← 主腳本（支援全三種題型）
-├── 題庫完整內容_NotebookLM確認用.txt  ← 輸出結果（直接上傳 NotebookLM）
-└── quiz_data.json                 ← JSON 格式（程式調用）
+advertising-law/
+├── quiz_export/
+│   └── export_all.py              ← 主腳本（支援全三種題型）
+├── midterm-exam/
+│   └── 題庫完整內容_NotebookLM確認用.txt  ← 期中考匯出結果
+└── final-exam/
+    └── 期末題庫完整內容_NotebookLM確認用.txt  ← 期末考匯出結果
 ```
 
-執行方式：
+**執行方式（期中考）**：
 ```bash
+# export_all.py 預設指向 ../index.html（即期中 index.html）
 python quiz_export/export_all.py
+# 輸出至 midterm-exam/題庫完整內容_NotebookLM確認用.txt
+```
+
+**執行方式（期末考）**：
+```bash
+# 臨時修改 export_all.py 第14行 HTML_FILE 指向 final/index.html
+# 或直接用 Python 一行指令：
+python -c "
+import sys; sys.path.insert(0,'quiz_export')
+import export_all as e; from pathlib import Path
+e.HTML_FILE = Path('final/index.html')
+e.OUT_TXT   = Path('final-exam/期末題庫完整內容_NotebookLM確認用.txt')
+src = e.HTML_FILE.read_text(encoding='utf-8')
+tf=e.parse_tf(src); mc=e.parse_mc(src); fill=e.parse_fill(src)
+e.OUT_TXT.write_text(e.build_txt(tf,mc,fill), encoding='utf-8')
+print('done', len(tf), len(mc), len(fill))
+"
 ```
 
 ---
@@ -293,16 +336,55 @@ python quiz_export/export_all.py
 - **NCC組織法§8**：委員離職後 3 年不得任職相關業者；追溯離職前 5 年職務
 - **公平交易法§21**：素人薦證者連帶賠償上限為所受報酬 10 倍
 
+### 期末考新增法規重點
+
+#### 公平交易法罰則
+| 違規類型 | 條文 | 罰鍰 |
+|---------|------|------|
+| 違反§21（虛偽不實廣告） | §42 | 5萬～2500萬 |
+| 違反聯合行為§14 | §35/36 | 100萬～5億（或上年營業額10%） |
+| 多層次傳銷不實廣告 | §29 | 5萬～2500萬 |
+
+#### 贈品贈獎辦法重點
+- **§4**：正當交易行為贈品附送上限：附送贈品價值不得超過主產品售價 **50%**
+- **§5**：競賽型贈品最高金額不得超過 **2000 萬元**
+- **§6**：摸彩型贈品最高金額不得超過 **200 萬元**
+
+#### 薦證廣告規範重點
+- 薦證者需有使用商品或服務之真實體驗
+- 醫師、律師等專業人士薦證須符合其職業倫理及相關法規
+- 廣告主、廣告代理業與廣告媒體業需連帶負責虛偽薦證
+
+#### 消費者保護法重點
+- **§9**：主管機關有**職業安全衛生法**主管機關等協助義務
+- **§11-1**：企業經營者未依規定訂定型式契約 → 以消費者主張有利條款為準
+- **§19**：通訊交易或訪問交易，消費者得於7日內**無需說明理由**解除契約
+- **§19-2**：已拆封、已提供之服務等特定例外不適用§19
+- **§51**：企業故意損害消費者 → 懲罰性賠償最高 **5 倍**；過失最高 **3 倍**
+- **§45-5**：主管機關得公告不良企業名單
+
+#### 衛廣法施行細則重點
+- **§11**：廣播電視節目廣告化，認定標準：廣告時間≥ 節目時間 1/2
+- **§12**：衛廣頻道每日本國語言節目播映比例不得低於 **70%**
+
 ---
 
 ## Git 提交習慣
 ```bash
+# 期中考修改
 git add index.html
+
+# 期末考修改
+git add final/index.html
+
+# CLAUDE.md 更新
+git add CLAUDE.md
+
 git commit -m "說明"
 git push origin main
 ```
 推送後約 1 分鐘 GitHub Pages 生效。
-**只 add `index.html`**（和 CLAUDE.md），不要 add `.claude/` 等目錄。
+**不要 add `.claude/` 等目錄**（含 worktrees）。
 commit 訊息**不得含有密碼明文**。
 
 ---
@@ -310,20 +392,29 @@ commit 訊息**不得含有密碼明文**。
 ## 工作流程慣例（本專案適用）
 
 1. **題目修正流程**：
-   - 使用者提供正確法條 → Claude 直接修改 `index.html` → push
+   - 使用者提供正確法條 → Claude 直接修改對應 `index.html`（期中或 `final/index.html` 期末）→ push
    - 修正後同步更新 CLAUDE.md「已修正的重要題目錯誤」表格
 
 2. **新增題目流程**：
    - 使用者提供題目內容 → Claude 依格式插入對應陣列末尾 → push
+   - 期中題目加在 `index.html`；期末題目加在 `final/index.html`
 
-3. **NotebookLM 匯出流程**：
+3. **NotebookLM 匯出流程（期中）**：
    - 執行 `python quiz_export/export_all.py`
-   - 上傳 `quiz_export/題庫完整內容_NotebookLM確認用.txt` 給 NotebookLM
+   - 上傳 `midterm-exam/題庫完整內容_NotebookLM確認用.txt` 給 NotebookLM
 
-4. **題目驗證流程（NotebookLM 回報問題後）**：
+4. **NotebookLM 匯出流程（期末）**：
+   - 修改 `export_all.py` 的 `HTML_FILE` 指向 `final/index.html`，`OUT_TXT` 指向 `final-exam/期末題庫完整內容_NotebookLM確認用.txt`，執行後還原
+   - 上傳 `final-exam/期末題庫完整內容_NotebookLM確認用.txt` 給 NotebookLM
+
+5. **題目驗證流程（NotebookLM 回報問題後）**：
    - 逐一確認題目文字、答案、詳解三者是否一致
    - 與 CLAUDE.md「重要法條筆記」交叉核對
    - 若與法條衝突，以使用者提供的法條原文為最終依據
+
+6. **期末考追蹤資料識別**：
+   - `final/index.html` 的所有 `trackAnswer` 呼叫已加 `final-` 前綴（`final-learn`、`final-classic`、`final-mc`、`final-fill`、`final-story`）
+   - Google Sheet 用「模式」欄篩選 `final-*` 即可只看期末資料
 
 ---
 
@@ -529,36 +620,54 @@ function makeQId(text) {
 
 ---
 
-## 期末考題庫規劃（2026-04-29 規劃中）
+## 期末考題庫現況（2026-05-23 已完成基礎建置）
 
-期中考已考完，期末題庫採用**獨立資料夾**方式建置：
+期末題庫採用**獨立資料夾**方式建置，已完成以下工作：
 
 ```
 advertising-law/
-├── index.html          ← 期中（保持原樣，不再大改）
+├── index.html              ← 期中（不再大改）
 ├── final/
-│   └── index.html      ← 期末（複製 index.html 後改題庫）
-└── images/             ← 共用角色立繪
+│   └── index.html          ← 期末（已建置，59 題是非）
+├── images/                 ← 共用角色立繪
+├── midterm-exam/           ← 期中考 PDF 及匯出 TXT
+├── final-exam/             ← 期末考 PDF 及匯出 TXT
+└── quiz_export/
+    └── export_all.py       ← 匯出腳本
 ```
 
 - **網址**：`https://lml679939-cmyk.github.io/advertising-law/final/`
-- **追蹤資料分離**：在 `final/index.html` 把 `trackAnswer(...)` 的 `mode` 參數加前綴（例如 `final-learn`、`final-mc`、`final-classic`、`final-fill`、`final-story`），這樣試算表用 `模式` 欄就能自動區分期中／期末
-- **共用元件**：`images/`、追蹤系統（同一個 Apps Script、同一個 Google Sheet）、密碼鎖機制
-- **獨立元件**：題庫陣列、劇情模式關卡、頁面標題
+- **追蹤資料分離**：`final/index.html` 的 `trackAnswer` 模式均加 `final-` 前綴 ✅
+- **共用元件**：`images/`、追蹤系統（同一個 Apps Script、同一個 Google Sheet）、密碼鎖機制 ✅
+- **獨立元件**：題庫陣列、劇情模式關卡、頁面標題 ✅
 
-實作步驟（待使用者下指令時執行）：
-1. 建立 `final/` 資料夾
-2. 複製 `index.html` → `final/index.html`
-3. 替換題庫（`questions`、`mcQuestions`、`fillQuestions`）
-4. 替換劇情模式關卡（`storyDay1` ~ `storyDay4` 重新撰寫）
-5. 把所有 `trackAnswer('learn',...)` 改為 `trackAnswer('final-learn',...)`，其他模式類推
-6. 修改頁面標題為「廣告法規期末考」
+### 已完成
+- [x] 建立 `final/` 資料夾
+- [x] 複製 `index.html` → `final/index.html`
+- [x] 替換是非題題庫（59 題，涵蓋衛廣法、公平交易法、贈品贈獎辦法、薦證廣告規範、消費者保護法等）
+- [x] 所有 `trackAnswer` 加 `final-` 前綴
+- [x] 修改頁面標題為「廣告法規期末考」
+- [x] 複製按鈕位置與期中一致（猜的/確認答案右側）
+
+### 待建置
+- [ ] 期末選擇題（`mcQuestions = []` 目前為空）
+- [ ] 期末填充題（`fillQuestions = []` 目前為空）
+- [ ] 期末劇情模式 Day 1–4（目前為「開發中」佔位符）
 
 ---
 
 ## 下一步可能的工作
-- 期末考題庫建置（見上方規劃）
-- 繼續新增隱藏題目（使用者會提供題目內容）
+
+### 期末考（優先）
+- **期末選擇題**：建置 `mcQuestions` 陣列（目前為空）
+- **期末填充題**：建置 `fillQuestions` 陣列（目前為空）
+- **期末劇情模式**：撰寫 Day 1–4 題目（主題可對應衛廣法、公平法、消保法等）
+- **NotebookLM 驗證**：將已匯出的 59 題是非上傳 NotebookLM 確認答案與詳解
+
+### 期中考（維護）
+- 繼續新增隱藏題目（使用者提供題目內容）
 - NotebookLM 驗證後修正錯誤答案或解析
-- 角色立繪優化（目前因 PNG 有白底，以左側大氣遮罩補救；可換用去背 PNG 以達完美效果）
+
+### 長期優化（低優先）
+- 角色立繪優化（目前 PNG 有白底，以左側大氣遮罩補救；可換用去背 PNG）
 - 劇情模式音效 / 背景音樂（VN 沉浸感升級）
