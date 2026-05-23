@@ -1612,7 +1612,6 @@
       <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
       <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
       <button class="mode-btn" id="btn-mode-fill" onclick="switchMode('fill')">✏️ 填空題</button>
-      <button class="mode-btn" id="btn-mode-story" onclick="switchMode('story')" style="display:none;">🎭 劇情模式</button>
     </div>
   </div>
   <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
@@ -2403,7 +2402,6 @@
 
     if (isUnlocked) {
       document.querySelector('.exam-header h1').innerHTML = '廣告法規期末考 <span style="font-size:0.6em;opacity:0.8;">🔓</span>';
-      document.getElementById('btn-mode-story').style.display = '';
     }
 
     /* ─── 匿名答題追蹤 ─── */
@@ -2477,7 +2475,6 @@
       document.getElementById('btn-mode-classic').classList.toggle('active', mode === 'classic');
       document.getElementById('btn-mode-mc').classList.toggle('active', mode === 'mc');
       document.getElementById('btn-mode-fill').classList.toggle('active', mode === 'fill');
-      document.getElementById('btn-mode-story').classList.toggle('active', mode === 'story');
 
       // 劇情模式：顯示 story-panel，隱藏其他主要 UI
       const isStory = mode === 'story';
