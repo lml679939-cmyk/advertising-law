@@ -1919,15 +1919,13 @@
         <button class="choice-btn" id="btn-O-${i}" onclick="handleAnswer(${i},'O')">○ 正確</button>
         <button class="choice-btn" id="btn-X-${i}" onclick="handleAnswer(${i},'X')">✕ 錯誤</button>
         <button class="guess-btn"  id="gbtn-${i}"  onclick="toggleGuess(${i})">🎲 猜的</button>
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
         <span  class="guess-label" id="glabel-${i}">⚠️ 我猜的</span>
       </div>
       <div class="result-row" id="rrow-${i}">
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div style="display:flex;align-items:center;margin-top:6px;">
-        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
-      </div>
     `;
         c.appendChild(card);
       });
@@ -1963,15 +1961,13 @@
       </div>
       <div class="choices-row" style="margin-top:8px">
         <button class="guess-btn" id="gbtn-${i}" onclick="toggleGuess(${i})">🎲 猜的</button>
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
         <span class="guess-label" id="glabel-${i}">⚠️ 我猜的</span>
       </div>
       <div class="result-row" id="rrow-${i}">
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
       <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div style="display:flex;align-items:center;margin-top:6px;">
-        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
-      </div>
     `;
         c.appendChild(card);
       });
@@ -2059,14 +2055,12 @@
       </div>
       <div class="fill-check-row">
         <button class="btn-fill-check" id="fill-check-${i}" onclick="checkFill(${i})">✅ 確認答案</button>
+        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
       </div>
       <div class="result-row" id="rrow-${i}">
         <div class="result-badge" id="rbadge-${i}"></div>
       </div>
-      <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>
-      <div style="display:flex;align-items:center;margin-top:6px;">
-        <button class="save-png-btn" id="savebtn-${i}" onclick="captureCard(${i})" title="複製為圖片"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="17" rx="2"/><path d="M2 7v13a2 2 0 0 0 2 2h11"/></svg></button>
-      </div>`;
+      <div class="explanation" id="exp-${i}">${q.exp}${q.page ? `<div class='page-ref'>📖 講義參考頁碼：<strong>${q.page}</strong></div>` : ''}</div>`;
         c.appendChild(card);
       });
     }
