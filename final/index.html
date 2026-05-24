@@ -1599,6 +1599,383 @@
     .save-png-btn svg {
       display: block;
     }
+
+    /* ══════════════════════════════════════
+       概念地圖模式 — 法規架構 × 白話故事 × 隨堂驗收
+    ══════════════════════════════════════ */
+    #concept-map-panel {
+      display: none;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .cm-header {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 18px;
+      text-align: center;
+      box-shadow: 0 6px 22px rgba(15, 32, 39, 0.35);
+      border: 1px solid rgba(255, 215, 100, 0.22);
+    }
+    .cm-header h1 { font-size: 1.6em; letter-spacing: 3px; margin-bottom: 6px; }
+    .cm-header p { font-size: 0.88em; opacity: 0.85; }
+
+    .cm-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* ── 左側手風琴選單 ── */
+    .cm-sidebar {
+      background: white;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 12px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+    }
+    .cm-cat {
+      border-bottom: 1px solid #ecf0f1;
+    }
+    .cm-cat:last-child { border-bottom: none; }
+    .cm-cat-header {
+      padding: 11px 12px;
+      font-weight: bold;
+      color: #1a3c6e;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 8px;
+      transition: background 0.18s;
+      font-size: 0.95em;
+    }
+    .cm-cat-header:hover { background: #f5f8fb; }
+    .cm-cat-arrow {
+      transition: transform 0.22s;
+      color: #7f8c8d;
+      font-size: 0.85em;
+    }
+    .cm-cat.open .cm-cat-arrow { transform: rotate(90deg); }
+    .cm-sublist {
+      display: none;
+      padding: 4px 0 8px 0;
+    }
+    .cm-cat.open .cm-sublist { display: block; }
+    .cm-subitem {
+      padding: 8px 14px 8px 28px;
+      cursor: pointer;
+      color: #5a6a7e;
+      font-size: 0.88em;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 2px;
+    }
+    .cm-subitem:hover {
+      background: #f0f6ff;
+      color: #1a3c6e;
+    }
+    .cm-subitem.active {
+      background: linear-gradient(90deg, #e3f2fd, transparent);
+      border-left-color: #2e6da4;
+      color: #1a3c6e;
+      font-weight: bold;
+    }
+
+    /* ── 右側內容區 ── */
+    .cm-content {
+      min-height: 400px;
+    }
+    .cm-placeholder {
+      background: white;
+      border-radius: 12px;
+      padding: 60px 30px;
+      text-align: center;
+      color: #95a5a6;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      font-size: 1em;
+    }
+    .cm-placeholder .big {
+      font-size: 3.2em;
+      margin-bottom: 14px;
+      opacity: 0.45;
+    }
+
+    /* Tip Card（白話小故事） */
+    .cm-tip-card {
+      background: linear-gradient(135deg, #fff9e6, #fff3cc);
+      border-left: 5px solid #f39c12;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 12px rgba(243, 156, 18, 0.18);
+    }
+    .cm-tip-title {
+      font-size: 1.15em;
+      font-weight: bold;
+      color: #b45309;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cm-tip-body {
+      color: #4a3a1a;
+      line-height: 1.75;
+      font-size: 0.96em;
+      white-space: pre-line;
+    }
+    .cm-tip-body b { color: #c0392b; font-weight: bold; }
+    .cm-tip-pages {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(180, 83, 9, 0.3);
+      font-size: 0.78em;
+      color: #8a6a2a;
+    }
+    .cm-tip-pages .tag {
+      display: inline-block;
+      background: rgba(243, 156, 18, 0.18);
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin: 2px 4px 2px 0;
+      color: #8a4500;
+      font-weight: bold;
+    }
+
+    /* Quiz 區 */
+    .cm-quiz-header {
+      background: linear-gradient(135deg, #1a3c6e, #2e6da4);
+      color: white;
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .cm-quiz-title { font-size: 1.05em; font-weight: bold; }
+    .cm-quiz-stats { font-size: 0.88em; opacity: 0.9; }
+    .cm-quiz-reshuffle {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.35);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 18px;
+      cursor: pointer;
+      font-size: 0.82em;
+      transition: all 0.18s;
+    }
+    .cm-quiz-reshuffle:hover {
+      background: rgba(255,255,255,0.28);
+    }
+
+    .cm-no-question {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      color: #95a5a6;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    }
+
+    .cm-qcard {
+      background: white;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+      border-left: 4px solid #ecf0f1;
+      transition: border-color 0.2s;
+    }
+    .cm-qcard.correct { border-left-color: #27ae60; }
+    .cm-qcard.wrong   { border-left-color: #e74c3c; }
+    .cm-qcard-top {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .cm-qnum {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #ecf0f1;
+      color: #5a6a7e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.88em;
+    }
+    .cm-qcard.correct .cm-qnum { background: #27ae60; color: white; }
+    .cm-qcard.wrong   .cm-qnum { background: #e74c3c; color: white; }
+    .cm-qtype-tag {
+      flex-shrink: 0;
+      font-size: 0.72em;
+      padding: 3px 8px;
+      border-radius: 10px;
+      background: #f0f6ff;
+      color: #2e6da4;
+      align-self: flex-start;
+      margin-top: 3px;
+    }
+    .cm-qtype-tag.mc   { background: #fef5e7; color: #b45309; }
+    .cm-qtype-tag.fill { background: #e8f8f0; color: #1e7e34; }
+    .cm-qtext {
+      flex: 1;
+      color: #2c3e50;
+      line-height: 1.6;
+      font-size: 0.95em;
+    }
+    .cm-choices {
+      display: flex;
+      gap: 10px;
+      margin-left: 38px;
+      flex-wrap: wrap;
+    }
+    .cm-cbtn {
+      padding: 8px 22px;
+      border-radius: 8px;
+      border: 2px solid #dfe4ea;
+      background: white;
+      color: #2c3e50;
+      cursor: pointer;
+      font-size: 0.93em;
+      font-weight: bold;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .cm-cbtn:hover:not(:disabled) {
+      border-color: #2e6da4;
+      background: #f0f6ff;
+    }
+    .cm-cbtn:disabled { cursor: not-allowed; }
+    .cm-cbtn.picked-correct {
+      background: #27ae60; border-color: #27ae60; color: white;
+    }
+    .cm-cbtn.picked-wrong {
+      background: #e74c3c; border-color: #e74c3c; color: white;
+    }
+    .cm-cbtn.show-correct {
+      background: #d5f5e3; border-color: #27ae60; color: #145a32;
+    }
+    .cm-mc-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-left: 38px;
+    }
+    .cm-mc-opt {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 2px solid #dfe4ea;
+      background: white;
+      color: #2c3e50;
+      cursor: pointer;
+      text-align: left;
+      font-size: 0.92em;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .cm-mc-opt:hover:not(:disabled) {
+      border-color: #2e6da4;
+      background: #f0f6ff;
+    }
+    .cm-mc-opt:disabled { cursor: not-allowed; }
+    .cm-mc-opt.picked-correct { background: #27ae60; border-color: #27ae60; color: white; }
+    .cm-mc-opt.picked-wrong   { background: #e74c3c; border-color: #e74c3c; color: white; }
+    .cm-mc-opt.show-correct   { background: #d5f5e3; border-color: #27ae60; color: #145a32; }
+    .cm-fill-row {
+      display: flex;
+      gap: 8px;
+      margin-left: 38px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .cm-fill-input {
+      padding: 8px 12px;
+      border: 2px solid #dfe4ea;
+      border-radius: 6px;
+      font-size: 0.95em;
+      width: 130px;
+      font-family: inherit;
+    }
+    .cm-fill-input:focus { outline: none; border-color: #2e6da4; }
+    .cm-fill-input.correct { border-color: #27ae60; background: #f0fff4; }
+    .cm-fill-input.wrong   { border-color: #e74c3c; background: #fff5f5; }
+    .cm-fill-btn {
+      padding: 8px 18px;
+      background: #2e6da4;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: inherit;
+      font-size: 0.9em;
+    }
+    .cm-fill-btn:hover { background: #1a3c6e; }
+    .cm-fill-btn:disabled { background: #95a5a6; cursor: not-allowed; }
+    .cm-result {
+      margin: 10px 0 0 38px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      font-weight: bold;
+      display: none;
+    }
+    .cm-result.show { display: block; }
+    .cm-result.correct { background: #d5f5e3; color: #145a32; }
+    .cm-result.wrong   { background: #fadbd8; color: #78281f; }
+    .cm-exp {
+      margin: 10px 0 0 38px;
+      padding: 12px 16px;
+      background: #f8f9fa;
+      border-left: 3px solid #2e6da4;
+      border-radius: 0 6px 6px 0;
+      color: #4a5568;
+      font-size: 0.88em;
+      line-height: 1.65;
+      display: none;
+    }
+    .cm-exp.show { display: block; }
+    .cm-exp .law-ref { color: #b45309; font-weight: bold; }
+    .cm-exp b, .cm-exp strong { color: #c0392b; }
+
+    .cm-final-summary {
+      background: linear-gradient(135deg, #fef9e7, #fff3cc);
+      border: 2px solid #f1c40f;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 12px;
+      text-align: center;
+      color: #7d6608;
+      font-size: 1.05em;
+      font-weight: bold;
+    }
+
+    @media (max-width: 820px) {
+      .cm-layout {
+        grid-template-columns: 1fr;
+      }
+      .cm-sidebar {
+        position: static;
+        max-height: none;
+      }
+      .cm-choices, .cm-mc-options, .cm-fill-row, .cm-result, .cm-exp {
+        margin-left: 0;
+      }
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
@@ -1612,6 +1989,7 @@
       <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
       <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
       <button class="mode-btn" id="btn-mode-fill" onclick="switchMode('fill')">✏️ 填空題</button>
+      <button class="mode-btn" id="btn-mode-map" onclick="switchMode('map')">🗺️ 概念地圖</button>
     </div>
   </div>
   <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
@@ -1644,6 +2022,7 @@
 
   <div id="quiz-container"></div>
   <div id="story-panel"></div>
+  <div id="concept-map-panel"></div>
 
   <div class="final-box" id="final-box">
     <h2 id="final-score-text"></h2>
@@ -2379,6 +2758,253 @@
       },
     ];
 
+    /* ─── 概念地圖：概念樹狀資料 ─── */
+    const concepts = [
+      {
+        mainTopic: '公平交易法',
+        subTopics: [
+          {
+            id: 'ftc_basics',
+            name: '立法目的與「事業」定義',
+            matchPages: ['公平法§1', '公平法§2', '公平法§42', '公平法§45'],
+            story: '🥸 想像公平會就是「商業界的裁判」。它的首要任務是維護<b>市場公平競爭秩序</b>，保護消費者只是順便的（間接目的）。\n\n那「事業」是誰？除了公司、行號，連<b>同業公會</b>（注意是「公會」不是「工會」！工會是勞工的，公會是廠商的）也算。你跟同行老闆們組的「珍奶公會」，要是聯合漲價就會踩線。'
+          },
+          {
+            id: 'ftc_merger',
+            name: '結合申報（事業合併）',
+            matchPages: ['公平法§8', '公平法§11', '公平法§13'],
+            story: '🥸 想像「五十嵐」想併購「清玉」。如果合併後市占率達<b>三分之一</b>，要先向公平會申報。\n\n公平會審查時很實在：如果合併「整體經濟利益 > 限制競爭的壞處」，公平會<b>不得</b>禁止（注意是「不得」不是「得不」）—— 也就是說公平會沒有裁量空間，必須放行。'
+          },
+          {
+            id: 'ftc_false_ad',
+            name: '廣告不實（虛偽不實 vs 引人錯誤）',
+            matchPages: ['處理原則§4', '處理原則§5', '處理原則§6', '處理原則§7', '處理原則§5§6'],
+            story: '🥸 珍奶店招牌寫「全台第一」，這是廣告。\n\n<b>虛偽不實</b>：你根本不是第一，跟事實不符 → 違反公平法§21。\n<b>引人錯誤</b>：就算你真的銷量第一，但你用的字眼會讓人誤以為「你家珍奶會讓人長高」——<b>不論是否與事實相符</b>，只要會讓一般消費者產生錯誤認知，就算引人錯誤。\n\n這是期末考最愛考的陷阱：很多人以為「引人錯誤」也要「與事實不符」，錯！'
+          },
+          {
+            id: 'ftc_civil',
+            name: '民事責任與請求權時效',
+            matchPages: ['公平法§29', '公平法§31', '公平法§32'],
+            story: '🥸 隔壁飲料店偷用你家招牌賣假珍奶，你可以：\n1. 要求<b>排除侵害</b>（叫他停止），有侵害之虞還能<b>預防侵害</b>（§29）\n2. 求懲罰性賠償：故意行為最高<b>3 倍</b>（§31）—— 注意公平法是 3 倍，<b>消保法故意是 5 倍</b>，別搞混！\n3. 但要快：知道有人侵害你權益起<b>2 年</b>內、行為發生起<b>10 年</b>內要告，否則時效消滅（§32）'
+          },
+          {
+            id: 'ftc_correction',
+            name: '更正廣告',
+            matchPages: ['更正廣告處理原則'],
+            story: '🥸 你的珍奶店被罰廣告不實，公平會命你登「更正廣告」道歉。\n\n刊登期限<b>不得逾處分書送達後 30 日</b>（不是 20 日喔，常考！）。簡單講：被抓包後一個月內要公開認錯，免得錯誤資訊繼續傳播害更多消費者上當。'
+          },
+          {
+            id: 'ftc_warning',
+            name: '不當警告函（智財權濫用）',
+            matchPages: ['警告函處理原則§3', '警告函處理原則§5'],
+            story: '🥸 你開飲料店，對手寄律師函給你的經銷商說「他家配方侵害我專利，你別賣他的！」\n\n但對方根本沒先走「鑑定 + 通知你」程序，就到處發警告函嚇唬你的經銷商 —— 這叫<b>濫發警告函</b>，違反公平法<b>§25</b>（非§21！）。會被認定為「足以影響交易秩序的欺罔或顯失公平行為」。'
+          },
+          {
+            id: 'ftc_internet',
+            name: '網路廣告（部落客、網紅）',
+            matchPages: ['網路廣告處理原則§4', '網路廣告處理原則§9', '網路廣告處理原則§10'],
+            story: '🥸 你開的飲料店請 IG 網紅業配。如果網紅亂講「喝了會瘦」：\n\n• <b>你（廣告主）</b>有義務確保網紅貼文內容屬實，沒做到 → 違反公平法§21\n• <b>網紅</b>如果是<b>故意共同</b>跟你一起騙人 → 也會被一起罰（§10第2項）\n• 連購物網站的<b>供貨商與平台</b>都可能同時被認定為「廣告主」，一起負責'
+          }
+        ]
+      },
+      {
+        mainTopic: '消費者保護法',
+        subTopics: [
+          {
+            id: 'cpl_entrepreneur',
+            name: '「企業經營者」是誰？',
+            matchPages: ['消保法§2'],
+            story: '🥸 別以為消保法只管「賺錢的公司」！\n\n依§2，企業經營者<b>不限於營利目的</b>。連社區大學、廟方賣紀念品、學校福利社、非營利協會辦活動賣商品 —— 只要你<b>持續性</b>提供商品或服務，就是企業經營者，要負消保法責任。\n\n路邊偶爾一次的義賣不算，但常態運作的「公益商店」也算企業經營者。'
+          },
+          {
+            id: 'cpl_safety',
+            name: '商品安全責任（無過失 + 舉證倒置）',
+            matchPages: ['消保法§7', '消保法§9'],
+            story: '🥸 你買的手搖珍奶喝下去拉肚子送醫，要告飲料店：\n\n• 你<b>不用證明店家有過失</b>（§7 是無過失責任）—— 只要證明「商品瑕疵 + 損害」\n• 反過來<b>店家要自己舉證</b>「我的商品符合當時科技可合理期待的安全性」才能免責\n• 就算店家舉證成功，法院也只能「<b>減輕</b>」賠償，不能完全免除\n\n進口商更慘：依§9，<b>輸入商品的進口商「視為」製造者</b>，要負同樣的無過失責任，不能說「我只是代理」就推掉。'
+          },
+          {
+            id: 'cpl_standard_contract',
+            name: '定型化契約（審閱期 + 應記載事項）',
+            matchPages: ['消保法§11-1', '消保法§15', '消保法§17'],
+            story: '🥸 你去買預售屋，建商給你一本厚厚的契約：\n\n• <b>§11-1</b>：要給你<b>30 日以內</b>的合理審閱期。契約裡若寫「消費者同意拋棄審閱期」—— <b>該條款無效</b>！\n• <b>§15</b>：定型化條款（建商印好的）vs 你跟業務「個別磋商」談好的條件 —— <b>個別磋商優先</b>，牴觸的定型化部分無效\n• <b>§17</b>：主管機關公告的「應記載事項」（例如預售屋契約應記載坪數計算方式），<b>就算契約沒寫，依法也自動成為契約內容</b>'
+          },
+          {
+            id: 'cpl_7days',
+            name: '七天鑑賞期（通訊 / 訪問交易）',
+            matchPages: ['消保法§19', '消保法§19-2'],
+            story: '🥸 「七天鑑賞期」常被誤解！它<b>不是試用期</b>，是「無條件解除契約權」，且<b>只適用兩種情況</b>：\n\n• <b>通訊交易</b>：你在<b>沒看到實物</b>的情況下訂購（網購、電視購物、目錄）\n• <b>訪問交易</b>：業務「<b>未經邀約</b>」主動找上門推銷\n\n→ 你自己走進實體店面買 → <b>不適用</b>！\n→ 解除後企業要在<b>收到通知次日起 15 日內</b>取回商品（§19-2）\n→ 如果企業沒告知你有解除權，最久可延長到「7 日起算<b>逾 4 個月</b>」（不是 3 個月！）'
+          },
+          {
+            id: 'cpl_installment',
+            name: '分期付款買賣',
+            matchPages: ['消保法§21', '消保法分期付款'],
+            story: '🥸 你分期付款買 iPhone，但合約沒寫利率怎麼算？\n\n依§21第3項，企業<b>沒記載利率</b>者，按現金交易價格<b>年利率 5%</b> 計算（不是 20%！）—— 對消費者超有利。\n\n但要注意：分期付款買賣的定義是「<b>付頭期款的同時交付商品</b>」。所以買<b>預售屋不算分期付款</b>（房子還沒蓋好不能交付），要回歸民法處理。'
+          },
+          {
+            id: 'cpl_mediation',
+            name: '消費爭議調解',
+            matchPages: ['消保法§45-5'],
+            story: '🥸 你跟業者吵不出結果，找消保官調解。調解委員會提出方案後：\n\n若雙方在期限內<b>沒提出異議</b>，依§45-5，<b>「視為」</b>已依方案成立調解（不是「推定」！）。\n\n為什麼這個字很重要？「視為」= 確定生效、不能反駁；「推定」= 可以舉反證推翻。考試最愛在這兩字玩文字遊戲。'
+          },
+          {
+            id: 'cpl_punitive',
+            name: '懲罰性賠償（§51）',
+            matchPages: ['消保法§51'],
+            story: '🥸 業者賣黑心商品害你受傷，除了實際損失賠償外，還可請求懲罰性賠償：\n\n• <b>故意</b> → 最高 <b>5 倍</b>\n• <b>重大過失</b> → 最高 <b>3 倍</b>\n• <b>（一般）過失</b> → 最高 <b>1 倍</b>\n\n口訣：「故意五、重三、過一」。注意公平法§31「故意」是 3 倍，跟消保法不同，超常考！'
+          }
+        ]
+      },
+      {
+        mainTopic: '衛星廣播電視法',
+        subTopics: [
+          {
+            id: 'sat_ad_time',
+            name: '廣告時間限制與標示',
+            matchPages: ['衛廣法§36', '衛廣法施行細則§11', '廣告插播辦法§3'],
+            story: '🥸 打開電視看連續劇，覺得「怎麼廣告比劇還多」？依§36：\n\n• 廣告時間不得超過<b>節目時間的 1/6</b>（六分之一）\n• 單則廣告超過<b>3 分鐘</b>就必須在畫面上標示「廣告」二字（不是 2 分鐘！）\n• 廣告時間<b>不包括</b>同家族頻道節目預告（施行細則§11）\n• 插播次數：30 分鐘可插 2 次、45 分鐘 3 次、60 分鐘 4 次'
+          },
+          {
+            id: 'sat_shopping_placement',
+            name: '購物頻道與置入性行銷',
+            matchPages: ['衛廣法§24', '衛廣法§31'],
+            story: '🥸 你轉電視老是轉到一堆購物台覺得很煩？依§24，購物頻道數不得超過<b>頻道總數 10%</b>（十分之一）—— 別記成 15% 或 1/4！\n\n至於「置入性行銷」（戲劇主角剛好喝某品牌珍奶）—— §31第2項禁止在「<b>新聞節目</b>」和「兒童節目」置入（不是「新聞評論」！）。'
+          },
+          {
+            id: 'sat_pre_approval',
+            name: '廣告事前審核與資料索取',
+            matchPages: ['衛廣法§29', '衛廣法§35', '衛廣法§39'],
+            story: '🥸 醫美診所要在電視打廣告，依§35，要先取得目的事業主管機關<b>「核准」</b>的證明文件（不是「核定」！）才能播。\n\n關於頻道鎖碼（成人台）：§29 規定要以<b>鎖碼方式</b>報請主管機關<b>「核定」</b>（這時用「核定」！）。\n\n播出後主管機關有權索取資料：§39 規定可於<b>播送「後」20 日內</b>索取（不是播送「前」！）。'
+          },
+          {
+            id: 'sat_correction',
+            name: '更正答辯權',
+            matchPages: ['衛廣法§44', '衛廣法施行細則§12'],
+            story: '🥸 電視台播報新聞說你開的飲料店有問題，但內容是錯的，你可以要求更正：\n\n依§44，事業接到要求後須在<b>10 日內</b>更正（不是 20 日！）。\n\n如果是節目評論你的，依施行細則§12，你要在播出後<b>3 個月內</b>提出答辯要求。\n\n口訣：「更正 10 天、答辯 3 個月」。'
+          },
+          {
+            id: 'sat_rating',
+            name: '節目分級制度',
+            matchPages: ['衛廣法§28'],
+            story: '🥸 為什麼電視右上角會有「普」「護」「輔 12」「輔 15」「限」？\n\n依衛廣法§28第1項，衛星廣電事業<b>應</b>就播送之電視節目予以分級，目的是保護兒少身心健康。'
+          },
+          {
+            id: 'sat_local_content',
+            name: '本國語言節目比例',
+            matchPages: ['衛廣法相關辦法§5'],
+            story: '🥸 為什麼台灣的衛星頻道一定要播一定比例的中文節目？\n\n依衛廣法相關辦法§5，衛星頻道<b>新播節目</b>本國比例下限為 <b>20%</b>（注意：是衛星 20%，別跟無線電視戲劇 40% 搞混！）。\n\n施行細則§12 另規定：衛廣每日<b>本國語言節目</b>播映比例不得低於 <b>70%</b>。'
+          }
+        ]
+      },
+      {
+        mainTopic: '贈品贈獎辦法',
+        subTopics: [
+          {
+            id: 'gift_value',
+            name: '贈品價值上限（§4）',
+            matchPages: ['贈品贈獎辦法§4'],
+            story: '🥸 你的飲料店搞「買珍奶送贈品」活動，贈品價值有上限：\n\n• 商品/服務價值 ≤ <b>100 元</b> → 贈品上限 <b>50 元</b>\n• 商品/服務價值 > 100 元 → 贈品上限為「商品價值的一半」\n\n例：賣 60 元珍奶最多送 50 元贈品，賣 200 元手搖最多送 100 元贈品。'
+          },
+          {
+            id: 'gift_total',
+            name: '全年贈獎總額上限（§5）',
+            matchPages: ['贈品贈獎辦法§5'],
+            story: '🥸 全國連鎖飲料店搞「年度抽獎」，依§5，全年贈獎總額有天花板：\n\n• 上年度銷售額 ≥ <b>30 億元</b>者 → 全年贈獎總額上限 <b>6 億元</b>（不是 5 億、不是 7.5 億！）\n\n設這上限是怕大廠「砸錢抽獎」把小廠擠出市場，破壞競爭。'
+          },
+          {
+            id: 'gift_max_prize',
+            name: '單項最大獎額（§6）',
+            matchPages: ['贈品贈獎辦法§6'],
+            story: '🥸 飲料店辦「集點抽夏威夷雙人遊」，依§6，單項最大獎額不得超過<b>新臺幣 500 萬元</b>。\n\n所以你不能搞「抽 BMW + 帝寶豪宅」這種誇張獎項（除非業者夠大且分次設多獎）。'
+          }
+        ]
+      },
+      {
+        mainTopic: '薦證廣告',
+        subTopics: [
+          {
+            id: 'end_real',
+            name: '薦證者需有真實體驗（§3）',
+            matchPages: ['薦證廣告規範§3'],
+            story: '🥸 網紅幫減肥茶業配說「我喝了瘦 5 公斤」—— 但她根本沒喝過。\n\n依薦證廣告規範§3，薦證者<b>必須真實使用過</b>該商品或服務，否則就算違法。\n\n所以你常看到網紅貼文末尾標註「#實際使用心得」，就是為了符合這規定。'
+          },
+          {
+            id: 'end_false',
+            name: '虛偽不實薦證（§4）',
+            matchPages: ['薦證廣告規範§4'],
+            story: '🥸 健康食品廣告說「臨床實驗證明有效」，但其實沒做過實驗 —— 經目的事業主管機關（衛福部）認定為<b>誇大不實</b>，就涉及違反公平法§21。\n\n薦證者（網紅、藝人）也會一起被連坐處理。'
+          },
+          {
+            id: 'end_disclose',
+            name: '利益關係揭露（§5）',
+            matchPages: ['薦證廣告規範§5'],
+            story: '🥸 網紅 PO 文「我超愛這個保養品！」—— 但其實是廠商付錢請她寫的。\n\n依§5，<b>薦證者與廣告主有利益關係（收錢、收贈品、贊助）必須明確揭露</b>。沒揭露會違反公平法<b>§25</b>（不是§21！）—— 屬「足以影響交易秩序的欺罔或顯失公平」。\n\n所以業配文要標 #合作、#廣告、#業配，不然就違法。'
+          },
+          {
+            id: 'end_liability',
+            name: '連帶損害賠償責任(§6)',
+            matchPages: ['薦證廣告規範§6'],
+            story: '🥸 網紅替黑心減肥茶代言，消費者吃了傷身求償：\n\n• 薦證者<b>明知或可得而知</b>是不實薦證仍代言 → 依公平法<b>§21第5項後段</b>與廣告主<b>連帶賠償</b>\n• 素人薦證者（非藝人/網紅）：連帶賠償<b>上限為所受報酬 10 倍</b>\n• 薦證者本身就是商品銷售者 → 直接視為「廣告主」，適用廣告主規範\n\n注意：期末考超愛考「廣告主 vs 廣告代理業 vs 媒體業」誰跟誰連帶。'
+          }
+        ]
+      },
+      {
+        mainTopic: '比較廣告',
+        subTopics: [
+          {
+            id: 'compare_evidence',
+            name: '比較標準與舉證責任（§5）',
+            matchPages: ['比較廣告處理原則§5'],
+            story: '🥸 你的飲料店廣告打「我家珍奶比 50 嵐還大杯」—— 比較廣告本身合法，但要符合：\n\n• 比較項目必須<b>客觀可驗證</b>（杯量、價格、糖度，不能是「比較好喝」這種主觀感受）\n• <b>事業必須能舉證</b>真實性（你得拿得出量杯數據）\n• 不能拿自家規格跟對手不同等級的產品比（不能拿「特大杯」比對手「中杯」）'
+          },
+          {
+            id: 'compare_disparage',
+            name: '貶損競爭對手（§6）',
+            matchPages: ['比較廣告處理原則§6'],
+            story: '🥸 你的飲料店廣告「隔壁那家用劣質茶葉，喝了會中毒！」—— 大踩雷！\n\n• 貶損他事業<b>營業信譽</b> → 違反公平法<b>§24（營業誹謗）</b>（不是§25！）\n• 就算是真的，沒實證也不能亂講\n• 「我家比較好」可以，「他家很爛」不行 —— 這是比較廣告的紅線'
+          }
+        ]
+      },
+      {
+        mainTopic: '跨法規：主管機關與行政救濟',
+        subTopics: [
+          {
+            id: 'cross_agencies',
+            name: '誰是主管機關？（廣告違規移送對照）',
+            matchPages: ['移送主管機關類型表'],
+            story: '🥸 同樣是「廣告違規」，主管機關完全不同 —— 期末考最愛把這些機關混在一起考！\n\n📌 <b>農產品</b>（按通路階段分）：\n• <b>零售市場階段</b>（菜市場、超市）→ <b>衛生福利部</b>（食品衛生為主）\n• <b>批發市場階段</b>（果菜批發）→ <b>農業部</b>（原農委會）\n• <b>有機食品</b> → <b>農業部</b>\n\n📌 <b>菸酒、酒品廣告</b> → <b>財政部國庫署</b>（不是衛福部！）\n\n📌 <b>職業訓練機構招訓廣告</b> → <b>勞工局</b>（地方主管機關）\n\n📌 <b>廣告法源層級</b>：公平會處理「廣告不實」的最後一道防線 —— 如果有專法（藥事法、化粧品法、食安法），優先由各專業主管機關處理；公平會做補充適用。\n\n💡 記憶法：「賣什麼東西的廣告 → 找平常管那東西的部會」。賣食品找衛福部、賣酒找國庫署、賣藥找衛福部、招生找教育/勞工局。'
+          }
+        ]
+      }
+    ];
+
+    /* 概念地圖：依 page 比對篩出對應題目 */
+    function getQuestionsForConcept(subTopicId) {
+      let target = null;
+      for (const cat of concepts) {
+        const found = cat.subTopics.find(s => s.id === subTopicId);
+        if (found) { target = found; break; }
+      }
+      if (!target) return { tf: [], mc: [], fill: [], subTopic: null };
+      const pages = new Set(target.matchPages);
+      const matches = q => pages.has(q.page);
+      return {
+        tf:   activeQuestions.filter(matches),
+        mc:   activeMCQuestions.filter(matches),
+        fill: activeFillQuestions.filter(matches),
+        subTopic: target
+      };
+    }
+
+    /* 隨機抽 N 題（不重複） */
+    function pickRandomN(arr, n) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy.slice(0, n);
+    }
+
     /* ─── 解鎖檢查 ─── */
     // 密碼以 SHA-256 hash 儲存，不在原始碼中保留明文
     const UNLOCK_HASH = '175917e084446d364d5a393b25cddb3a0d0a71b6745b0a120b77e925518c112e';
@@ -2433,7 +3059,7 @@
     const activeFillQuestions = fillQuestions.filter(q => isUnlocked || !q.hidden);
 
     /* ─── 模式狀態 ─── */
-    let currentMode = 'learn'; // 'learn' | 'classic'
+    let currentMode = ''; // 初始為空，讓 switchMode('learn') 完整執行一次
     let userAnswers = Array(activeQuestions.length).fill(null);
     let guessFlags = Array(activeQuestions.length).fill(false);
     let correctCount = 0, wrongCount = 0;
@@ -2475,18 +3101,27 @@
       document.getElementById('btn-mode-classic').classList.toggle('active', mode === 'classic');
       document.getElementById('btn-mode-mc').classList.toggle('active', mode === 'mc');
       document.getElementById('btn-mode-fill').classList.toggle('active', mode === 'fill');
+      document.getElementById('btn-mode-map').classList.toggle('active', mode === 'map');
 
       // 劇情模式：顯示 story-panel，隱藏其他主要 UI
       const isStory = mode === 'story';
+      const isMap   = mode === 'map';
       document.getElementById('story-panel').style.display = isStory ? 'block' : 'none';
-      document.getElementById('quiz-container').style.display = isStory ? 'none' : '';
+      document.getElementById('concept-map-panel').style.display = isMap ? 'block' : 'none';
+      document.getElementById('quiz-container').style.display = (isStory || isMap) ? 'none' : '';
       document.getElementById('final-box').style.display = 'none';
-      document.querySelector('.sticky-bar').style.display = isStory ? 'none' : '';
-      document.querySelector('.exam-header').style.display = isStory ? 'none' : '';
+      document.querySelector('.sticky-bar').style.display = (isStory || isMap) ? 'none' : '';
+      document.querySelector('.exam-header').style.display = (isStory || isMap) ? 'none' : '';
 
       if (isStory) {
         document.getElementById('mode-desc').textContent = '🔒 限密碼解鎖者遊玩・菜鳥律師小廣的廣告法求生記';
         resetAll();
+        return;
+      }
+
+      if (isMap) {
+        document.getElementById('mode-desc').textContent = '🗺️ 依法規 → 核心概念 → 白話故事 + 隨堂 5 題，把破碎題目串成系統知識';
+        initConceptMap();
         return;
       }
 
@@ -2529,6 +3164,7 @@
     /* ─── 建立題目 ─── */
     function buildQuiz() {
       if (currentMode === 'story') return;
+      if (currentMode === 'map')   return;
       if (currentMode === 'mc') { buildMCQuiz(); return; }
       if (currentMode === 'fill') { buildFillQuiz(); return; }
       const c = document.getElementById('quiz-container');
@@ -2916,6 +3552,7 @@
     /* ─── 進度條 ─── */
     function updateBar() {
       if (currentMode === 'story') return;
+      if (currentMode === 'map')   return;
       let answered, total, corr, wrng, gCount = 0;
       if (currentMode === 'mc') {
         total = displayMCQuestions.length; answered = mcUserAnswers.filter(a => a !== null).length;
@@ -2999,6 +3636,7 @@
     function resetAll() {
       document.getElementById('final-box').style.display = 'none';
       if (currentMode === 'story') { initStoryMode(); return; }
+      if (currentMode === 'map')   { initConceptMap(); return; }
       document.getElementById('answered-count').textContent = '0';
       document.getElementById('correct-count').textContent = '0';
       document.getElementById('wrong-count').textContent = '0';
@@ -3504,6 +4142,290 @@
 
       overlay.append(hint, img, closeBtn);
       document.body.appendChild(overlay);
+    }
+
+    /* ══════════════════════════════════════
+       概念地圖模式 — 核心邏輯
+    ══════════════════════════════════════ */
+    let cmCurrentSubId = null;
+    let cmCurrentQs = [];           // 本次抽到的 5 題：{ type, data, idx }
+    let cmAnswered = [];            // 對應每題是否已作答
+    let cmCorrectFlags = [];        // 對應每題答對與否
+    let cmMCOrders = [];            // MC 選項洗牌順序
+    let cmOpenCat = 0;              // 預設展開第一類
+
+    function initConceptMap() {
+      const panel = document.getElementById('concept-map-panel');
+      panel.innerHTML = `
+        <div class="cm-header">
+          <h1>🗺️ 概念地圖</h1>
+          <p>左側選擇概念 → 右側看白話故事 + 隨堂 5 題</p>
+        </div>
+        <div class="cm-layout">
+          <div class="cm-sidebar" id="cm-sidebar"></div>
+          <div class="cm-content" id="cm-content">
+            <div class="cm-placeholder">
+              <div class="big">👈</div>
+              <div>從左側選一個核心概念開始學習</div>
+              <div style="margin-top:8px;font-size:0.85em;opacity:0.7;">共 ${concepts.length} 大類法規・${concepts.reduce((n, c) => n + c.subTopics.length, 0)} 個核心概念</div>
+            </div>
+          </div>
+        </div>
+      `;
+      renderCMSidebar();
+    }
+
+    function renderCMSidebar() {
+      const html = concepts.map((cat, ci) => {
+        const isOpen = ci === cmOpenCat;
+        const items = cat.subTopics.map(sub => {
+          const active = sub.id === cmCurrentSubId ? ' active' : '';
+          return `<div class="cm-subitem${active}" onclick="selectConcept('${sub.id}')">${sub.name}</div>`;
+        }).join('');
+        return `
+          <div class="cm-cat${isOpen ? ' open' : ''}">
+            <div class="cm-cat-header" onclick="toggleCMCat(${ci})">
+              <span>${cat.mainTopic}</span>
+              <span class="cm-cat-arrow">▶</span>
+            </div>
+            <div class="cm-sublist">${items}</div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('cm-sidebar').innerHTML = html;
+    }
+
+    function toggleCMCat(ci) {
+      cmOpenCat = (cmOpenCat === ci) ? -1 : ci;
+      renderCMSidebar();
+    }
+
+    function selectConcept(subId) {
+      const result = getQuestionsForConcept(subId);
+      if (!result.subTopic) return;
+      cmCurrentSubId = subId;
+
+      // 找出概念所屬的大類索引，自動展開
+      const catIdx = concepts.findIndex(c => c.subTopics.some(s => s.id === subId));
+      if (catIdx >= 0) cmOpenCat = catIdx;
+      renderCMSidebar();
+
+      // 隨機抽 5 題（混合題型）
+      const all = [
+        ...result.tf.map(q => ({ type: 'tf', data: q })),
+        ...result.mc.map(q => ({ type: 'mc', data: q })),
+        ...result.fill.map(q => ({ type: 'fill', data: q }))
+      ];
+      cmCurrentQs = pickRandomN(all, 5);
+      cmAnswered = Array(cmCurrentQs.length).fill(false);
+      cmCorrectFlags = Array(cmCurrentQs.length).fill(false);
+      cmMCOrders = cmCurrentQs.map(item => {
+        if (item.type !== 'mc') return null;
+        const order = shuffleArray([0, 1, 2, 3]);
+        return { order, mappedAns: order.indexOf(item.data.ans) };
+      });
+
+      renderCMContent(result.subTopic, all.length);
+      // 滾動到頂部以便看到 Tip Card
+      window.scrollTo({ top: document.querySelector('.cm-header').offsetTop - 10, behavior: 'smooth' });
+    }
+
+    function renderCMContent(sub, totalPoolSize) {
+      const tipHTML = `
+        <div class="cm-tip-card">
+          <div class="cm-tip-title">💡 ${sub.name}</div>
+          <div class="cm-tip-body">${sub.story}</div>
+          <div class="cm-tip-pages">
+            <span style="opacity:0.75;">對應法條：</span>
+            ${sub.matchPages.map(p => `<span class="tag">${p}</span>`).join('')}
+          </div>
+        </div>
+      `;
+
+      if (cmCurrentQs.length === 0) {
+        document.getElementById('cm-content').innerHTML = tipHTML + `
+          <div class="cm-no-question">
+            <div style="font-size:2em;margin-bottom:8px;opacity:0.5;">📭</div>
+            這個概念目前沒有對應題目，但故事內容已可幫助你掌握重點。
+          </div>
+        `;
+        return;
+      }
+
+      const quizHTML = `
+        <div class="cm-quiz-header">
+          <div class="cm-quiz-title">📝 隨堂驗收（${cmCurrentQs.length} / ${totalPoolSize} 題隨機抽）</div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div class="cm-quiz-stats" id="cm-stats">作答 0 / ${cmCurrentQs.length}</div>
+            <button class="cm-quiz-reshuffle" onclick="selectConcept('${sub.id}')">🔄 換 5 題</button>
+          </div>
+        </div>
+        <div id="cm-questions"></div>
+        <div id="cm-final" style="display:none;"></div>
+      `;
+
+      document.getElementById('cm-content').innerHTML = tipHTML + quizHTML;
+      renderCMQuestions();
+    }
+
+    function renderCMQuestions() {
+      const container = document.getElementById('cm-questions');
+      const html = cmCurrentQs.map((item, i) => {
+        if (item.type === 'tf') return cmCardTF(item.data, i);
+        if (item.type === 'mc') return cmCardMC(item.data, i);
+        return cmCardFill(item.data, i);
+      }).join('');
+      container.innerHTML = html;
+    }
+
+    function cmCardTF(q, i) {
+      return `
+        <div class="cm-qcard" id="cm-card-${i}">
+          <div class="cm-qcard-top">
+            <div class="cm-qnum" id="cm-qnum-${i}">${i + 1}</div>
+            <div class="cm-qtype-tag">是非</div>
+            <div class="cm-qtext">${q.q}</div>
+          </div>
+          <div class="cm-choices">
+            <button class="cm-cbtn" id="cm-tf-${i}-O" onclick="cmAnswerTF(${i}, 'O')">○ 正確</button>
+            <button class="cm-cbtn" id="cm-tf-${i}-X" onclick="cmAnswerTF(${i}, 'X')">✕ 錯誤</button>
+          </div>
+          <div class="cm-result" id="cm-result-${i}"></div>
+          <div class="cm-exp" id="cm-exp-${i}">${q.exp}${q.page ? ` <span class="law-ref">(${q.page})</span>` : ''}</div>
+        </div>
+      `;
+    }
+
+    function cmCardMC(q, i) {
+      const { order } = cmMCOrders[i];
+      const opts = order.map((origIdx, pos) => {
+        const label = ['A','B','C','D'][pos];
+        return `<button class="cm-mc-opt" id="cm-mc-${i}-${pos}" onclick="cmAnswerMC(${i}, ${pos})">${label}. ${q.options[origIdx]}</button>`;
+      }).join('');
+      return `
+        <div class="cm-qcard" id="cm-card-${i}">
+          <div class="cm-qcard-top">
+            <div class="cm-qnum" id="cm-qnum-${i}">${i + 1}</div>
+            <div class="cm-qtype-tag mc">選擇</div>
+            <div class="cm-qtext">${q.q}</div>
+          </div>
+          <div class="cm-mc-options">${opts}</div>
+          <div class="cm-result" id="cm-result-${i}"></div>
+          <div class="cm-exp" id="cm-exp-${i}">${q.exp}${q.page ? ` <span class="law-ref">(${q.page})</span>` : ''}</div>
+        </div>
+      `;
+    }
+
+    function cmCardFill(q, i) {
+      const inputs = q.blanks.map((_, bi) =>
+        `<input class="cm-fill-input" id="cm-fill-${i}-${bi}" type="text" placeholder="第 ${bi + 1} 格">`
+      ).join('');
+      return `
+        <div class="cm-qcard" id="cm-card-${i}">
+          <div class="cm-qcard-top">
+            <div class="cm-qnum" id="cm-qnum-${i}">${i + 1}</div>
+            <div class="cm-qtype-tag fill">填空</div>
+            <div class="cm-qtext">${q.q}</div>
+          </div>
+          <div class="cm-fill-row">
+            ${inputs}
+            <button class="cm-fill-btn" id="cm-fill-btn-${i}" onclick="cmAnswerFill(${i})">✅ 確認</button>
+          </div>
+          <div class="cm-result" id="cm-result-${i}"></div>
+          <div class="cm-exp" id="cm-exp-${i}">${q.exp}${q.page ? ` <span class="law-ref">(${q.page})</span>` : ''}</div>
+        </div>
+      `;
+    }
+
+    function cmAnswerTF(i, chosen) {
+      if (cmAnswered[i]) return;
+      const q = cmCurrentQs[i].data;
+      const correct = chosen === q.ans;
+      cmAnswered[i] = true;
+      cmCorrectFlags[i] = correct;
+
+      trackAnswer('final-map', 'tf', i, chosen, correct, q.q);
+
+      document.getElementById(`cm-tf-${i}-O`).disabled = true;
+      document.getElementById(`cm-tf-${i}-X`).disabled = true;
+      if (correct) {
+        document.getElementById(`cm-tf-${i}-${chosen}`).classList.add('picked-correct');
+      } else {
+        document.getElementById(`cm-tf-${i}-${chosen}`).classList.add('picked-wrong');
+        document.getElementById(`cm-tf-${i}-${q.ans}`).classList.add('show-correct');
+      }
+      cmFinishQuestion(i, correct, q.ans === 'O' ? '○ 正確' : '✕ 錯誤');
+    }
+
+    function cmAnswerMC(i, pos) {
+      if (cmAnswered[i]) return;
+      const q = cmCurrentQs[i].data;
+      const { mappedAns, order } = cmMCOrders[i];
+      const correct = pos === mappedAns;
+      cmAnswered[i] = true;
+      cmCorrectFlags[i] = correct;
+
+      trackAnswer('final-map', 'mc', i, ['A','B','C','D'][pos], correct, q.q);
+
+      for (let p = 0; p < 4; p++) {
+        document.getElementById(`cm-mc-${i}-${p}`).disabled = true;
+      }
+      if (correct) {
+        document.getElementById(`cm-mc-${i}-${pos}`).classList.add('picked-correct');
+      } else {
+        document.getElementById(`cm-mc-${i}-${pos}`).classList.add('picked-wrong');
+        document.getElementById(`cm-mc-${i}-${mappedAns}`).classList.add('show-correct');
+      }
+      cmFinishQuestion(i, correct, ['A','B','C','D'][mappedAns] + '. ' + q.options[order[mappedAns]]);
+    }
+
+    function cmAnswerFill(i) {
+      if (cmAnswered[i]) return;
+      const q = cmCurrentQs[i].data;
+      let allRight = true;
+      const userAnsParts = [];
+      for (let bi = 0; bi < q.blanks.length; bi++) {
+        const input = document.getElementById(`cm-fill-${i}-${bi}`);
+        const v = input.value.trim();
+        userAnsParts.push(v);
+        const accept = q.blanks[bi].map(s => s.trim());
+        const right = accept.includes(v);
+        input.classList.add(right ? 'correct' : 'wrong');
+        input.disabled = true;
+        if (!right) allRight = false;
+      }
+      cmAnswered[i] = true;
+      cmCorrectFlags[i] = allRight;
+      document.getElementById(`cm-fill-btn-${i}`).disabled = true;
+
+      trackAnswer('final-map', 'fill', i, userAnsParts.join(' / '), allRight, q.q);
+      cmFinishQuestion(i, allRight, q.answers.join(' / '));
+    }
+
+    function cmFinishQuestion(i, correct, correctText) {
+      const card = document.getElementById(`cm-card-${i}`);
+      card.classList.add(correct ? 'correct' : 'wrong');
+      const result = document.getElementById(`cm-result-${i}`);
+      result.className = 'cm-result show ' + (correct ? 'correct' : 'wrong');
+      result.innerHTML = correct ? '✅ 答對了！' : `❌ 答錯了，正確答案：<b>${correctText}</b>`;
+      document.getElementById(`cm-exp-${i}`).classList.add('show');
+
+      const total = cmCurrentQs.length;
+      const done = cmAnswered.filter(Boolean).length;
+      const right = cmCorrectFlags.filter(Boolean).length;
+      document.getElementById('cm-stats').textContent = `作答 ${done} / ${total}・答對 ${right}`;
+
+      if (done === total) {
+        const pct = Math.round(right / total * 100);
+        let msg = '';
+        if (pct === 100)      msg = '🏆 全對！這個概念你已經完全掌握。';
+        else if (pct >= 80)   msg = '🎉 很不錯！再回頭看上面的故事鞏固一下細節。';
+        else if (pct >= 60)   msg = '💪 還可以！建議重讀一次故事，再點「換 5 題」練手。';
+        else                  msg = '📖 這概念還需要加強！故事再讀一次，搭配練習效果最好。';
+        const finalDiv = document.getElementById('cm-final');
+        finalDiv.style.display = 'block';
+        finalDiv.innerHTML = `<div class="cm-final-summary">本概念 ${total} 題答對 ${right} 題（${pct}%）<br>${msg}</div>`;
+      }
     }
 
     /* ─── 初始化 ─── */

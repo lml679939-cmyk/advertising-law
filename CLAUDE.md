@@ -52,7 +52,7 @@
 | `fill` | ✏️ 填空題 | 填入關鍵數字/詞彙 |
 | `story` | 🎭 劇情模式 | **密碼解鎖限定**，菜鳥律師小廣的廣告法求生記 |
 
-### 期末考（`final/index.html`）—— 四種模式（劇情模式已移除）
+### 期末考（`final/index.html`）—— 五種模式（劇情模式已移除，新增概念地圖）
 
 | ID | 按鈕 | 說明 |
 |----|------|------|
@@ -60,14 +60,18 @@
 | `classic` | 📝 傳統模式 | 全部作答後點「對答案」 |
 | `mc` | 📋 選擇題 | 選擇題四選一，答後立即顯示 |
 | `fill` | ✏️ 填空題 | 填入關鍵數字/詞彙 |
+| `map` | 🗺️ 概念地圖 | 依法規分類 → 核心概念 → 白話故事 + 隨堂 5 題，把破碎題目串成系統知識 |
 
 > 期末考劇情模式按鈕已於 2026-05-24 從 `final/index.html` 完全移除（含 HTML 按鈕、解鎖顯示邏輯、switchMode 中的 active class 切換），即使解鎖密碼也不會出現。
 
 切換模式時 `switchMode(mode)` 會：
 1. 切換按鈕 active 狀態
 2. story 模式：隱藏 `.sticky-bar`、`.exam-header`、`#quiz-container`，顯示 `#story-panel`
-3. 非 story 模式：反向操作
-4. 呼叫 `resetAll()` → 若為 story 則 `initStoryMode()`，否則走原本流程
+3. map 模式：隱藏 `.sticky-bar`、`.exam-header`、`#quiz-container`，顯示 `#concept-map-panel`
+4. 非 story/map 模式：反向操作
+5. 呼叫 `resetAll()` → 若為 story 則 `initStoryMode()`，若為 map 則 `initConceptMap()`，否則走原本流程
+
+> **初始化注意**：`let currentMode = ''`（空字串，非 `'learn'`）。這樣頁面載入時 `switchMode('learn')` 才能完整執行（若初始為 `'learn'`，函式開頭的 `if (currentMode === mode) return` 會直接跳過，導致 quiz 不建立）。
 
 ---
 
@@ -509,9 +513,9 @@ commit 訊息**不得含有密碼明文**。
    - 若與法條衝突，以使用者提供的法條原文為最終依據
 
 6. **期末考追蹤資料識別**：
-   - `final/index.html` 的所有 `trackAnswer` 呼叫已加 `final-` 前綴（`final-learn`、`final-classic`、`final-mc`、`final-fill`）
+   - `final/index.html` 的所有 `trackAnswer` 呼叫已加 `final-` 前綴（`final-learn`、`final-classic`、`final-mc`、`final-fill`、`final-map`）
    - 注意：`final-story` 前綴已不存在（劇情模式按鈕已移除）
-   - Google Sheet 用「模式」欄篩選 `final-*` 即可只看期末資料
+   - Google Sheet 用「模式」欄篩選 `final-*` 即可只看期末資料；`final-map` 為概念地圖模式的答題紀錄
 
 ---
 
@@ -532,6 +536,9 @@ Claude 會改用 `Grep` 搜尋函式名稱或關鍵字，再用 `Read + offset/l
 | 場景背景函式 | `getSceneBackground` |
 | VN 舞台 CSS | `story-vn-stage` |
 | 是非題陣列結尾 | `hidden: true` 附近 |
+| 概念地圖資料 | `const concepts` |
+| 概念地圖函式 | `initConceptMap` / `selectConcept` |
+| 概念地圖 CSS | `.cm-layout` / `.cm-sidebar` |
 
 ### 開 Agent 平行作業
 
@@ -549,6 +556,136 @@ Claude 會用 Agent 工具在背景啟動一個子代理，讓它：
 「幫我開 agent 寫 Day3，主題是化粧品法，
  比照 storyDay2 格式，不用push，先給我看題目」
 ```
+
+---
+
+## 概念地圖模式（`map`，2026-05-24 完成，僅限期末考）
+
+### 設計目標
+幫助學生把破碎的題目串成系統法規知識：**選法規分類 → 選核心概念 → 看白話故事 → 作隨堂 5 題**。
+
+### 介面結構
+```
+┌─────────────────────────────────────────────────────┐
+│  #concept-map-panel                                  │
+│  .cm-layout (280px sidebar + 1fr content)            │
+├─────────────────┬───────────────────────────────────┤
+│  .cm-sidebar    │  .cm-content                       │
+│  (sticky)       │                                    │
+│  [accordion]    │  .cm-tip-card（琥珀色漸層）         │
+│  ▼ 法規大類      │  白話故事（pre-line, innerHTML）    │
+│    ● 子概念      │                                    │
+│    ○ 子概念      │  .cm-qcard × 5（白底+左邊框）      │
+│  ▶ 法規大類      │  答對→綠邊框，答錯→紅邊框          │
+│                 │  題型自動混搭（TF / MC / Fill）     │
+└─────────────────┴───────────────────────────────────┘
+```
+響應式：820px 以下改為單欄垂直排列（sidebar 在上，content 在下）。
+
+### 資料結構 (`const concepts`)
+
+```javascript
+const concepts = [
+  {
+    mainTopic: '公平交易法',      // 分類標題（顯示於 accordion 標頭）
+    subTopics: [
+      {
+        id: 'ftc_basics',        // 唯一 ID，供 selectConcept() 查找
+        name: '立法目的與「事業」定義',
+        matchPages: ['公平法§1', '公平法§2', '公平法§42', '公平法§45'],
+        // matchPages = 篩選題目用的 page 欄位值（完全相符）
+        story: '🥸 想像公平會就是「商業界的裁判」...\n<b>重點</b>：...'
+        // story 支援 \n（pre-line 換行）與 <b> HTML tag（innerHTML 渲染）
+      },
+      // ...
+    ]
+  },
+  // ...
+];
+```
+
+### 7 大分類（30 子概念）
+
+| # | mainTopic | 子概念數 |
+|---|-----------|---------|
+| 1 | 公平交易法 | 7 |
+| 2 | 衛星廣播電視法 | 7 |
+| 3 | 薦證廣告、比較廣告、警告函 | 4 |
+| 4 | 贈品贈獎辦法 | 3 |
+| 5 | 消費者保護法 | 5 |
+| 6 | 廣播電視法（含有線廣電法） | 3 |
+| 7 | 跨法規：主管機關與行政救濟 | 1 |
+
+### 核心函式
+
+| 函式 | 說明 |
+|------|------|
+| `initConceptMap()` | 初始化面板，預設展開第 0 個分類，呼叫 `renderCMSidebar()` |
+| `renderCMSidebar()` | 依 `cmOpenCat` 狀態渲染整個 accordion |
+| `toggleCMCat(ci)` | 展開/收合第 ci 個分類（`cmOpenCat = ci` or -1） |
+| `selectConcept(subId)` | 查找子概念，呼叫 `getQuestionsForConcept()`，隨機選 5 題，渲染右側內容 |
+| `renderCMContent(sub, poolSize)` | 渲染 Tip Card（故事）+ 5 題卡片 |
+| `cmCardTF/MC/Fill(q, i)` | 渲染各題型卡片 HTML |
+| `cmAnswerTF/MC/Fill(i, ...)` | 答題邏輯，呼叫 `cmFinishQuestion()` |
+| `cmFinishQuestion(i, correct, ans)` | 標記卡片邊框色、呼叫 `trackAnswer('final-map', ...)` |
+| `getQuestionsForConcept(subId)` | 回傳 `{tf, mc, fill, subTopic}` — 用 `matchPages` Set 篩選三種題型 |
+| `pickRandomN(arr, n)` | Fisher-Yates 洗牌取前 n 題 |
+
+### 狀態變數（模組層級）
+
+```javascript
+let cmCurrentSubId = null;   // 目前選中的子概念 ID
+let cmCurrentQs = [];        // 已選 5 題（含 type 欄位：'tf'|'mc'|'fill'）
+let cmAnswered = [];         // 各題是否已作答
+let cmCorrectFlags = [];     // 各題是否答對
+let cmMCOrders = [];         // 各 MC 題的洗牌選項順序（與主 quiz 獨立）
+let cmOpenCat = 0;           // 目前展開的分類 index（-1=全收）
+```
+
+### matchPages 設計原則
+- 每道題目已有 `page` 欄位（如 `page: "衛廣法§24"`），概念地圖**不修改任何題目資料**
+- 子概念的 `matchPages` 陣列列出希望納入的 page 值，篩選時建 `Set` 做 O(1) 查找
+- 若某法條的題目很少（如移送表），可讓多個 page 值共用同一子概念
+- 若新增題目後想讓其出現在概念地圖，只需在對應子概念的 `matchPages` 加入新 page 值
+
+### Bug 修正紀錄（2026-05-24）
+開發時修正了 4 個會導致「概念地圖點不開 / 進度顯示 0/0」的 bug：
+
+| 位置 | 修正前 | 修正後 | 原因 |
+|------|--------|--------|------|
+| 初始化 | `let currentMode = 'learn'` | `let currentMode = ''` | 避免 `switchMode('learn')` 因 mode 相同直接 return，導致題目不載入 |
+| `buildQuiz()` | 無 map guard | 加 `if (currentMode === 'map') return;` | 避免地圖模式下誤建是非題 HTML |
+| `resetAll()` | 無 map guard | 加 `if (currentMode === 'map') { initConceptMap(); return; }` | 避免地圖模式觸發傳統答題初始化 |
+| `updateBar()` | 無 map guard | 加 `if (currentMode === 'map') return;` | 避免地圖模式下讀取無效的答題狀態 |
+
+### HTML 元素
+```html
+<!-- 模式按鈕（加在 fill 按鈕之後） -->
+<button class="mode-btn" id="btn-mode-map" onclick="switchMode('map')">🗺️ 概念地圖</button>
+
+<!-- 面板容器（加在 #story-panel 之後） -->
+<div id="concept-map-panel"></div>
+```
+
+### CSS 主要類別
+
+| CSS 類別 | 說明 |
+|---------|------|
+| `.cm-layout` | 280px + 1fr grid 兩欄佈局 |
+| `.cm-sidebar` | sticky 左側欄，overflow-y: auto |
+| `.cm-cat` | 分類標頭（點擊展開/收合） |
+| `.cm-cat.open` | 展開狀態（標頭樣式不同） |
+| `.cm-subitem` | 子概念條目 |
+| `.cm-subitem.active` | 當前選中子概念（高亮） |
+| `.cm-tip-card` | 琥珀色漸層故事卡 |
+| `.cm-qcard` | 白底題目卡，左側 4px 邊框 |
+| `.cm-qcard.cm-correct` | 答對→綠色邊框 |
+| `.cm-qcard.cm-wrong` | 答錯→紅色邊框 |
+| `.cm-cbtn` | TF 題 O/X 按鈕 |
+| `.cm-mc-opt` | 選擇題選項按鈕 |
+| `.cm-fill-input` | 填空輸入框 |
+| `.cm-fill-btn` | 填空確認按鈕 |
+| `.cm-final-summary` | 5 題全答完後的得分摘要 |
 
 ---
 
@@ -753,9 +890,11 @@ advertising-law/
 - [x] 劇情模式按鈕移除（`final/index.html` 不提供劇情模式）
 - [x] 所有 `trackAnswer` 加 `final-` 前綴
 - [x] NotebookLM 匯出 TXT（`final-exam/期末題庫完整內容_NotebookLM確認用.txt`，tf=64, mc=64, fill=31）
+- [x] 概念地圖模式（`map`）——7大法規分類 × 30 子概念，白話故事 + 隨堂 5 題，`matchPages` 篩題，完整追蹤（`final-map`）
 
 ### 待建置
 - [ ] 期末劇情模式（目前無此計畫；如需建置須先重新加回按鈕，並撰寫期末法規相關的 storyDay 資料）
+- [ ] 概念地圖「故事」內容優化（目前已有白話故事，可依課程反饋持續優化詞句與例子）
 
 ---
 
@@ -765,6 +904,8 @@ advertising-law/
 - **NotebookLM 驗證**：`final-exam/期末題庫完整內容_NotebookLM確認用.txt` 已含 tf=64, mc=64, fill=31，可繼續上傳 NotebookLM 驗證填充題與新增隱藏題
 - **填充題擴充**：可視考試需求繼續新增（目前 31 題，以公開題為主）
 - **隱藏題擴充**：可繼續新增其他法規主題的隱藏題
+- **概念地圖白話故事優化**：30 個子概念各有一段白話故事，可依學生反饋持續改寫（grep `const concepts` 找到資料位置）
+- **概念地圖 matchPages 擴充**：若新增題目，確認其 `page` 欄位是否已在某概念的 `matchPages` 中；若題目涉及新條文，可在對應子概念加入新 page tag
 
 ### 期中考（維護）
 - 繼續新增隱藏題目（使用者提供題目內容）
@@ -774,3 +915,4 @@ advertising-law/
 - 角色立繪優化（目前 PNG 有白底，以左側大氣遮罩補救；可換用去背 PNG）
 - 期末考劇情模式（如決定建置，主題建議：衛廣法、公平法、消保法）
 - 劇情模式音效 / 背景音樂（VN 沉浸感升級）
+- 概念地圖加入「知識點完成度」進度條（依每個子概念答對率顯示熟練度）
