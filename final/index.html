@@ -1989,7 +1989,7 @@
       <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
       <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
       <button class="mode-btn" id="btn-mode-fill" onclick="switchMode('fill')">✏️ 填空題</button>
-      <button class="mode-btn" id="btn-mode-map" onclick="switchMode('map')">🗺️ 概念地圖</button>
+      <button class="mode-btn" id="btn-mode-map" onclick="switchMode('map')" style="display:none">🗺️ 概念地圖</button>
     </div>
   </div>
   <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
@@ -3028,6 +3028,7 @@
 
     if (isUnlocked) {
       document.querySelector('.exam-header h1').innerHTML = '廣告法規期末考 <span style="font-size:0.6em;opacity:0.8;">🔓</span>';
+      document.getElementById('btn-mode-map').style.display = '';
     }
 
     /* ─── 匿名答題追蹤 ─── */
