@@ -255,11 +255,12 @@ function getCharacter(name) → storyCharacters 物件 | null
 ```
 advertising-law/
 ├── quiz_export/
-│   └── export_all.py              ← 主腳本（支援全三種題型）
+│   ├── export_all.py              ← 題型匯出腳本（三種題型：TF/MC/Fill）
+│   └── export_map.py              ← 概念地圖索引匯出腳本（2026-05-24 新增）
 ├── midterm-exam/
 │   └── 題庫完整內容_NotebookLM確認用.txt  ← 期中考匯出結果
 └── final-exam/
-    └── 期末題庫完整內容_NotebookLM確認用.txt  ← 期末考匯出結果
+    └── 期末題庫完整內容_NotebookLM確認用.txt  ← 期末考匯出結果（含概念地圖索引段落）
 ```
 
 **執行方式（期中考）**：
@@ -269,10 +270,9 @@ python quiz_export/export_all.py
 # 輸出至 midterm-exam/題庫完整內容_NotebookLM確認用.txt
 ```
 
-**執行方式（期末考）**：
+**執行方式（期末考，含概念地圖索引）**：
 ```bash
-# 臨時修改 export_all.py 第14行 HTML_FILE 指向 final/index.html
-# 或直接用 Python 一行指令：
+# 步驟一：匯出三種題型
 python -c "
 import sys; sys.path.insert(0,'quiz_export')
 import export_all as e; from pathlib import Path
@@ -283,6 +283,11 @@ tf=e.parse_tf(src); mc=e.parse_mc(src); fill=e.parse_fill(src)
 e.OUT_TXT.write_text(e.build_txt(tf,mc,fill), encoding='utf-8')
 print('done', len(tf), len(mc), len(fill))
 "
+
+# 步驟二：附加概念地圖索引段落（各子概念對應題目清單）
+python quiz_export/export_map.py
+# 兩步合一：export_map.py 會自動在 TXT 末尾附加概念地圖段落
+# 若 TXT 已有舊的概念地圖段落，會自動截斷並重寫
 ```
 
 ---
@@ -328,6 +333,28 @@ print('done', len(tf), len(mc), len(fill))
 | 是非38（薦證廣告§3） | 題幹「其中即應即刻應對違反本規定之虞」（掃描亂碼） | 改為「否則即有違反本法規定之虞」 |
 | 是非41（網路廣告§9） | 題幹「推廣商品護服務者」（錯字） | 改為「推廣商品或服務者」 |
 | 是非47、48（警告函處理原則） | 題幹「警告告函」（贅字） | 改為「警告函」 |
+
+### 期末考（`final/index.html`）—— 2026-05-24 第二批修正
+
+| 題號 | 錯誤內容 | 修正後 |
+|------|---------|--------|
+| 是非2（衛廣§31） | 詳解稱禁止置入之節目為「新聞**節目**」 | 母法用字為「新聞**報導**」，已修正詳解 |
+| 選擇2（衛廣§31） | 正確選項為「新聞節目及兒童節目」 | 改為「新聞**報導**及兒童節目」，詳解同步修正 |
+| 填充2（衛廣§31） | blanks/answers 為「新聞節目」 | 改為「新聞**報導**」，詳解加註「母法用字」 |
+| 是非20（公平法§8） | 題幹為掃描殘字（邏輯顛倒），ans=X | 還原§8正確句型；ans 改**O**；詳解重寫去除「邏輯相反」 |
+| 是非23（公平法§42） | 題幹「主管機關**關**對於」（贅字） | 刪除多餘「關」字 |
+| 是非37（薦證廣告§5） | 題幹「且**以**影響交易秩序者」（漏字） | 補為「且**足以**影響交易秩序者」 |
+| 是非52（移送表第14項） | 題幹稱「主管機關為**勞工局**」，ans=O | 依最新講義 p.175 改為「**勞動部**」，exp 同步 |
+| 選擇52（移送表第14項） | 選項B「勞工局」為正確答案 | 選項B改「**勞動部**」；exp 同步；選項D改「職業訓練局（勞工局）」避免提示 |
+| 選擇61（消保法§7商品安全） | 選項C「企業不得以...主張先前商品不符合安全性」主詞邏輯怪異 | 改為消保法§7-1原意句型：「依法，商品不得僅因事後有較佳之商品問世，即被視為不符合安全性。」 |
+
+### 概念地圖修正（2026-05-24）
+
+| 修正項目 | 內容 |
+|---------|------|
+| `ftc_false_ad` 子概念 matchPages | 補入 `'處理原則§8'`，使是非30/選擇30 等題能出現在「廣告不實」概念下 |
+| `sat_shopping_placement` 故事文字 | 「新聞節目」→「新聞報導」，補註母法用字 |
+| `cross_agencies` 故事文字 | 「職業訓練機構招訓廣告 → 勞工局（地方主管機關）」→「勞動部」|
 
 ---
 
@@ -377,6 +404,7 @@ print('done', len(tf), len(mc), len(fill))
 | 條文 | 正確規定 | 常見錯誤版本 |
 |------|---------|------------|
 | **§29** | 鎖碼方式報請主管機關**核定** | 誤寫廣告內容報請核備 |
+| **§31第2項** | 禁止置入性行銷之節目為**新聞報導**及兒童節目（母法用字） | 誤寫「新聞節目」（下位辦法用字，但母法原文為「新聞報導」） |
 | **§35** | 應先取得目的事業主管機關**核准**之證明文件 | 誤寫核定 |
 | **§39** | 播送**後**二十日內索取資料 | 誤寫播送前 |
 | **§44** | 事業接到要求後**十日**內更正 | 誤寫二十日 |
@@ -398,6 +426,7 @@ print('done', len(tf), len(mc), len(fill))
 | 警告函§5 | 未踐行先行程序逕發警告函違反**§25** | 誤寫§21 |
 | 移送表 | **零售市場**農產品標示主管機關為**衛生福利部** | 誤寫農委會 |
 | 移送表 | **批發市場**農產品廣告、有機食品主管機關為**農業部** | 誤寫衛福部 |
+| 移送表第14項 | **職業訓練機構**招訓廣告不實主管機關為**勞動部** | 誤寫勞工局（舊稱地方機關；依最新講義 p.175 已更新為勞動部） |
 
 ### 消保法懲罰性賠償（§51，最易混淆）
 | 原因 | 倍數上限 |
@@ -548,8 +577,10 @@ commit 訊息**不得含有密碼明文**。
    - 上傳 `midterm-exam/題庫完整內容_NotebookLM確認用.txt` 給 NotebookLM
 
 4. **NotebookLM 匯出流程（期末）**：
-   - 修改 `export_all.py` 的 `HTML_FILE` 指向 `final/index.html`，`OUT_TXT` 指向 `final-exam/期末題庫完整內容_NotebookLM確認用.txt`，執行後還原
+   - 步驟一：用 Python 一行指令匯出三種題型（見「題庫匯出腳本」章節）
+   - 步驟二：執行 `python quiz_export/export_map.py` 附加概念地圖索引段落
    - 上傳 `final-exam/期末題庫完整內容_NotebookLM確認用.txt` 給 NotebookLM
+   - **注意**：每次修改題目或 matchPages 後，兩個步驟都要重跑，TXT 才會同步
 
 5. **題目驗證流程（NotebookLM 回報問題後）**：
    - 逐一確認題目文字、答案、詳解三者是否一致
@@ -703,6 +734,24 @@ let cmOpenCat = 0;           // 目前展開的分類 index（-1=全收）
 | `buildQuiz()` | 無 map guard | 加 `if (currentMode === 'map') return;` | 避免地圖模式下誤建是非題 HTML |
 | `resetAll()` | 無 map guard | 加 `if (currentMode === 'map') { initConceptMap(); return; }` | 避免地圖模式觸發傳統答題初始化 |
 | `updateBar()` | 無 map guard | 加 `if (currentMode === 'map') return;` | 避免地圖模式下讀取無效的答題狀態 |
+
+### matchPages 補正（2026-05-24）
+運行題目覆蓋率檢查後，發現 1 個 page 值未被任何子概念涵蓋：
+
+| 子概念 ID | 補入的 matchPages 值 | 影響題目 |
+|----------|-------------------|---------|
+| `ftc_false_ad`（廣告不實） | `'處理原則§8'` | 是非30（答案✕）、選擇30（虛偽不實 vs 引人錯誤）等 |
+
+**驗證方式**：執行以下 Python 片段可列出所有未覆蓋的 page 值
+```python
+import re
+src = open('final/index.html', encoding='utf-8').read()
+all_pages = set(re.findall(r'page:\s*"([^"]+)"', src))
+cblock = re.search(r'const concepts = \[(.*?)\];\s*/\* 概念地圖', src, re.DOTALL).group(1)
+match_strs = set(s for mp in re.findall(r"matchPages:\s*\[([^\]]+)\]", cblock) for s in re.findall(r"'([^']+)'", mp))
+uncovered = [p for p in all_pages if not any(m in p for m in match_strs)]
+print(uncovered)  # 應輸出 []
+```
 
 ### HTML 元素
 ```html
