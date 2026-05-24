@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>廣告法規劇情模式 — 角色圖鑑</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0d1a;
+      --surface: #13132a;
+      --card: #1a1a35;
+      --accent1: #7c5cbf;
+      --accent2: #e67e22;
+      --accent3: #2ecc71;
+      --text: #e8e8ff;
+      --text-muted: #8888bb;
+      --glow: rgba(124, 92, 191, 0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans TC', 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Hero Header ── */
+    .hero {
+      background: linear-gradient(135deg, #0d0d2a 0%, #1a0a3a 40%, #0a1a3a 100%);
+      padding: 60px 32px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(124, 92, 191, 0.3);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(124,92,191,0.2) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 50%, rgba(46,204,113,0.1) 0%, transparent 60%);
+    }
+    .hero-subtitle {
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: var(--accent1);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, #c8b8ff 50%, #89d4ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      position: relative;
+    }
+    .hero p {
+      margin-top: 14px;
+      font-size: 15px;
+      color: var(--text-muted);
+      position: relative;
+    }
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .badge {
+      background: rgba(124,92,191,0.2);
+      border: 1px solid rgba(124,92,191,0.4);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      color: #c8b8ff;
+    }
+
+    /* ── Section ── */
+    .section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .section-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .section-divider {
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent1), transparent);
+      margin-bottom: 32px;
+    }
+
+    /* ── Character Block ── */
+    .char-block {
+      margin-bottom: 60px;
+    }
+    .char-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding: 14px 20px;
+      background: var(--card);
+      border-radius: 14px;
+      border-left: 4px solid var(--char-color, var(--accent1));
+    }
+    .char-emoji { font-size: 28px; }
+    .char-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .char-title {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Image Grid ── */
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .img-card {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      cursor: pointer;
+      position: relative;
+      group: 1;
+    }
+    .img-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--char-color, rgba(124,92,191,0.5));
+      border-color: var(--char-color, rgba(124,92,191,0.5));
+    }
+    .img-card img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.25s;
+    }
+    .img-card:hover img {
+      filter: brightness(1.08);
+    }
+    .img-label {
+      padding: 10px 14px 12px;
+      background: rgba(0,0,0,0.3);
+    }
+    .img-label .emotion {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .img-label .file-path {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: monospace;
+      margin-top: 3px;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+    .tag-new { background: rgba(46,204,113,0.2); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
+    .tag-orig { background: rgba(124,92,191,0.2); color: #b89eff; border: 1px solid rgba(124,92,191,0.3); }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img {
+      max-width: min(90vw, 600px);
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 20px; right: 20px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+    .lightbox-caption {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      color: var(--text);
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+
+    /* ── Copy hint ── */
+    .usage-box {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 20px 24px;
+      border: 1px solid rgba(124,92,191,0.25);
+      margin-bottom: 40px;
+    }
+    .usage-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: #c8b8ff; }
+    .usage-box code {
+      font-family: 'Courier New', monospace;
+      background: rgba(0,0,0,0.4);
+      padding: 10px 14px;
+      border-radius: 8px;
+      display: block;
+      font-size: 12px;
+      color: #89d4ff;
+      white-space: pre;
+      overflow-x: auto;
+      margin-top: 8px;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-subtitle">廣告法規期末考 · 劇情模式</div>
+  <h1>🎭 角色圖鑑</h1>
+  <p>所有角色的原始圖像 + 新生成的表情變化版本</p>
+  <div class="badge-row">
+    <span class="badge">👤 8 個角色</span>
+    <span class="badge">🖼️ 23 張圖像</span>
+    <span class="badge">✨ 15 張新生成</span>
+  </div>
+</div>
+
+<div class="section">
+
+  <!-- Usage hint -->
+  <div class="usage-box">
+    <h3>📌 如何在 index.html 中使用新圖像</h3>
+    <code>// 在 storyCharacters 設定中，將 avatar 替換為對應的新圖像路徑：
+'王鐵嘴主任': {
+  avatar: './images/boss.png',          // 原始（嚴肅握拳）
+  // 也可以用：
+  // avatar: './images/boss_angry.png',  // 大吼拍桌
+  // avatar: './images/boss_happy.png',  // 勉強嘉許
+  ...
+}</code>
+  </div>
+
+  <!-- 王鐵嘴主任 -->
+  <div class="char-block" style="--char-color: #c0392b">
+    <div class="char-header">
+      <div class="char-emoji">😤</div>
+      <div>
+        <div class="char-name">王鐵嘴主任</div>
+        <div class="char-title">律師事務所主任</div>
+      </div>
+    </div>
+    <div class="img-grid">
+      <div class="img-card" onclick="openLightbox('./images/boss.png', '王鐵嘴主任 — 原始（嚴肅握拳）')">
+        <img src="./images/boss.png" alt="主任原始">
+        <div class="img-label">
+          <div class="emotion">😤 嚴肅握拳</div>
+          <div class="file-path">images/boss.png</div>
+          <span class="tag tag-orig">原始</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/boss_angry.png', '王鐵嘴主任 — 大吼拍桌')">
+        <img src="./images/boss_angry.png" alt="主任憤怒">
+        <div class="img-label">
+          <div class="emotion">🤬 大吼拍桌</div>
+          <div class="file-path">images/boss_angry.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/boss_happy.png', '王鐵嘴主任 — 勉強嘉許')">
+        <img src="./images/boss_happy.png" alt="主任嘉許">
+        <div class="img-label">
+          <div class="emotion">😏 勉強嘉許</div>
+          <div class="file-path">images/boss_happy.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 林酸酸 -->
+  <div class="char-block" style="--char-color: #34495e">
+    <div class="char-header">
+      <div class="char-emoji">🧊</div>
+      <div>
+        <div class="char-name">林酸酸</div>
+        <div class="char-title">資深律師</div>
+      </div>
+    </div>
+    <div class="img-grid">
+      <div class="img-card" onclick="openLightbox('./images/sour.png', '林酸酸 — 原始（冷眼抱胸）')">
+        <img src="./images/sour.png" alt="酸酸原始">
+        <div class="img-label">
+          <div class="emotion">🧊 冷眼抱胸</div>
+          <div class="file-path">images/sour.png</div>
+          <span class="tag tag-orig">原始</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/sour_smirk.png', '林酸酸 — 冷傲雙手抱胸')">
+        <img src="./images/sour_smirk.png" alt="酸酸冷傲">
+        <div class="img-label">
+          <div class="emotion">😏 冷傲霸氣</div>
+          <div class="file-path">images/sour_smirk.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/sour_surprised.png', '林酸酸 — 難得驚訝')">
+        <img src="./images/sour_surprised.png" alt="酸酸驚訝">
+        <div class="img-label">
+          <div class="emotion">🤨 難得驚訝</div>
+          <div class="file-path">images/sour_surprised.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 阿肥 -->
+  <div class="char-block" style="--char-color: #e67e22">
+    <div class="char-header">
+      <div class="char-emoji">😊</div>
+      <div>
+        <div class="char-name">阿肥</div>
+        <div class="char-title">實習生</div>
+      </div>
+    </div>
+    <div class="img-grid">
+      <div class="img-card" onclick="openLightbox('./images/intern.png', '阿肥 — 原始（開心揮手）')">
+        <img src="./images/intern.png" alt="阿肥原始">
+        <div class="img-label">
+          <div class="emotion">👋 開心揮手</div>
+          <div class="file-path">images/intern.png</div>
+          <span class="tag tag-orig">原始</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/intern_excited.png', '阿肥 — 超級興奮')">
+        <img src="./images/intern_excited.png" alt="阿肥興奮">
+        <div class="img-label">
+          <div class="emotion">🎉 超級興奮</div>
+          <div class="file-path">images/intern_excited.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/intern_panic.png', '阿肥 — 驚慌失措')">
+        <img src="./images/intern_panic.png" alt="阿肥驚慌">
+        <div class="img-label">
+          <div class="emotion">😰 驚慌失措</div>
+          <div class="file-path">images/intern_panic.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 何副理 -->
+  <div class="char-block" style="--char-color: #ff5722">
+    <div class="char-header">
+      <div class="char-emoji">🛒</div>
+      <div>
+        <div class="char-name">何副理</div>
+        <div class="char-title">購物頻道副理（太陽購物台）</div>
+      </div>
+    </div>
+    <div class="img-grid">
+      <div class="img-card" onclick="openLightbox('./images/shopping.png', '何副理 — 原始（熱情推銷）')">
+        <img src="./images/shopping.png" alt="何副理原始">
+        <div class="img-label">
+          <div class="emotion">📢 熱情推銷</div>
+          <div class="file-path">images/shopping.png</div>
+          <span class="tag tag-orig">原始</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/shopping_confident.png', '何副理 — 自信滿滿')">
+        <img src="./images/shopping_confident.png" alt="何副理自信">
+        <div class="img-label">
+          <div class="emotion">💪 自信滿滿</div>
+          <div class="file-path">images/shopping_confident.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/shopping_panic.png', '何副理 — 驚慌失措')">
+        <img src="./images/shopping_panic.png" alt="何副理驚慌">
+        <div class="img-label">
+          <div class="emotion">😱 驚慌失措</div>
+          <div class="file-path">images/shopping_panic.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/shopping_lookback.png', '何副理 — 轉頭回望')">
+        <img src="./images/shopping_lookback.png" alt="何副理回頭">
+        <div class="img-label">
+          <div class="emotion">🚪 轉頭回望</div>
+          <div class="file-path">images/shopping_lookback.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 陳經理 -->
+  <div class="char-block" style="--char-color: #27ae60">
+    <div class="char-header">
+      <div class="char-emoji">💊</div>
+      <div>
+        <div class="char-name">陳經理</div>
+        <div class="char-title">藥廠業務經理</div>
+      </div>
+    </div>
+    <div class="img-grid">
+      <div class="img-card" onclick="openLightbox('./images/pharma.png', '陳經理 — 原始（緊張抱文件）')">
+        <img src="./images/pharma.png" alt="陳經理原始">
+        <div class="img-label">
+          <div class="emotion">📋 緊張抱文件</div>
+          <div class="file-path">images/pharma.png</div>
+          <span class="tag tag-orig">原始</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/pharma_panic.png', '陳經理 — 超級驚慌')">
+        <img src="./images/pharma_panic.png" alt="陳經理驚慌">
+        <div class="img-label">
+          <div class="emotion">😨 超級驚慌</div>
+          <div class="file-path">images/pharma_panic.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 電視台業務小陳 -->
+  <div class="char-block" style="--char-color: #3498db">
+    <div class="char-header">
+      <div class="char-emoji">📺</div>
+      <div>
+        <div class="char-name">電視台業務小陳</div>
+        <div class="char-title">電視台業務</div>
+      </div>
+    </div>
+    <div class="img-grid">
+      <div class="img-card" onclick="openLightbox('./images/tv_biz.png', '小陳 — 原始（專業自信）')">
+        <img src="./images/tv_biz.png" alt="小陳原始">
+        <div class="img-label">
+          <div class="emotion">😊 專業自信</div>
+          <div class="file-path">images/tv_biz.png</div>
+          <span class="tag tag-orig">原始</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/tv_biz_selling.png', '小陳 — 現場銷售模式')">
+        <img src="./images/tv_biz_selling.png" alt="小陳銷售">
+        <div class="img-label">
+          <div class="emotion">🔥 現場銷售模式</div>
+          <div class="file-path">images/tv_biz_selling.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 林法務 -->
+  <div class="char-block" style="--char-color: #8e44ad">
+    <div class="char-header">
+      <div class="char-emoji">⚖️</div>
+      <div>
+        <div class="char-name">林法務</div>
+        <div class="char-title">全台電視法務</div>
+      </div>
+    </div>
+    <div class="img-grid">
+      <div class="img-card" onclick="openLightbox('./images/legal.png', '林法務 — 原始（沉穩持書）')">
+        <img src="./images/legal.png" alt="林法務原始">
+        <div class="img-label">
+          <div class="emotion">📚 沉穩持書</div>
+          <div class="file-path">images/legal.png</div>
+          <span class="tag tag-orig">原始</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/legal_smile.png', '林法務 — 難得微笑')">
+        <img src="./images/legal_smile.png" alt="林法務微笑">
+        <div class="img-label">
+          <div class="emotion">😊 難得微笑</div>
+          <div class="file-path">images/legal_smile.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/legal_angry.png', '林法務 — 正義憤慨')">
+        <img src="./images/legal_angry.png" alt="林法務生氣">
+        <div class="img-label">
+          <div class="emotion">😠 正義憤慨</div>
+          <div class="file-path">images/legal_angry.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 圈圈 -->
+  <div class="char-block" style="--char-color: #e91e63">
+    <div class="char-header">
+      <div class="char-emoji">💄</div>
+      <div>
+        <div class="char-name">圈圈</div>
+        <div class="char-title">美妝直播主</div>
+      </div>
+    </div>
+    <div class="img-grid">
+      <div class="img-card" onclick="openLightbox('./images/beauty.png', '圈圈 — 原始（開心直播）')">
+        <img src="./images/beauty.png" alt="圈圈原始">
+        <div class="img-label">
+          <div class="emotion">🎀 開心直播</div>
+          <div class="file-path">images/beauty.png</div>
+          <span class="tag tag-orig">原始</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/beauty_shock.png', '圈圈 — 大受衝擊')">
+        <img src="./images/beauty_shock.png" alt="圈圈驚訝">
+        <div class="img-label">
+          <div class="emotion">😱 大受衝擊</div>
+          <div class="file-path">images/beauty_shock.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+      <div class="img-card" onclick="openLightbox('./images/beauty_sweet.png', '圈圈 — 甜美微笑')">
+        <img src="./images/beauty_sweet.png" alt="圈圈甜笑">
+        <div class="img-label">
+          <div class="emotion">😊 甜美微笑</div>
+          <div class="file-path">images/beauty_sweet.png</div>
+          <span class="tag tag-new">新生成</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section -->
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<script>
+  function openLightbox(src, caption) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-caption').textContent = caption;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(e) {
+    if (!e || e.target === document.getElementById('lightbox') || e.target.classList.contains('lightbox-close')) {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+</body>
+</html>
