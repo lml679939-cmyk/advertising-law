@@ -1248,6 +1248,7 @@
       height: 480px;
       border-radius: 14px;
       overflow: hidden;
+      isolation: isolate;
       margin-bottom: 14px;
       box-shadow:
         0 8px 40px rgba(0, 0, 0, 0.45),
@@ -1353,13 +1354,13 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
-    /* 角色大圖（左側立繪 — RPG VN 風格） */
+    /* 角色大圖（水平置中立繪 — RPG VN 風格） */
     .story-vn-sprite {
       position: absolute;
-      left: 0;
+      left: 50%;
       bottom: 0;
       z-index: 3;
-      animation: storyCharIn 0.5s ease-out;
+      animation: storyCharIn 0.5s ease-out forwards;
       width: 260px;
       height: 340px;
       /* 底部漸隱遮罩，讓立繪自然融入對話框 */
@@ -1372,6 +1373,8 @@
       height: 100%;
       object-fit: cover;
       object-position: top center;
+      /* 白色/淺色背景與深色舞台相乘，白底幾乎消失 */
+      mix-blend-mode: multiply;
       border-radius: 0;
       background: transparent;
       border: none;
@@ -1491,11 +1494,11 @@
     @keyframes storyCharIn {
       from {
         opacity: 0;
-        transform: translateX(-30px) scale(0.96);
+        transform: translateX(calc(-50% - 30px)) scale(0.96);
       }
       to {
         opacity: 1;
-        transform: translateX(0) scale(1);
+        transform: translateX(-50%) scale(1);
       }
     }
 
