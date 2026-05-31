@@ -763,6 +763,149 @@
       transform: translateY(-1px);
     }
 
+    .btn-export-wrong {
+      background: linear-gradient(135deg, #6366f1, #4338ca);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-size: 0.95em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.1s;
+      margin-top: 10px;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+
+    .btn-export-wrong:hover {
+      transform: translateY(-1px);
+    }
+
+    .export-modal-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .export-modal-mask.show {
+      display: flex;
+    }
+
+    .export-modal {
+      background: white;
+      border-radius: 14px;
+      max-width: 760px;
+      width: 100%;
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .export-modal-head {
+      padding: 14px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .export-modal-head h3 {
+      margin: 0;
+      font-size: 1.05em;
+      color: #1f2937;
+    }
+
+    .export-modal-head .modal-hint {
+      font-size: 0.8em;
+      color: #6b7280;
+      margin-left: 12px;
+    }
+
+    .export-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.6em;
+      cursor: pointer;
+      color: #6b7280;
+      line-height: 1;
+      padding: 0 4px;
+    }
+
+    .export-modal-body {
+      padding: 14px 20px;
+      flex: 1;
+      overflow: auto;
+    }
+
+    .export-modal-body textarea {
+      width: 100%;
+      min-height: 360px;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.88em;
+      line-height: 1.6;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 12px;
+      resize: vertical;
+      box-sizing: border-box;
+      color: #1f2937;
+      background: #f9fafb;
+    }
+
+    .export-modal-foot {
+      padding: 12px 20px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .export-modal-foot .copy-status {
+      font-size: 0.85em;
+      color: #16a34a;
+      margin-right: auto;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-weight: bold;
+    }
+
+    .export-modal-foot .copy-status.show {
+      opacity: 1;
+    }
+
+    .export-modal-foot button {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      font-size: 0.92em;
+    }
+
+    .btn-copy-text {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+    }
+
+    .btn-download-text {
+      background: linear-gradient(135deg, #0ea5e9, #0369a1);
+      color: white;
+    }
+
+    .btn-modal-close {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
     @media (max-width: 600px) {
 
       .choices-row,
@@ -1358,28 +1501,28 @@
     .story-vn-sprite {
       position: absolute;
       left: 50%;
-      bottom: 0;
+      bottom: 70px;
       z-index: 3;
       animation: storyCharIn 0.5s ease-out forwards;
-      width: 260px;
-      height: 340px;
+      width: 300px;
+      height: 360px;
       /* 底部漸隱遮罩，讓立繪自然融入對話框 */
-      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
-      mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 86%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 0%, black 86%, transparent 100%);
     }
 
     .story-vn-sprite img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      /* 圖片已去背（透明），用 contain 完整呈現角色 */
+      object-fit: contain;
       object-position: top center;
-      /* 白色/淺色背景與深色舞台相乘，白底幾乎消失 */
-      mix-blend-mode: multiply;
       border-radius: 0;
       background: transparent;
       border: none;
       box-shadow: none;
       display: block;
+      filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.5));
     }
 
     /* 底部對話框 — RPG 遊戲風格 */
@@ -2040,6 +2183,27 @@
     <p style="margin-top:14px;font-size:0.85em;opacity:0.75;" id="final-hint"></p>
     <div id="retry-wrap" style="display:none">
       <button class="btn-retry" id="btn-retry" onclick="retryWrong()">🔁 重新練習答錯題目</button>
+    </div>
+    <div id="export-wrong-wrap" style="display:none;margin-top:6px">
+      <button class="btn-export-wrong" id="btn-export-wrong" onclick="exportWrongAnswers()">📋 匯出錯題（複習用）</button>
+    </div>
+  </div>
+
+  <div class="export-modal-mask" id="export-modal-mask" onclick="if(event.target===this)closeExportModal()">
+    <div class="export-modal">
+      <div class="export-modal-head">
+        <h3>📋 錯題複習清單<span class="modal-hint">可直接複製貼到 Google Docs / Word</span></h3>
+        <button class="export-modal-close" onclick="closeExportModal()" aria-label="關閉">×</button>
+      </div>
+      <div class="export-modal-body">
+        <textarea id="export-text" readonly></textarea>
+      </div>
+      <div class="export-modal-foot">
+        <span class="copy-status" id="copy-status">✓ 已複製到剪貼簿</span>
+        <button class="btn-download-text" onclick="downloadExportText()">💾 下載 .txt</button>
+        <button class="btn-copy-text" onclick="copyExportText()">📋 複製到剪貼簿</button>
+        <button class="btn-modal-close" onclick="closeExportModal()">關閉</button>
+      </div>
     </div>
   </div>
 
@@ -3081,6 +3245,7 @@
     const TOTAL = activeQuestions.length;
     const MC_TOTAL = activeMCQuestions.length;
     let fillUserAnswers = Array(activeFillQuestions.length).fill(null);
+    let fillUserInputs = Array(activeFillQuestions.length).fill(null);
     let fillCorrectCount = 0, fillWrongCount = 0;
     let displayFillQuestions = [...activeFillQuestions];
     const FILL_TOTAL = activeFillQuestions.length;
@@ -3353,6 +3518,10 @@
 
       if (prev !== null) { if (prev) fillCorrectCount--; else fillWrongCount--; }
       fillUserAnswers[idx] = allOk;
+      fillUserInputs[idx] = q.blanks.map((_, j) => {
+        const inp = document.getElementById(`fill-input-${idx}-${j}`);
+        return inp ? inp.value : '';
+      });
       trackAnswer('final-fill', 'fill', idx, null, allOk, q.q);
       if (allOk) fillCorrectCount++; else fillWrongCount++;
 
@@ -3399,6 +3568,7 @@
         if (fillUserAnswers[idx]) fillCorrectCount--; else fillWrongCount--;
       }
       fillUserAnswers[idx] = null;
+      fillUserInputs[idx] = null;
       document.getElementById('rrow-' + idx).classList.remove('show');
       document.getElementById('exp-' + idx).classList.remove('show');
       const card = document.getElementById('card-' + idx);
@@ -3635,6 +3805,16 @@
         retryWrap.style.display = 'none';
       }
 
+      // 解鎖後：若有錯題則顯示「匯出錯題」按鈕
+      const exportWrap = document.getElementById('export-wrong-wrap');
+      const wrongCnt = countWrongForExport();
+      if (isUnlocked && wrongCnt > 0) {
+        document.getElementById('btn-export-wrong').textContent = `📋 匯出錯題（共 ${wrongCnt} 題，複習用）`;
+        exportWrap.style.display = 'block';
+      } else {
+        exportWrap.style.display = 'none';
+      }
+
       fb.style.display = 'block';
       fb.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
@@ -3650,6 +3830,7 @@
       document.getElementById('progress-fill').style.width = '0%';
       document.getElementById('guess-chip').style.display = 'none';
       if (document.getElementById('retry-wrap')) document.getElementById('retry-wrap').style.display = 'none';
+      if (document.getElementById('export-wrong-wrap')) document.getElementById('export-wrong-wrap').style.display = 'none';
 
       if (currentMode === 'mc') {
         displayMCQuestions = shuffleEnabled ? shuffleArray([...activeMCQuestions]) : [...activeMCQuestions];
@@ -3660,6 +3841,7 @@
       } else if (currentMode === 'fill') {
         displayFillQuestions = shuffleEnabled ? shuffleArray([...activeFillQuestions]) : [...activeFillQuestions];
         fillUserAnswers = Array(displayFillQuestions.length).fill(null);
+        fillUserInputs = Array(displayFillQuestions.length).fill(null);
         fillCorrectCount = 0; fillWrongCount = 0;
       } else {
         displayQuestions = shuffleEnabled ? shuffleArray([...activeQuestions]) : [...activeQuestions];
@@ -3696,6 +3878,7 @@
         if (shuffleEnabled) shuffleArray(retryList);
         displayFillQuestions = retryList;
         fillUserAnswers = Array(retryList.length).fill(null);
+        fillUserInputs = Array(retryList.length).fill(null);
         fillCorrectCount = 0; fillWrongCount = 0;
       }
       if (!retryList || retryList.length === 0) return;
@@ -3709,6 +3892,192 @@
       updateBar();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    /* ─── 錯題匯出（解鎖限定，學習／傳統／選擇／填空） ─── */
+    function htmlToPlainText(html) {
+      if (!html) return '';
+      const d = document.createElement('div');
+      d.innerHTML = html;
+      d.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
+      d.querySelectorAll('div, p, li').forEach(el => { el.appendChild(document.createTextNode('\n')); });
+      let txt = d.textContent || '';
+      return txt.replace(/ /g, ' ').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+    }
+
+    function formatNowForExport() {
+      const d = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    function tfText(v) {
+      if (v === 'O') return '○ 正確';
+      if (v === 'X') return '✕ 錯誤';
+      return '（未作答）';
+    }
+
+    function collectWrongItems() {
+      const items = [];
+      if (currentMode === 'learn' || currentMode === 'classic') {
+        displayQuestions.forEach((q, i) => {
+          const ua = userAnswers[i];
+          const wrong = (ua === null) || (ua !== q.ans);
+          // learn 模式幾乎不會 null（要全答完才 showFinal），但 classic 可能未作答
+          if (!wrong) return;
+          if (currentMode === 'learn' && ua === null) return;
+          items.push({
+            type: '是非題',
+            page: q.page || '',
+            questionLines: [`題目：${q.q}`],
+            userAns: tfText(ua),
+            correctAns: tfText(q.ans),
+            exp: q.exp
+          });
+        });
+      } else if (currentMode === 'mc') {
+        const LABELS = ['A', 'B', 'C', 'D'];
+        displayMCQuestions.forEach((q, i) => {
+          const ua = mcUserAnswers[i];
+          if (ua === null || ua === mcMappedAns[i]) return;
+          const order = mcOptionOrders[i] || [0, 1, 2, 3];
+          const optionLines = order.map((origIdx, k) => `  ${LABELS[k]}. ${q.options[origIdx]}`);
+          const userOriginalIdx = order[ua];
+          items.push({
+            type: '選擇題',
+            page: q.page || '',
+            questionLines: [`題目：${q.q}`, '選項：', ...optionLines],
+            userAns: `${LABELS[ua]}. ${q.options[userOriginalIdx]}`,
+            correctAns: `${LABELS[mcMappedAns[i]]}. ${q.options[q.ans]}`,
+            exp: q.exp
+          });
+        });
+      } else if (currentMode === 'fill') {
+        displayFillQuestions.forEach((q, i) => {
+          if (fillUserAnswers[i] !== false) return;
+          const inputs = fillUserInputs[i] || q.blanks.map(() => '');
+          const parts = q.q.split('___');
+          let userFilled = '', correctFilled = '';
+          parts.forEach((part, j) => {
+            userFilled += part;
+            correctFilled += part;
+            if (j < parts.length - 1) {
+              const v = (inputs[j] || '').trim();
+              userFilled += `【${v || '（未填）'}】`;
+              correctFilled += `【${q.answers[j] || ''}】`;
+            }
+          });
+          items.push({
+            type: '填空題',
+            page: q.page || '',
+            questionLines: [`題目：${q.q}`],
+            userAns: userFilled,
+            correctAns: correctFilled,
+            exp: q.exp
+          });
+        });
+      }
+      return items;
+    }
+
+    function countWrongForExport() {
+      return collectWrongItems().length;
+    }
+
+    function buildWrongExportText() {
+      const modeNames = { learn: '學習模式', classic: '傳統模式', mc: '選擇題模式', fill: '填空題模式' };
+      const modeName = modeNames[currentMode] || currentMode;
+      const items = collectWrongItems();
+
+      const header = [
+        '═══════════════════════════════════════',
+        '  廣告法規期末考 — 錯題複習清單',
+        `  模式：${modeName}`,
+        `  匯出時間：${formatNowForExport()}`,
+        `  錯題數：${items.length} 題`,
+        '═══════════════════════════════════════',
+        ''
+      ].join('\n');
+
+      if (items.length === 0) {
+        return header + '\n🎉 本次沒有錯題，完美達成！';
+      }
+
+      const body = items.map((it, k) => {
+        return [
+          `【第 ${k + 1} 題】${it.type}${it.page ? '　法條：' + it.page : ''}`,
+          ...it.questionLines,
+          '',
+          `我的作答：${it.userAns}`,
+          `正確答案：${it.correctAns}`,
+          '',
+          '詳解：',
+          htmlToPlainText(it.exp),
+          '───────────────────────────────────────',
+          ''
+        ].join('\n');
+      }).join('\n');
+
+      return header + '\n' + body;
+    }
+
+    function exportWrongAnswers() {
+      if (!isUnlocked) { alert('此功能需解鎖後才能使用。'); return; }
+      const text = buildWrongExportText();
+      document.getElementById('export-text').value = text;
+      document.getElementById('export-modal-mask').classList.add('show');
+      document.getElementById('copy-status').classList.remove('show');
+    }
+
+    function closeExportModal() {
+      document.getElementById('export-modal-mask').classList.remove('show');
+    }
+
+    async function copyExportText() {
+      const ta = document.getElementById('export-text');
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(ta.value);
+        ok = true;
+      } catch (e) {
+        try {
+          ta.removeAttribute('readonly');
+          ta.focus(); ta.select();
+          ok = document.execCommand('copy');
+          ta.setAttribute('readonly', '');
+        } catch (e2) { ok = false; }
+      }
+      const s = document.getElementById('copy-status');
+      if (ok) {
+        s.textContent = '✓ 已複製到剪貼簿';
+        s.style.color = '#16a34a';
+      } else {
+        s.textContent = '⚠ 複製失敗，請手動全選複製';
+        s.style.color = '#dc2626';
+      }
+      s.classList.add('show');
+      setTimeout(() => s.classList.remove('show'), 2500);
+    }
+
+    function downloadExportText() {
+      const text = document.getElementById('export-text').value;
+      const modeNames = { learn: 'learn', classic: 'classic', mc: 'mc', fill: 'fill' };
+      const stamp = formatNowForExport().replace(/[: ]/g, '-');
+      const fname = `期末錯題_${modeNames[currentMode] || 'exam'}_${stamp}.txt`;
+      const blob = new Blob(['﻿' + text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = fname;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+    }
+
+    // ESC 關閉匯出視窗
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const m = document.getElementById('export-modal-mask');
+        if (m && m.classList.contains('show')) closeExportModal();
+      }
+    });
 
     /* ══════════════════════════════════════════════════════════════
        劇情模式 — 菜鳥律師小廣的廣告法求生記
