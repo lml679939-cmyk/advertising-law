@@ -3805,11 +3805,11 @@
         retryWrap.style.display = 'none';
       }
 
-      // 解鎖後：若有錯題則顯示「匯出錯題」按鈕
+      // 解鎖後：若有錯題或猜題則顯示「匯出」按鈕
       const exportWrap = document.getElementById('export-wrong-wrap');
       const wrongCnt = countWrongForExport();
       if (isUnlocked && wrongCnt > 0) {
-        document.getElementById('btn-export-wrong').textContent = `📋 匯出錯題（共 ${wrongCnt} 題，複習用）`;
+        document.getElementById('btn-export-wrong').textContent = `📋 匯出錯題＋猜題（共 ${wrongCnt} 題，複習用）`;
         exportWrap.style.display = 'block';
       } else {
         exportWrap.style.display = 'none';
@@ -3916,17 +3916,26 @@
       return '（未作答）';
     }
 
+    function statusTag(isWrong, isGuess) {
+      if (isWrong && isGuess) return '❌ 答錯　🎲 猜的';
+      if (isWrong) return '❌ 答錯';
+      if (isGuess) return '🎲 猜對（不確定）';
+      return '';
+    }
+
     function collectWrongItems() {
       const items = [];
       if (currentMode === 'learn' || currentMode === 'classic') {
         displayQuestions.forEach((q, i) => {
           const ua = userAnswers[i];
           const wrong = (ua === null) || (ua !== q.ans);
-          // learn 模式幾乎不會 null（要全答完才 showFinal），但 classic 可能未作答
-          if (!wrong) return;
+          const guessed = !!guessFlags[i];
+          // learn 模式：要全答完才 showFinal，所以 ua 不會是 null
+          if (!wrong && !guessed) return;
           if (currentMode === 'learn' && ua === null) return;
           items.push({
             type: '是非題',
+            tag: statusTag(wrong, guessed),
             page: q.page || '',
             questionLines: [`題目：${q.q}`],
             userAns: tfText(ua),
@@ -3938,12 +3947,16 @@
         const LABELS = ['A', 'B', 'C', 'D'];
         displayMCQuestions.forEach((q, i) => {
           const ua = mcUserAnswers[i];
-          if (ua === null || ua === mcMappedAns[i]) return;
+          const wrong = (ua === null) || (ua !== mcMappedAns[i]);
+          const guessed = !!mcGuessFlags[i];
+          if (!wrong && !guessed) return;
+          if (ua === null) return;
           const order = mcOptionOrders[i] || [0, 1, 2, 3];
           const optionLines = order.map((origIdx, k) => `  ${LABELS[k]}. ${q.options[origIdx]}`);
           const userOriginalIdx = order[ua];
           items.push({
             type: '選擇題',
+            tag: statusTag(wrong, guessed),
             page: q.page || '',
             questionLines: [`題目：${q.q}`, '選項：', ...optionLines],
             userAns: `${LABELS[ua]}. ${q.options[userOriginalIdx]}`,
@@ -3968,6 +3981,7 @@
           });
           items.push({
             type: '填空題',
+            tag: '❌ 答錯',
             page: q.page || '',
             questionLines: [`題目：${q.q}`],
             userAns: userFilled,
@@ -3987,24 +4001,33 @@
       const modeNames = { learn: '學習模式', classic: '傳統模式', mc: '選擇題模式', fill: '填空題模式' };
       const modeName = modeNames[currentMode] || currentMode;
       const items = collectWrongItems();
+      const wrongOnly = items.filter(it => it.tag && it.tag.includes('答錯')).length;
+      const guessOnly = items.filter(it => it.tag === '🎲 猜對（不確定）').length;
+      const breakdown = wrongOnly && guessOnly
+        ? `${wrongOnly} 題答錯 + ${guessOnly} 題猜對`
+        : wrongOnly
+          ? `${wrongOnly} 題答錯`
+          : guessOnly
+            ? `${guessOnly} 題猜對`
+            : '';
 
       const header = [
         '═══════════════════════════════════════',
-        '  廣告法規期末考 — 錯題複習清單',
+        '  廣告法規期末考 — 錯題＋猜題複習清單',
         `  模式：${modeName}`,
         `  匯出時間：${formatNowForExport()}`,
-        `  錯題數：${items.length} 題`,
+        `  共 ${items.length} 題${breakdown ? `（${breakdown}）` : ''}`,
         '═══════════════════════════════════════',
         ''
       ].join('\n');
 
       if (items.length === 0) {
-        return header + '\n🎉 本次沒有錯題，完美達成！';
+        return header + '\n🎉 本次沒有錯題也沒有猜題，完美達成！';
       }
 
       const body = items.map((it, k) => {
         return [
-          `【第 ${k + 1} 題】${it.type}${it.page ? '　法條：' + it.page : ''}`,
+          `【第 ${k + 1} 題】${it.type}${it.tag ? '　' + it.tag : ''}${it.page ? '　法條：' + it.page : ''}`,
           ...it.questionLines,
           '',
           `我的作答：${it.userAns}`,
