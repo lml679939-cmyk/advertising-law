@@ -2110,6 +2110,47 @@
       font-weight: bold;
     }
 
+    .cm-guess-btn {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1.5px solid #f0a500;
+      background: white;
+      color: #f0a500;
+      font-size: 0.78em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+      font-family: inherit;
+      align-self: flex-start;
+      margin-top: 2px;
+    }
+    .cm-guess-btn:hover:not(:disabled) { background: #fff3cd; }
+    .cm-guess-btn.active { background: #f0a500; color: white; }
+    .cm-guess-btn:disabled { cursor: default; opacity: 0.55; }
+
+    .cm-qcard.guessed { border-left-color: #f0a500; background: linear-gradient(135deg, #fffdf5, white 30%); }
+
+    .cm-export-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0 0;
+    }
+    .cm-export-btn {
+      background: linear-gradient(135deg, #6366f1, #4338ca);
+      color: white;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 10px;
+      font-size: 0.9em;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: inherit;
+      transition: transform 0.1s;
+    }
+    .cm-export-btn:hover { transform: translateY(-1px); }
+
     @media (max-width: 820px) {
       .cm-layout {
         grid-template-columns: 1fr;
@@ -4083,7 +4124,7 @@
 
     function downloadExportText() {
       const text = document.getElementById('export-text').value;
-      const modeNames = { learn: 'learn', classic: 'classic', mc: 'mc', fill: 'fill' };
+      const modeNames = { learn: 'learn', classic: 'classic', mc: 'mc', fill: 'fill', map: 'map' };
       const stamp = formatNowForExport().replace(/[: ]/g, '-');
       const fname = `期末錯題_${modeNames[currentMode] || 'exam'}_${stamp}.txt`;
       const blob = new Blob(['﻿' + text], { type: 'text/plain;charset=utf-8' });
@@ -4827,13 +4868,16 @@
       const charTitle = char ? char.title : '';
       const bg = getSceneBackground(q.setup);
 
+      // 2026-05-31 角色立繪重新去背（rembg），加版本參數強制刷新瀏覽器快取
+      const AVATAR_VER = '20260531';
+      const bust = (p) => p + (p.includes('?') ? '&' : '?') + 'v=' + AVATAR_VER;
       const spriteHTML = charAvatar
         ? `<div class="story-vn-sprite">
-         <img src="${charAvatar}" alt="${q.client}" onerror="this.parentElement.style.display='none'" />
+         <img src="${bust(charAvatar)}" alt="${q.client}" onerror="this.parentElement.style.display='none'" />
        </div>`
         : '';
       const miniHTML = charAvatar
-        ? `<div class="story-vn-mini"><img src="${charAvatar}" alt="" onerror="this.parentElement.style.display='none'"/></div>`
+        ? `<div class="story-vn-mini"><img src="${bust(charAvatar)}" alt="" onerror="this.parentElement.style.display='none'"/></div>`
         : '';
 
       document.getElementById('s-content').innerHTML = `
@@ -5071,6 +5115,8 @@
     let cmCurrentQs = [];           // 本次抽到的 5 題：{ type, data, idx }
     let cmAnswered = [];            // 對應每題是否已作答
     let cmCorrectFlags = [];        // 對應每題答對與否
+    let cmGuessFlags = [];          // 對應每題是否標記為「猜的」
+    let cmUserAnswers = [];         // 對應每題使用者作答（tf:'O'/'X'；mc:pos；fill:string[]）
     let cmMCOrders = [];            // MC 選項洗牌順序
     let cmOpenCat = 0;              // 預設展開第一類
 
@@ -5139,6 +5185,8 @@
       cmCurrentQs = pickRandomN(all, 5);
       cmAnswered = Array(cmCurrentQs.length).fill(false);
       cmCorrectFlags = Array(cmCurrentQs.length).fill(false);
+      cmGuessFlags = Array(cmCurrentQs.length).fill(false);
+      cmUserAnswers = Array(cmCurrentQs.length).fill(null);
       cmMCOrders = cmCurrentQs.map(item => {
         if (item.type !== 'mc') return null;
         const order = shuffleArray([0, 1, 2, 3]);
@@ -5198,6 +5246,10 @@
       container.innerHTML = html;
     }
 
+    function cmGuessBtn(i) {
+      return `<button class="cm-guess-btn" id="cm-gbtn-${i}" onclick="cmToggleGuess(${i})" title="不確定？標記為「猜的」">🎲 猜的</button>`;
+    }
+
     function cmCardTF(q, i) {
       return `
         <div class="cm-qcard" id="cm-card-${i}">
@@ -5205,6 +5257,7 @@
             <div class="cm-qnum" id="cm-qnum-${i}">${i + 1}</div>
             <div class="cm-qtype-tag">是非</div>
             <div class="cm-qtext">${q.q}</div>
+            ${cmGuessBtn(i)}
           </div>
           <div class="cm-choices">
             <button class="cm-cbtn" id="cm-tf-${i}-O" onclick="cmAnswerTF(${i}, 'O')">○ 正確</button>
@@ -5228,12 +5281,23 @@
             <div class="cm-qnum" id="cm-qnum-${i}">${i + 1}</div>
             <div class="cm-qtype-tag mc">選擇</div>
             <div class="cm-qtext">${q.q}</div>
+            ${cmGuessBtn(i)}
           </div>
           <div class="cm-mc-options">${opts}</div>
           <div class="cm-result" id="cm-result-${i}"></div>
           <div class="cm-exp" id="cm-exp-${i}">${q.exp}${q.page ? ` <span class="law-ref">(${q.page})</span>` : ''}</div>
         </div>
       `;
+    }
+
+    function cmToggleGuess(i) {
+      if (cmAnswered[i]) return;
+      if (cmCurrentQs[i] && cmCurrentQs[i].type === 'fill') return;
+      cmGuessFlags[i] = !cmGuessFlags[i];
+      const btn = document.getElementById(`cm-gbtn-${i}`);
+      if (btn) btn.classList.toggle('active', cmGuessFlags[i]);
+      const card = document.getElementById(`cm-card-${i}`);
+      if (card) card.classList.toggle('guessed', cmGuessFlags[i]);
     }
 
     function cmCardFill(q, i) {
@@ -5257,17 +5321,24 @@
       `;
     }
 
+    function cmLockGuessBtn(i) {
+      const g = document.getElementById(`cm-gbtn-${i}`);
+      if (g) g.disabled = true;
+    }
+
     function cmAnswerTF(i, chosen) {
       if (cmAnswered[i]) return;
       const q = cmCurrentQs[i].data;
       const correct = chosen === q.ans;
       cmAnswered[i] = true;
       cmCorrectFlags[i] = correct;
+      cmUserAnswers[i] = chosen;
 
       trackAnswer('final-map', 'tf', i, chosen, correct, q.q);
 
       document.getElementById(`cm-tf-${i}-O`).disabled = true;
       document.getElementById(`cm-tf-${i}-X`).disabled = true;
+      cmLockGuessBtn(i);
       if (correct) {
         document.getElementById(`cm-tf-${i}-${chosen}`).classList.add('picked-correct');
       } else {
@@ -5284,12 +5355,14 @@
       const correct = pos === mappedAns;
       cmAnswered[i] = true;
       cmCorrectFlags[i] = correct;
+      cmUserAnswers[i] = pos;
 
       trackAnswer('final-map', 'mc', i, ['A','B','C','D'][pos], correct, q.q);
 
       for (let p = 0; p < 4; p++) {
         document.getElementById(`cm-mc-${i}-${p}`).disabled = true;
       }
+      cmLockGuessBtn(i);
       if (correct) {
         document.getElementById(`cm-mc-${i}-${pos}`).classList.add('picked-correct');
       } else {
@@ -5316,6 +5389,7 @@
       }
       cmAnswered[i] = true;
       cmCorrectFlags[i] = allRight;
+      cmUserAnswers[i] = userAnsParts;
       document.getElementById(`cm-fill-btn-${i}`).disabled = true;
 
       trackAnswer('final-map', 'fill', i, userAnsParts.join(' / '), allRight, q.q);
@@ -5344,8 +5418,134 @@
         else                  msg = '📖 這概念還需要加強！故事再讀一次，搭配練習效果最好。';
         const finalDiv = document.getElementById('cm-final');
         finalDiv.style.display = 'block';
-        finalDiv.innerHTML = `<div class="cm-final-summary">本概念 ${total} 題答對 ${right} 題（${pct}%）<br>${msg}</div>`;
+        let html = `<div class="cm-final-summary">本概念 ${total} 題答對 ${right} 題（${pct}%）<br>${msg}</div>`;
+        if (isUnlocked) {
+          const reviewCnt = cmCurrentQs.filter((_, j) => !cmCorrectFlags[j] || cmGuessFlags[j]).length;
+          if (reviewCnt > 0) {
+            html += `<div class="cm-export-wrap"><button class="cm-export-btn" onclick="cmExportWrongAnswers()">📋 匯出錯題＋猜題（共 ${reviewCnt} 題，複習用）</button></div>`;
+          }
+        }
+        finalDiv.innerHTML = html;
       }
+    }
+
+    /* ─── 概念地圖：匯出錯題＋猜題 ─── */
+    function cmFindSubTopic(subId) {
+      for (const cat of concepts) {
+        for (const sub of cat.subTopics) {
+          if (sub.id === subId) return { cat, sub };
+        }
+      }
+      return null;
+    }
+
+    function cmCollectWrongItems() {
+      const LABELS = ['A', 'B', 'C', 'D'];
+      const items = [];
+      cmCurrentQs.forEach((item, i) => {
+        if (!cmAnswered[i]) return;
+        const wrong = !cmCorrectFlags[i];
+        const guessed = !!cmGuessFlags[i];
+        if (!wrong && !guessed) return;
+        const q = item.data;
+        if (item.type === 'tf') {
+          items.push({
+            type: '是非題',
+            tag: statusTag(wrong, guessed),
+            page: q.page || '',
+            questionLines: [`題目：${q.q}`],
+            userAns: tfText(cmUserAnswers[i]),
+            correctAns: tfText(q.ans),
+            exp: q.exp
+          });
+        } else if (item.type === 'mc') {
+          const { order, mappedAns } = cmMCOrders[i];
+          const optionLines = order.map((origIdx, k) => `  ${LABELS[k]}. ${q.options[origIdx]}`);
+          const ua = cmUserAnswers[i];
+          items.push({
+            type: '選擇題',
+            tag: statusTag(wrong, guessed),
+            page: q.page || '',
+            questionLines: [`題目：${q.q}`, '選項：', ...optionLines],
+            userAns: `${LABELS[ua]}. ${q.options[order[ua]]}`,
+            correctAns: `${LABELS[mappedAns]}. ${q.options[q.ans]}`,
+            exp: q.exp
+          });
+        } else {
+          const inputs = cmUserAnswers[i] || [];
+          const parts = q.q.split('___');
+          let userFilled = '', correctFilled = '';
+          parts.forEach((part, j) => {
+            userFilled += part;
+            correctFilled += part;
+            if (j < parts.length - 1) {
+              const v = (inputs[j] || '').trim();
+              userFilled += `【${v || '（未填）'}】`;
+              correctFilled += `【${q.answers[j] || ''}】`;
+            }
+          });
+          items.push({
+            type: '填空題',
+            tag: '❌ 答錯',
+            page: q.page || '',
+            questionLines: [`題目：${q.q}`],
+            userAns: userFilled,
+            correctAns: correctFilled,
+            exp: q.exp
+          });
+        }
+      });
+      return items;
+    }
+
+    function cmBuildExportText() {
+      const found = cmFindSubTopic(cmCurrentSubId);
+      const subName = found ? found.sub.name : '（未選）';
+      const catName = found ? found.cat.mainTopic : '';
+      const items = cmCollectWrongItems();
+      const wrongOnly = items.filter(it => it.tag && it.tag.includes('答錯')).length;
+      const guessOnly = items.filter(it => it.tag === '🎲 猜對（不確定）').length;
+      const breakdown = wrongOnly && guessOnly
+        ? `${wrongOnly} 題答錯 + ${guessOnly} 題猜對`
+        : wrongOnly ? `${wrongOnly} 題答錯`
+          : guessOnly ? `${guessOnly} 題猜對` : '';
+
+      const header = [
+        '═══════════════════════════════════════',
+        '  廣告法規期末考 — 概念地圖錯題＋猜題清單',
+        `  分類：${catName}`,
+        `  概念：${subName}`,
+        `  匯出時間：${formatNowForExport()}`,
+        `  共 ${items.length} 題${breakdown ? `（${breakdown}）` : ''}`,
+        '═══════════════════════════════════════',
+        ''
+      ].join('\n');
+
+      if (items.length === 0) {
+        return header + '\n🎉 本次沒有錯題也沒有猜題，完美達成！';
+      }
+
+      const body = items.map((it, k) => [
+        `【第 ${k + 1} 題】${it.type}${it.tag ? '　' + it.tag : ''}${it.page ? '　法條：' + it.page : ''}`,
+        ...it.questionLines,
+        '',
+        `我的作答：${it.userAns}`,
+        `正確答案：${it.correctAns}`,
+        '',
+        '詳解：',
+        htmlToPlainText(it.exp),
+        '───────────────────────────────────────',
+        ''
+      ].join('\n')).join('\n');
+
+      return header + '\n' + body;
+    }
+
+    function cmExportWrongAnswers() {
+      if (!isUnlocked) { alert('此功能需解鎖後才能使用。'); return; }
+      document.getElementById('export-text').value = cmBuildExportText();
+      document.getElementById('export-modal-mask').classList.add('show');
+      document.getElementById('copy-status').classList.remove('show');
     }
 
     /* ─── 初始化 ─── */
