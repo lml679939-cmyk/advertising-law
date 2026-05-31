@@ -4037,13 +4037,16 @@
       const charTitle = char ? char.title : '';
       const bg = getSceneBackground(q.setup);
 
+      // 2026-05-31 角色立繪重新去背（rembg），加版本參數強制刷新瀏覽器快取
+      const AVATAR_VER = '20260531';
+      const bust = (p) => p + (p.includes('?') ? '&' : '?') + 'v=' + AVATAR_VER;
       const spriteHTML = charAvatar
         ? `<div class="story-vn-sprite">
-         <img src="${charAvatar}" alt="${q.client}" onerror="this.parentElement.style.display='none'" />
+         <img src="${bust(charAvatar)}" alt="${q.client}" onerror="this.parentElement.style.display='none'" />
        </div>`
         : '';
       const miniHTML = charAvatar
-        ? `<div class="story-vn-mini"><img src="${charAvatar}" alt="" onerror="this.parentElement.style.display='none'"/></div>`
+        ? `<div class="story-vn-mini"><img src="${bust(charAvatar)}" alt="" onerror="this.parentElement.style.display='none'"/></div>`
         : '';
 
       document.getElementById('s-content').innerHTML = `
