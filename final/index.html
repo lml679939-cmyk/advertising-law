@@ -5241,9 +5241,9 @@
       <div style="font-size:0.78em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${dayData.daySubtitle}</div>
       <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">💕 ${dayData.dayTitle}</div>
     </div>
-    <div style="padding:16px;text-align:center;">
-      <div style="font-size:0.88em;color:rgba(255,215,200,0.9);white-space:pre-line;line-height:1.95;margin-bottom:20px;">${dayData.dayIntro}</div>
-      <div style="font-size:1em;font-weight:bold;color:#ffb3d9;margin-bottom:16px;letter-spacing:1px;text-shadow:0 0 10px rgba(255,80,160,0.4);">✨ 選擇你的攻略對象 ✨</div>
+    <div style="padding:20px 16px;text-align:center;background:linear-gradient(135deg,#2d0a3e 0%,#4a1565 50%,#6b1a5c 100%);border-radius:14px;margin-bottom:16px;box-shadow:0 4px 20px rgba(74,21,101,0.25);border:1px solid rgba(255,180,210,0.25);">
+      <div style="font-size:0.95em;color:#fff5e6;white-space:pre-line;line-height:1.95;margin-bottom:22px;text-shadow:0 1px 3px rgba(0,0,0,0.5);">${dayData.dayIntro}</div>
+      <div style="font-size:1.1em;font-weight:bold;color:#ffd0e6;margin-bottom:18px;letter-spacing:2px;text-shadow:0 0 12px rgba(255,120,180,0.6),0 1px 3px rgba(0,0,0,0.5);">✨ 選擇你的攻略對象 ✨</div>
       <div class="otome-route-grid">${routeCards}</div>
     </div>
     <div style="text-align:center;padding-bottom:20px;">
@@ -5320,6 +5320,7 @@
     <div class="story-intro-box" id="story-intro">
       <div style="font-size:0.88em;color:rgba(255,215,180,0.9);white-space:pre-line;line-height:1.95;">${dayData.dayIntro}${isOtome && route.introLine ? '\n\n' + route.character + '：「' + route.introLine + '」' : ''}</div>
       <button class="story-next-btn" style="display:block;margin-top:16px;" onclick="storyDismissIntro()">${startLabel}</button>
+      <button class="story-day-select-btn" style="display:block;margin-top:10px;max-width:240px;margin-left:auto;margin-right:auto;font-size:0.9em;padding:8px 16px;" onclick="storyOtomeRoute=null;initStoryMode()">← 返回關卡選擇</button>
     </div>
     <div id="story-game" style="display:none;">
       <div class="story-status-bar">
