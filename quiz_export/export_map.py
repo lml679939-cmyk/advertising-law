@@ -122,6 +122,139 @@ def parse_fill(src):
                             "exp": strip_html(exp), "page": pg or ""})
     return results
 
+def _find_balanced(src, start, open_ch, close_ch):
+    """從 src[start] 處的 open_ch 開始，找到對應 close_ch 的位置（含字串感知）。"""
+    depth = 0; j = start; in_str = False; quote = None; escape = False
+    while j < len(src):
+        c = src[j]
+        if escape:
+            escape = False
+        elif in_str:
+            if c == '\\':
+                escape = True
+            elif c == quote:
+                in_str = False; quote = None
+        else:
+            if c == '"' or c == "'":
+                in_str = True; quote = c
+            elif c == open_ch:
+                depth += 1
+            elif c == close_ch:
+                depth -= 1
+                if depth == 0:
+                    return j
+        j += 1
+    return -1
+
+
+def _get_field_any_quote(block, field):
+    """支援單引號或雙引號的字串欄位取值（劇情模式用單引號）。"""
+    for quote in ('"', "'"):
+        pat = re.compile(
+            r'\b' + re.escape(field) + r'\s*:\s*' + quote +
+            r'((?:[^' + quote + r'\\]|\\.)*)' + quote
+        )
+        m = pat.search(block)
+        if m:
+            return unescape_js(m.group(1))
+    return None
+
+
+def _get_options_any_quote(block):
+    m = re.search(r'options\s*:\s*\[(.*?)\]', block, re.DOTALL)
+    if not m:
+        return []
+    inner = m.group(1)
+    # 抓單／雙引號字串
+    items = re.findall(r"'((?:[^'\\]|\\.)*)'|\"((?:[^\"\\]|\\.)*)\"", inner)
+    return [unescape_js(a or b) for a, b in items]
+
+
+def parse_story_days(src):
+    """擷取 storyDay1~N 的 questions（含每題 q/ans/options/exp/page/client），供 NotebookLM 驗證法條正確性。"""
+    days = []
+    for m in re.finditer(r"const (storyDay\d+) = (\{)", src):
+        var = m.group(1)
+        brace_pos = m.start(2)
+        end_pos = _find_balanced(src, brace_pos, '{', '}')
+        if end_pos < 0:
+            continue
+        block = src[brace_pos:end_pos + 1]
+        title    = re.search(r"dayTitle:\s*'([^']+)'", block)
+        subtitle = re.search(r"daySubtitle:\s*'([^']+)'", block)
+        # 取 questions 陣列範圍
+        qarr_m = re.search(r"questions:\s*\[", block)
+        if not qarr_m:
+            continue
+        qbracket_pos = qarr_m.end() - 1  # 指向 '['
+        qend_pos = _find_balanced(block, qbracket_pos, '[', ']')
+        if qend_pos < 0:
+            continue
+        arr_src = block[qbracket_pos:qend_pos + 1]
+
+        # 找到每題物件（以 setup: 為起點，因為 q: 在物件內較晚出現會被 split_objects 誤判）
+        # 改用 setup: 為錨點抓物件
+        objs = []
+        for sm in re.finditer(r"\{\s*\n?\s*setup\s*:", arr_src):
+            ostart = sm.start()
+            oend = _find_balanced(arr_src, ostart, '{', '}')
+            if oend > 0:
+                objs.append(arr_src[ostart:oend + 1])
+        qs = []
+        for k, ob in enumerate(objs, 1):
+            qtext = _get_field_any_quote(ob, "q")
+            qtype = _get_field_any_quote(ob, "type")
+            exp   = _get_field_any_quote(ob, "exp")
+            pg    = _get_field_any_quote(ob, "page")
+            client = _get_field_any_quote(ob, "client")
+            if not qtext or not exp:
+                continue
+            entry = {"no": k, "q": qtext, "type": qtype or "tf",
+                     "exp": strip_html(exp), "page": pg or "",
+                     "client": client or ""}
+            if qtype == "mc":
+                entry["options"] = _get_options_any_quote(ob)
+                entry["ans_idx"] = get_int_field(ob, "ans")
+            else:
+                entry["ans"] = _get_field_any_quote(ob, "ans")
+            qs.append(entry)
+        days.append({"var": var,
+                     "title": title.group(1) if title else var,
+                     "subtitle": subtitle.group(1) if subtitle else "",
+                     "questions": qs})
+    return days
+
+
+def build_story_section(days):
+    LABELS = ["A", "B", "C", "D"]
+    lines = []
+    lines.append("\n\n" + "═"*72)
+    lines.append("【劇情模式題目】— Day 1~N 法條情境題（VN 視覺小說）")
+    lines.append("═"*72)
+    lines.append("（說明：劇情模式為情境式法律問答，每題附情境角色與對話；以下僅列法條題幹/答案/詳解，供 NotebookLM 驗證法條正確性）\n")
+    for d in days:
+        lines.append(f"\n▌ {d['title']}")
+        lines.append(f"   ({d['subtitle']})")
+        lines.append("─"*72)
+        for q in d["questions"]:
+            cli = f"  ｜客戶：{q['client']}" if q['client'] else ""
+            lines.append(f"\n  [Day-{d['var'][-1]} {q['no']:>2}] {q['type'].upper()}{cli}")
+            lines.append(f"  題目：{q['q']}")
+            if q['type'] == 'mc':
+                for j, opt in enumerate(q.get('options', [])):
+                    mark = " ◀ 正確答案" if j == q.get('ans_idx') else ""
+                    lines.append(f"    ({LABELS[j]}) {opt}{mark}")
+                if q.get('ans_idx') is not None and q.get('options'):
+                    lines.append(f"  答案：({LABELS[q['ans_idx']]}) {q['options'][q['ans_idx']]}")
+            else:
+                ans = "○（正確）" if q.get('ans') == "O" else "✕（錯誤）"
+                lines.append(f"  答案：{ans}")
+            lines.append(f"  詳解：{q['exp']}")
+    lines.append("\n" + "═"*72)
+    lines.append("（劇情模式段落由 export_map.py 自動生成）")
+    return "\n".join(lines)
+
+
 def parse_concepts(src):
     m = re.search(r"const concepts = \[(.*?)\];\s*\n\s*/\* 概念地圖", src, re.DOTALL)
     if not m: return []
@@ -195,18 +328,22 @@ if __name__ == "__main__":
     mc_qs   = parse_mc(src)
     fill_qs = parse_fill(src)
     cats    = parse_concepts(src)
+    days    = parse_story_days(src)
 
     print(f"題庫：是非 {len(tf_qs)} / 選擇 {len(mc_qs)} / 填充 {len(fill_qs)}")
     print(f"概念地圖：{len(cats)} 大類，{sum(len(c['subTopics']) for c in cats)} 子概念")
+    print(f"劇情模式：{len(days)} 天，共 {sum(len(d['questions']) for d in days)} 題")
 
-    # 讀入現有 TXT，截斷舊的概念地圖段落（若存在）
+    # 讀入現有 TXT，截斷舊的概念地圖／劇情段落（若存在）
     existing = OUT_TXT.read_text(encoding="utf-8")
-    cut_marker = "\n\n" + "═"*72 + "\n【概念地圖索引】"
-    cut = existing.find(cut_marker)
-    if cut != -1:
-        existing = existing[:cut]
-        print("已移除舊的概念地圖段落")
+    for cut_marker in ("\n\n" + "═"*72 + "\n【概念地圖索引】",
+                       "\n\n" + "═"*72 + "\n【劇情模式題目】"):
+        cut = existing.find(cut_marker)
+        if cut != -1:
+            existing = existing[:cut]
+            print(f"已移除舊段落：{cut_marker.strip()[-15:]}")
 
-    map_section = build_map_section(cats, tf_qs, mc_qs, fill_qs)
-    OUT_TXT.write_text(existing + map_section, encoding="utf-8")
+    map_section   = build_map_section(cats, tf_qs, mc_qs, fill_qs)
+    story_section = build_story_section(days)
+    OUT_TXT.write_text(existing + map_section + story_section, encoding="utf-8")
     print(f"已更新：{OUT_TXT}")
