@@ -1352,6 +1352,111 @@
       color: #6c3483;
     }
 
+    /* ── 乙女模式 CSS ── */
+    .otome-route-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 0 0 16px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .otome-char-card {
+      background: linear-gradient(135deg, #1a0530, #2d1060, #3d1566);
+      border: 1px solid rgba(255,150,200,0.25);
+      border-radius: 14px;
+      padding: 18px 14px;
+      cursor: pointer;
+      transition: all 0.22s;
+      text-align: center;
+      color: white;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+    .otome-char-card:hover {
+      border-color: rgba(255,150,200,0.75);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(220,80,160,0.35);
+    }
+    .otome-char-avatar {
+      width: 78px;
+      height: 78px;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 50%;
+      border: 2px solid rgba(255,160,200,0.5);
+      margin-bottom: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .otome-char-type {
+      font-size: 0.68em;
+      color: rgba(255,180,210,0.8);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    .otome-char-name {
+      font-size: 1.0em;
+      font-weight: bold;
+      color: #ffd700;
+      margin-bottom: 5px;
+    }
+    .otome-char-desc {
+      font-size: 0.72em;
+      color: rgba(255,220,235,0.65);
+      line-height: 1.5;
+    }
+    .otome-good-end {
+      background: linear-gradient(135deg, #2d0045 0%, #7b0060 40%, #a0006a 70%, #6b003d 100%);
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-align: center;
+      border: 1px solid rgba(255,150,200,0.3);
+      box-shadow: inset 0 1px 0 rgba(255,200,220,0.15);
+    }
+    .otome-normal-end {
+      background: linear-gradient(135deg, #0a1535 0%, #1a2b60 40%, #1a3a70 100%);
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-align: center;
+      border: 1px solid rgba(100,150,255,0.3);
+      box-shadow: inset 0 1px 0 rgba(150,180,255,0.1);
+    }
+    .otome-bad-end {
+      background: linear-gradient(135deg, #1a1a30 0%, #2a2850 40%, #1e1e3e 100%);
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-align: center;
+      border: 1px solid rgba(120,120,160,0.3);
+    }
+    .otome-end-type-label {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 0 0 12px rgba(255,215,0,0.4);
+      margin-bottom: 14px;
+      letter-spacing: 1px;
+    }
+    .otome-end-avatar {
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 50%;
+      border: 3px solid rgba(255,160,200,0.6);
+      display: block;
+      margin: 0 auto 14px;
+      box-shadow: 0 0 20px rgba(220,80,160,0.3);
+    }
+    .otome-end-text {
+      font-size: 0.9em;
+      color: rgba(255,235,240,0.92);
+      white-space: pre-line;
+      line-height: 2.1;
+      padding: 0 4px 8px;
+      text-align: left;
+    }
+
     .story-lock-box {
       background: linear-gradient(135deg, rgba(20,15,40,0.95), rgba(40,25,65,0.95));
       border-radius: 14px;
@@ -4813,9 +4918,230 @@
       ]
     };
 
+    /* ── Day 6：廣電法深夜告白（乙女模式） ── */
+    const storyDay6 = {
+      dayTitle: 'Day 6 ── 廣電法深夜告白',
+      daySubtitle: '菜鳥律師小廣的廣告法戀愛求生記',
+      dayIntro: '深夜十一點，全星媒體的廣告違規案讓你只能留在辦公室加班。\n翻著厚厚的廣播電視法施行細則，你的眼皮愈來愈重……\n就在這時，辦公室的門輕輕開了。',
+      type: 'otome',
+      routes: {
+        tsundere: {
+          key: 'tsundere', character: '王鐵嘴主任', label: '傲嬌霸道型',
+          subtitle: '口嫌體正直的律師事務所主任',
+          avatarNormal: '../images/boss_angry.png', avatarHappy: '../images/boss_happy.png',
+          color: '#c0392b',
+          introLine: '……就知道你還在加班。有什麼問題，說話。',
+          luckyMsg: '🎉 【特殊事件】主任突然放下手邊文件，低聲說：「……你最近進步不少。」他立刻轉身假裝在看資料。',
+          endings: {
+            good: { title: '🌸 Good End ── 告白之夜', text: '主任把辦公室的燈調暗，把外套搭在你肩上。\n「……拿你沒辦法。」他低聲說，視線卻沒離開你。\n「過來，讓我抱一下。就一下。」\n深夜的全星媒體案，已經不重要了。\n重要的是此刻，只有你和他。' },
+            normal: { title: '💙 Normal End ── 深夜同行', text: '主任站起身，為你關掉桌上的閱讀燈。\n「先回去，明天再繼續。」\n他走出幾步，又回頭：「……走吧，我送你出去。」\n今晚有什麼不一樣了，你說不清楚，只是感覺得到。' },
+            bad: { title: '💔 Bad End ── 擦身而過', text: '主任放下手邊的資料，沉默了一會兒。\n「廣電法的基礎還不穩，回去多讀。」\n他拿起公事包，頭也不回地走出辦公室。\n留下你和那些錯誤的法條，一起涼掉。' }
+          }
+        },
+        gentle: {
+          key: 'gentle', character: '林法務', label: '溫柔守護型',
+          subtitle: '永遠是你最可靠後盾的前輩',
+          avatarNormal: '../images/legal_smile.png', avatarHappy: '../images/legal_smile.png',
+          color: '#8e44ad',
+          introLine: '還沒走嗎？我帶了咖啡。有什麼需要幫忙的，盡管說。',
+          luckyMsg: '🎉 【特殊事件】前輩輕輕地說：「連對三題了，你今天狀態很好呢。」他溫柔地看著你，眼神比燈光更暖。',
+          endings: {
+            good: { title: '🌸 Good End ── 靜夜守護', text: '前輩把外套搭在你肩上，燈光映著他溫柔的眼神。\n「你知道嗎，每次看你認真的樣子……」他停頓了一下。\n「能像這樣陪在你身邊，我就已經很滿足了。雖然……偶爾也會有些貪心。」\n你沒有說話，只是輕輕握住了他的手。' },
+            normal: { title: '💙 Normal End ── 默默守候', text: '「今天辛苦了，先回去休息吧。」\n他整理好資料，為你開了門。\n「廣電法的東西，有不懂的隨時問我。」他微笑說。\n你知道，他說的「隨時」，不只是在工作的時候。' },
+            bad: { title: '💔 Bad End ── 距離', text: '前輩翻了翻解析，安靜地說：「廣電法的罰則體系還需要再熟悉。」\n他站起身：「先回去吧，不要太晚。」\n你點了點頭，心裡知道，今晚的距離，沒有縮短多少。' }
+          }
+        },
+        cunning: {
+          key: 'cunning', character: '林酸酸', label: '腹黑神祕型',
+          subtitle: '永遠讓你猜不透的資深律師',
+          avatarNormal: '../images/sour_smirk.png', avatarHappy: '../images/sour_smirk.png',
+          color: '#34495e',
+          introLine: '深夜加班呢……有趣。廣電法把你難住了？',
+          luckyMsg: '🎉 【特殊事件】林酸酸慢慢放下咖啡，瞇眼看著你：「……有點意思，你今天讓我有點意外。」那個笑，和平時不太一樣。',
+          endings: {
+            good: { title: '🌸 Good End ── 謎底', text: '林酸酸把手放到你面前的桌上，俯身低聲說：\n「你知道嗎，你總是能做出讓我意外的舉動。」\n他抬起視線，那個永遠帶著謎意的笑，這次有點不一樣。\n「把你的秘密交給我吧……作為交換，我也把我的靈魂分給你，好嗎？」' },
+            normal: { title: '💙 Normal End ── 謎', text: '林酸酸站起身，帶著一如往常的微笑。\n「還算有趣，今晚的你。」\n他走到門口，回頭看了你一眼：\n「下次，讓我繼續見識你吧。」\n那個眼神裡藏著什麼，你還猜不透。' },
+            bad: { title: '💔 Bad End ── 算了', text: '林酸酸輕笑一聲，「廣電法的基礎都還不到位嘛。」\n他收起了笑容，站起身來。\n「今晚就這樣吧。」語氣平淡，好像什麼都沒發生過。\n他離開了，留下你和那份讀不懂的廣電法案卷。' }
+          }
+        },
+        junior: {
+          key: 'junior', character: '阿肥', label: '年下直球型',
+          subtitle: '把喜歡全部寫在臉上的實習生',
+          avatarNormal: '../images/intern_excited.png', avatarHappy: '../images/intern_excited.png',
+          color: '#e67e22',
+          introLine: '學長姐！！我就知道你還沒走！我帶了滷味！一起複習廣電法！！',
+          luckyMsg: '🎉 【特殊事件】阿肥突然站起來深深鞠躬：「學長姐！三連對！這包滷味是我特地挑的最好吃的口味！！！」',
+          endings: {
+            good: { title: '🌸 Good End ── 直球告白', text: '「學長姐，」阿肥突然站直身體，認真得讓你嚇了一跳。\n「我不想只當你的學弟。」\n「看著我，把我當成一個真正的……」他停頓，臉已經通紅。\n「……當成男人來看待，好嗎？」\n深夜的辦公室，這句話，你永遠記得。' },
+            normal: { title: '💙 Normal End ── 陪伴', text: '「學長姐，時間不早了，我送你到門口！」\n他把滷味的袋子塞到你手上：「帶回家吃，免得餓著。」\n電梯裡，他突然說：「能跟你一起複習，我覺得很幸運。」\n你笑了笑，「傻瓜。」\n但這句話，讓你一路回家都帶著微笑。' },
+            bad: { title: '💔 Bad End ── 努力不夠', text: '「……學長姐，廣電法這邊好像還要多加油喔。」\n阿肥揉了揉頭，小聲說。\n「我今天可能幫不上什麼忙……」他把滷味默默推到你面前。\n「那個……剩下的，你自己加油。」\n他低著頭走出去了，門關上的聲音很輕。' }
+          }
+        }
+      },
+      questions: [
+        {
+          setup: '【晚上 11:00 ─ 律師事務所，全星媒體的節目表攤在桌上】\nNCC通知全星媒體：本國語言節目比例只有60%，不符規定，需限期改正。',
+          routeLine: {
+            tsundere: '……全星媒體的節目比例違規。你說說看，廣電法§19的標準是多少。',
+            gentle: '你看這份通知說節目比例不符，廣電法§19的規定你還記得嗎？',
+            cunning: '全星媒體的本國節目只有六成……到底要幾成才合規呢，嗯？',
+            junior: '學長姐！這題是節目比例！我昨天剛好複習到了！是70%對嗎！！'
+          },
+          type: 'tf', q: '依廣播電視法規定，無線電視台每日播送之本國語言節目，不得低於播出總時數的70%。', ans: 'O',
+          exp: '<strong>廣電法§19</strong>：無線廣播電視事業每日播送節目，其<strong>本國語言節目不得低於播出時數70%</strong>。全星媒體只達60%，明顯違規，需限期改正。',
+          sour: '七成。沒有技巧，就是硬背——七成，不是六成不是八成。',
+          rage: '七成！七成！廣電法§19本國語言節目下限七成！全星只有六成，明顯違規！',
+          correctR: { tsundere: ['……對了。', '嗯，答對了。別得意太早。', '這次及格。'], gentle: ['答對了，很好！', '正確，你掌握得很確實。', '不愧是你，很準確。'], cunning: ['呵，答對了。', '意外地不錯嘛。', '嗯，這題算你過了。'], junior: ['哇！！答對了！！學長姐最強！！', '耶！！！！！', '沒錯沒錯！！學長姐！！'] },
+          wrongR: { tsundere: ['這都答錯。', '……算了，看解析。', '注意力在哪裡。'], gentle: ['答錯了也沒關係，這個數字容易記混。', '別沮喪，看解析一起確認。', '這個考點很重要，我們再看一遍。'], cunning: ['啊，果然嘛。', '沒猜到呢……但也算正常。', '繼續看解析吧。'], junior: ['啊！！答錯了！！不過沒事！！', '學長姐也會答錯喔……（笑）那我也不難過了', '沒事！一起看解析！！'] }
+        },
+        {
+          setup: '【晚上 11:30 ─ 全星媒體業務部緊急來電】\n全星媒體忘了在節目播出前送交節目時間表，業務部詢問是否有法律責任。',
+          routeLine: {
+            tsundere: '節目時間表問題。幾日前要送核備，說。',
+            gentle: '這是施行細則的內容，你知道節目時間表的時間規定嗎？',
+            cunning: '全星媒體忘了送時間表……法條說幾日前呢？我很好奇你能不能答對。',
+            junior: '學長姐！這個！我記得是播出前五日！對嗎！！對嗎！！'
+          },
+          type: 'tf', q: '依廣播電視法施行細則，廣播電視事業應於節目播送「五日前」，將節目時間表送請主管機關核備。', ans: 'O',
+          exp: '<strong>廣電法施行細則§20</strong>：節目時間表應於播送<strong>五日前</strong>送請主管機關<strong>核備</strong>。注意：衛廣法§39是播送「後」二十日內索取資料，兩法方向完全相反，是考試陷阱。',
+          sour: '五天前核備。不是三天不是七天，五天。另外衛廣法是播送後，廣電法是播送前，方向也不一樣。',
+          rage: '五日前核備！五！廣電法施行細則§20！跟衛廣法播送後截然不同，方向都相反，分清楚！',
+          correctR: { tsundere: ['……及格。', '五日前，對了。繼續。', '嗯，這個記住了。'], gentle: ['答對了！你記得很清楚。', '正確！注意衛廣法跟廣電法方向不同喔。', '很好，繼續保持。'], cunning: ['答對了呢，嗯。', '沒讓我失望。', '意外地清楚。'], junior: ['對對對！！！五日前！！！學長姐你記得！！！', '耶耶耶！！！', '我也對了！！！！'] },
+          wrongR: { tsundere: ['五日前，不是你說的那個。', '看清楚施行細則§20。', '……答錯了，繼續。'], gentle: ['五日前核備，不太容易記呢。', '別沮喪，這個和衛廣法容易搞混。', '看解析再確認一次吧。'], cunning: ['答錯了，有點可惜。', '施行細則§20……五日前的，記一下。', '嗯，繼續吧。'], junior: ['啊！！五日前！！我剛剛也想說五日的！！', '我們都答錯了嗎……（失落）', '沒事！！看解析！！一起學！！'] }
+        },
+        {
+          setup: '【深夜 12:00 ─ 全星媒體某頻道廣告出了問題】\nNCC通知全星媒體某頻道廣告有問題，要求限期更正播出。',
+          routeLine: {
+            tsundere: 'NCC要求更正廣告，廣電法§23的期限是幾天。說。',
+            gentle: '這題要注意廣電法和衛廣法的更正期限不一樣喔。你記得廣電法的規定嗎？',
+            cunning: '更正廣告的期限……廣電法和衛廣法可不一樣呢，你知道哪個更快嗎？',
+            junior: '學長姐！這個！廣電法是七天還是十天！我記得有一個是七天一個是十天！'
+          },
+          type: 'tf', q: '依廣播電視法，廣播電視事業接到主管機關要求更正廣告的通知後，應於「七日內」完成更正播出。', ans: 'O',
+          exp: '<strong>廣電法§23</strong>：接到更正通知後<strong>七日內</strong>更正。<br>⚠️ 注意陷阱：<strong>衛廣法§44</strong>為「十日內」，兩法期限不同，是考試必考陷阱。口訣：<strong>廣電七日，衛廣十日</strong>。',
+          sour: '廣電法七天，衛廣法十天。規律：衛廣法通常管的範圍更廣，所以時間稍微寬鬆一點點。',
+          rage: '廣電法七日！不是十日！衛廣法才是十日！這個陷阱多少人跌進去！廣電七衛廣十！背！！',
+          correctR: { tsundere: ['七日，對了。衛廣法十日，記住。', '嗯，不錯。', '繼續。'], gentle: ['答對了！廣電七日，衛廣十日，記住了嗎？', '非常好！這個陷阱你沒踩到。', '很準確。'], cunning: ['嗯，對了。', '廣電七日，衛廣十日，你分清楚了。', '意外地紮實。'], junior: ['七日！！學長姐記住了！！', '耶！！！沒踩到陷阱！！！', '我也答對了！！！'] },
+          wrongR: { tsundere: ['廣電法七日，衛廣法十日。你搞混了。', '看清楚§23。', '……重來。'], gentle: ['沒關係，這個是常見陷阱。廣電七日，衛廣十日。', '這兩個很容易混，看解析一起記。', '看解析再確認。'], cunning: ['踩陷阱了，有點可惜。', '廣電七日，衛廣十日，要分清楚。', '繼續吧。'], junior: ['啊！！是七日嗎！！我也答錯了！！', '廣電七日衛廣十日……我以後一定記得！！', '沒事！看解析！一起記住！！'] }
+        },
+        {
+          setup: '【深夜 12:30 ─ 全星媒體檔案室傳來壞消息】\n全星媒體旗下廣播電台的廣告播出資料只保存了兩週就刪除了，NCC要查資料時已無法取得。',
+          routeLine: {
+            tsundere: '廣告資料保存問題。廣電法施行細則要求保存幾天，說。',
+            gentle: '廣告資料的保存期限，你記得施行細則是怎麼規定的嗎？',
+            cunning: '廣告資料保存……廣電法和藥事法的期限可差很多，你分得清楚嗎？',
+            junior: '學長姐！保存期限！我記得有好幾個不同的！廣電法是多少天！！'
+          },
+          type: 'tf', q: '依廣播電視法施行細則，廣播電視事業應將廣告播出相關資料保存20日備查。', ans: 'O',
+          exp: '<strong>廣電法施行細則§19</strong>：廣告播出資料保存<strong>20日</strong>。<br>⚠️ 注意：<strong>藥事法§66第4項</strong>廣告資料保存期限為<strong>6個月</strong>，兩者差距極大，務必分清楚。',
+          sour: '廣電法二十天，藥事法六個月，不要搞在一起。廣告類型不同，保存期限也不同。',
+          rage: '二十日！廣電法施行細則保存二十日！六個月那是藥事法！類型不同，期限差五倍多！！',
+          correctR: { tsundere: ['二十日，對了。', '嗯，及格。', '繼續。'], gentle: ['答對了！廣電二十日，藥事法六個月，記住了嗎？', '非常好！這個對比很重要。', '答得很準確。'], cunning: ['嗯，對了。', '廣電二十日，你記清楚了。', '意外地不錯。'], junior: ['對對對！！二十日！！學長姐！！', '耶！！！！！', '我也答對了！！！！'] },
+          wrongR: { tsundere: ['廣電法施行細則§19，二十日。看清楚。', '……答錯了，繼續。', '注意力散了。'], gentle: ['沒關係，這個容易和藥事法混淆。廣電二十日，藥事六個月。', '看解析再記一遍，這個對比很重要。', '別放棄。'], cunning: ['答錯了，嗯。', '廣電二十日，不是六個月，分清楚。', '繼續吧。'], junior: ['啊！！答錯了！！是二十日嗎！！', '廣電法施行細則二十日……我下次一定記住！！', '沒事！！看解析！！一起學！！'] }
+        },
+        {
+          setup: '【凌晨 1:00 ─ 全星媒體旗下廣播台被投訴】\n聽眾投訴全星廣播台超過一小時都沒報台名，NCC要求說明。',
+          routeLine: {
+            tsundere: '廣播台忘記報台名。施行細則規定多久報一次，說清楚。',
+            gentle: '這是廣播的基本義務，你知道多久需要報一次台名嗎？',
+            cunning: '報台名的義務……多久一次呢？感覺不是難題，但你確定嗎？',
+            junior: '學長姐！這個！我記得是每半小時！！施行細則有寫！！對嗎！！'
+          },
+          type: 'tf', q: '依廣播電視法施行細則，廣播電視事業在節目播送期間，應每「半小時」至少報告台名一次。', ans: 'O',
+          exp: '<strong>廣電法施行細則§22</strong>：每<strong>半小時</strong>（30分鐘）至少報台名一次。這是廣電法體系的基本識別義務，確保聽眾隨時能辨識收聽的是哪個頻道。',
+          sour: '每半小時報一次台名，這個規定現在聽起來有點老派，但白紙黑字寫在施行細則裡，考試就考這個。',
+          rage: '每半小時！！半小時！！施行細則§22！廣播台超過一小時不報台名，明顯違規！記住！',
+          correctR: { tsundere: ['半小時，對了。', '嗯，這個記住了。', '及格。'], gentle: ['答對了！每半小時報台名，施行細則§22。', '非常好！你掌握得很確實。', '很準確。'], cunning: ['對了。', '半小時，嗯，你記得清楚。', '意外地穩。'], junior: ['對！！！每半小時！！！學長姐！！！', '耶耶耶！！！！！', '我也答對了！！！！！'] },
+          wrongR: { tsundere: ['半小時，§22。你說的不對，看清楚。', '……看解析。', '重來。'], gentle: ['沒關係，施行細則§22是半小時。', '這個細節容易忽略，看解析吧。', '記住：每30分鐘報台名一次。'], cunning: ['答錯了呢。', '半小時，施行細則§22，記一下。', '繼續。'], junior: ['啊！！是半小時！！我剛剛也想說半小時的！！', '唉……一起看解析！！', '沒事！下次一定記住！！'] }
+        },
+        {
+          setup: '【凌晨 1:30 ─ 全星媒體旗下電視頻道超播廣告】\n全星媒體的頻道廣告時間超出上限，NCC已知悉，業務部緊急詢問法律風險。',
+          routeLine: {
+            tsundere: '全星超播廣告。廣電法的違規處理程序是什麼，說。',
+            gentle: '這題考廣電法的違規處理程序，§42和§43的關係你記得嗎？',
+            cunning: '廣電法的罰則是分階段的……你知道哪個步驟在前嗎？有趣的問題。',
+            junior: '學長姐！！這個是先警告再罰款對嗎！！我記得有分步驟！！'
+          },
+          type: 'mc', q: '依廣播電視法，廣播電視事業違反廣告相關規定，主管機關應依法如何處置？',
+          options: ['先以書面警告，命限期改正；不改正再依§43罰鍰', '直接廢止執照', '立即停播並移送司法機關', '直接裁罰後再要求改正'],
+          ans: 0,
+          exp: '<strong>廣電法§42</strong>：違規先以<strong>書面警告</strong>，命期限改正；<strong>§43</strong>：不改正才處<strong>罰鍰</strong>。廣電法採「告知→改正→罰鍰」的階段程序。情節重大另有§44停播罰則，但一般違規仍先走§42程序。',
+          sour: '先警告再罰款，這是廣電法的標準程序。法規通常給媒體改正機會，直接廢照是非常例外的情況。',
+          rage: '先警告後罰款！§42先書面警告！§43才罰鍰！這個程序必須背熟！直接廢照？那要多嚴重才廢照！！',
+          correctR: { tsundere: ['先警告，對了。', '§42§43的程序，你記清楚了。', '嗯，及格。'], gentle: ['答對了！§42先書面警告，§43才罰鍰，記住了嗎？', '非常好！這個程序很重要。', '很準確。'], cunning: ['嗯，對了。', '先警告後罰款，你知道流程。', '意外地清楚。'], junior: ['對！！！先書面警告！！！學長姐你記住了！！！', '耶！！！！', '我也答對了！！！！！'] },
+          wrongR: { tsundere: ['先書面警告再罰款。§42§43，看清楚。', '……答錯了。', '重來。'], gentle: ['沒關係，§42先警告，§43才罰鍰。', '這個程序很重要，看解析再記一遍。', '不要直接選廢照，那是例外。'], cunning: ['答錯了，有點可惜。', '先警告後罰款，程序題要記清楚。', '繼續吧。'], junior: ['啊！！先書面警告！！我剛說要先警告的！！', '為什麼選錯了……（難過）', '沒事！看解析！下次一定對！！'] }
+        },
+        {
+          setup: '【凌晨 2:00 ─ 緊急狀況升級！】\n全星媒體旗下電視台播出嚴重違規廣告，NCC認定情節重大，準備依§44開罰。',
+          routeLine: {
+            tsundere: '全星電視台情節重大。§44對電視廣播事業的罰則是多少，說。',
+            gentle: '這題很重要，電視廣播事業和廣播電台的罰則金額不一樣。你注意到了嗎？',
+            cunning: '電視台的§44罰則……和廣播台可不一樣喔，哪個罰得更重呢？',
+            junior: '學長姐！電視台和廣播台的罰款不一樣對嗎！電視比較多！我有印象！！'
+          },
+          type: 'mc', q: '廣播電視事業違反廣電法第21條第2款情節重大，對於「電視廣播事業」，主管機關依§44得處以：',
+          options: ['40萬至200萬元罰鍰，並得停播3日至3個月', '9萬至120萬元罰鍰，並得停播3日至3個月', '100萬至500萬元罰鍰，並廢止執照', '20萬至500萬元罰鍰，不得停播'],
+          ans: 0,
+          exp: '<strong>廣電法§44</strong>：<strong>電視廣播事業</strong>→<strong>40萬~200萬</strong>＋停播3日~3個月；<strong>廣播事業</strong>→<strong>9萬~120萬</strong>＋停播3日~3個月。兩者金額不同，是考試常見考點。',
+          sour: '電視台四十萬起跳，廣播電台九萬起跳。金額差這麼多是因為電視的社會影響力更大，罰則也更重。',
+          rage: '電視四十萬到兩百萬！不是九萬那是廣播台！媒體類型不同，罰則也不同，分清楚！！',
+          correctR: { tsundere: ['四十萬到兩百萬，對了。', '電視廣播事業§44，你記清楚了。', '及格。'], gentle: ['答對了！電視40~200萬，廣播9~120萬，這個對比很重要。', '非常好！', '很準確。'], cunning: ['嗯，對了。', '電視台的罰則比廣播重，你分清楚了。', '不錯。'], junior: ['對！！！四十萬到兩百萬！！！學長姐！！！', '耶！！！！！', '我也答對了！！！！！'] },
+          wrongR: { tsundere: ['電視四十萬到兩百萬，廣播九萬到一百二十萬。分清楚。', '……答錯了，看§44。', '重來。'], gentle: ['電視40~200萬，廣播9~120萬，容易混淆。', '看解析再記一遍，這個對比很重要。', '不要選廢照選項，那是例外。'], cunning: ['答錯了呢。', '電視台和廣播台的罰則不一樣，記清楚。', '繼續吧。'], junior: ['啊！！是四十萬！！我剛剛差點選對的！！', '唉……一起看解析！！', '沒事！下次一定記住電視四十萬！！'] }
+        },
+        {
+          setup: '【凌晨 2:30 ─ 全星媒體集團評估收購有線電視系統台】\n全星集團想收購第二家有線電視系統台，但擔心訂戶數觸犯上限。',
+          routeLine: {
+            tsundere: '全星要收購系統台。有線廣電法對訂戶數的限制是多少，說。',
+            gentle: '這題考有線廣電法的市佔限制，注意§24和§25的分母不一樣喔。',
+            cunning: '訂戶數上限……三分之一還是四分之一呢？呵，感覺是個陷阱。',
+            junior: '學長姐！有線廣電法訂戶數！是三分之一嗎！我怕跟頻道數搞混了！！'
+          },
+          type: 'tf', q: '依有線廣播電視法，同一系統經營者在全國之訂戶數，不得超過全國有線電視訂戶總數的「三分之一」。', ans: 'O',
+          exp: '<strong>有線廣電法§24</strong>：訂戶數上限<strong>三分之一（1/3）</strong>。<br>⚠️ 注意：<strong>§25</strong>節目頻道上限是<strong>四分之一（1/4）</strong>，兩條的分母正好相反，是高頻考試陷阱。口訣：<strong>訂三頻四</strong>。',
+          sour: '訂戶三分之一，頻道四分之一。記成「訂戶比較寬（1/3），頻道比較嚴（1/4）」，或記口訣「訂三頻四」。',
+          rage: '三分之一！訂戶是三分之一！四分之一是頻道數那條！§24和§25要配對記！口訣：訂三頻四！！',
+          correctR: { tsundere: ['三分之一，對了。頻道是四分之一，記好。', '嗯，及格。', '繼續。'], gentle: ['答對了！訂三頻四，口訣很好用！', '非常好！這個陷阱你沒踩到。', '很準確。'], cunning: ['嗯，對了。', '訂三頻四，你記清楚了。', '意外地紮實。'], junior: ['對！！！三分之一！！！學長姐！！！沒踩陷阱！！！', '耶！！！！！', '我也答對了！！！！！'] },
+          wrongR: { tsundere: ['三分之一，§24。你說的不對，看清楚。', '訂三頻四，記住。', '……答錯了。'], gentle: ['沒關係，這是陷阱題。訂戶三分之一，頻道四分之一。', '口訣「訂三頻四」，看解析再確認。', '下次一定要注意。'], cunning: ['踩陷阱了，呵。', '訂三頻四，記清楚。', '繼續吧。'], junior: ['啊！！是三分之一！！我剛剛就在想三還是四！！', '訂三頻四……我下次一定記住！！', '沒事！看解析！！'] }
+        },
+        {
+          setup: '【凌晨 3:00 ─ 全星媒體集團頻道整合規劃】\n全星集團評估旗下多個頻道數量，擔心超過有線電視系統台的頻道數量上限。',
+          routeLine: {
+            tsundere: '全星的頻道數接近上限。有線廣電法§25的頻道比例是多少，說。',
+            gentle: '這是§25的頻道比例題，注意這和§24訂戶數的限制不一樣。',
+            cunning: '頻道數上限……和訂戶數的分母不一樣喔。你能分清楚嗎？',
+            junior: '學長姐！！頻道是四分之一！！我剛記起來了！！訂戶三頻道四！！'
+          },
+          type: 'mc', q: '依有線廣播電視法第25條，系統經營者播送之節目頻道中，屬於同一頻道事業或關係企業者，不得超過系統可播送頻道總數的：',
+          options: ['四分之一', '三分之一', '五分之一', '二分之一'],
+          ans: 0,
+          exp: '<strong>有線廣電法§25</strong>：節目頻道上限<strong>四分之一（1/4）</strong>。<br>⚠️ 注意：<strong>§24</strong>訂戶數是<strong>三分之一（1/3）</strong>，兩條分母正好相反，極易混淆。口訣：<strong>訂三頻四</strong>。',
+          sour: '頻道四分之一，訂戶三分之一。「頻道比較嚴（1/4比1/3小），訂戶比較寬（1/3比1/4大）」。',
+          rage: '四分之一！頻道是四分之一！訂戶才是三分之一！§25對應頻道！§24對應訂戶！配對記！！',
+          correctR: { tsundere: ['四分之一，對了。', '訂三頻四，你記清楚了。', '及格。'], gentle: ['答對了！訂三頻四，這個口訣很好用。', '非常好！這個對比你掌握得很好。', '很準確。'], cunning: ['嗯，四分之一，對了。', '訂三頻四，你沒踩陷阱。', '意外地穩。'], junior: ['對！！！四分之一！！！我剛說的！！！', '耶！！！！！訂三頻四！！！', '學長姐！！！我們都答對了！！！'] },
+          wrongR: { tsundere: ['頻道四分之一，訂戶三分之一。配對記。', '……答錯了，看§25。', '重來。'], gentle: ['頻道四分之一，訂戶三分之一，口訣「訂三頻四」。', '看解析再確認，這個對比很重要。', '別放棄，下次一定對。'], cunning: ['踩陷阱了，呵。', '訂三頻四，記清楚，分母相反。', '繼續吧。'], junior: ['啊！！我剛說的四分之一！！自己說的！！', '唉……我剛說對了怎麼又選錯了……', '沒事！！下次記住訂三頻四！！'] }
+        },
+        {
+          setup: '【凌晨 3:30 ─ 全星媒體深夜最後一戰】\n全星系統台新增限制級頻道，業務部說已向主管機關提出「核備」申請，詢問是否需要等候審查。',
+          routeLine: {
+            tsundere: '全星說已經核備了限制級頻道。法條說核備還是核定，你確定嗎。',
+            gentle: '這題要特別注意「核備」和「核定」的區別，限制級頻道用哪一個？',
+            cunning: '核備還是核定……全星業務部說核備，你覺得他說對了嗎？呵，有趣的問題。',
+            junior: '學長姐！！這個是核定吧！！不是核備！！我記得！！'
+          },
+          type: 'tf', q: '依有線廣播電視法，系統經營者播送限制級節目，應以鎖碼方式為之，並報請中央主管機關「核備」。', ans: 'X',
+          exp: '<strong>有線廣電法§27</strong>：應以鎖碼方式報請中央主管機關「<strong>核定</strong>」（非核備）。<br>⚠️ 陷阱集錦：<strong>廣電法§27</strong>節目時間表→「<strong>核備</strong>」；<strong>衛廣法§29</strong>鎖碼→「<strong>核定</strong>」；<strong>有線廣電法§27</strong>鎖碼→「<strong>核定</strong>」。三條要分清楚！',
+          sour: '核備 vs 核定：「核備」只是送件知會，「核定」要等審查通過。鎖碼頻道需要審查，當然是核定。廣電法節目時間表才是核備。',
+          rage: '核定！！！不是核備！！！有線廣電法§27！！鎖碼頻道要報請核定！！核備跟核定差很多！！',
+          correctR: { tsundere: ['核定，不是核備，對了。', '有線廣電法§27，你答對了。', '這個陷阱你沒踩到。'], gentle: ['答對了！有線廣電法§27是核定，不是核備。你看穿了！', '非常好！這個陷阱你識破了。', '很準確，繼續保持。'], cunning: ['嗯，核定，對了。', '全星業務部說錯了，你答對了。', '意外地清楚。'], junior: ['對！！！是核定！！！我說的！！！學長姐！！！', '耶！！！！！！！', '全星業務部說錯了！！我們都答對了！！！'] },
+          wrongR: { tsundere: ['有線廣電法§27，核定，不是核備。你跟全星業務部一樣說錯了。', '……看清楚，核定。', '重來。'], gentle: ['這個陷阱很容易踩到。有線廣電法§27是核定，不是核備。', '「核定」要審查通過，「核備」只是知會。看解析再確認。', '別沮喪，下次一定記住。'], cunning: ['和全星業務部一樣說錯了，有點可惜。', '有線廣電法§27，核定，不是核備，記清楚。', '繼續吧。'], junior: ['啊！！是核定！！我說核定的！！', '（混亂）……看解析！！有線廣電法§27是核定！！', '一起學！！不要被全星業務部帶跑！！'] }
+        }
+      ]
+    };
+
     /* ── 狀態 ── */
     let storyState = { qIdx: 0, score: 0, hearts: 3, streak: 0, answered: false, wrongList: [] };
     let currentDay = storyDay1;
+    let storyOtomeRoute = null;
 
     /* ── 角色圖像 ── */
     const storyCharacters = {
@@ -4897,8 +5223,42 @@
     function sHearts(n) { return '❤️'.repeat(Math.max(0, Math.min(n, S_MAX_HEARTS))) + '🖤'.repeat(S_MAX_HEARTS - Math.max(0, Math.min(n, S_MAX_HEARTS))); }
     function sRand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+    /* ── 乙女路線選擇畫面 ── */
+    function showOtomeRouteSelect(dayData) {
+      storyOtomeRoute = null;
+      const panel = document.getElementById('story-panel');
+      const AVATAR_VER = '20260531';
+      const bust = (p) => p + (p.includes('?') ? '&' : '?') + 'v=' + AVATAR_VER;
+      const routeCards = Object.values(dayData.routes).map(r => `
+        <div class="otome-char-card" onclick="selectOtomeRoute(storyDay6,'${r.key}')">
+          <img src="${bust(r.avatarNormal)}" class="otome-char-avatar" alt="${r.character}" onerror="this.style.display='none'" />
+          <div class="otome-char-type">${r.label}</div>
+          <div class="otome-char-name">${r.character}</div>
+          <div class="otome-char-desc">${r.subtitle}</div>
+        </div>`).join('');
+      panel.innerHTML = `
+    <div class="story-day-header" style="background:linear-gradient(135deg,#1a0533 0%,#6b0059 50%,#a0006a 100%);">
+      <div style="font-size:0.78em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${dayData.daySubtitle}</div>
+      <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">💕 ${dayData.dayTitle}</div>
+    </div>
+    <div style="padding:16px;text-align:center;">
+      <div style="font-size:0.88em;color:rgba(255,215,200,0.9);white-space:pre-line;line-height:1.95;margin-bottom:20px;">${dayData.dayIntro}</div>
+      <div style="font-size:1em;font-weight:bold;color:#ffb3d9;margin-bottom:16px;letter-spacing:1px;text-shadow:0 0 10px rgba(255,80,160,0.4);">✨ 選擇你的攻略對象 ✨</div>
+      <div class="otome-route-grid">${routeCards}</div>
+    </div>
+    <div style="text-align:center;padding-bottom:20px;">
+      <button class="story-day-select-btn" style="max-width:220px;margin:0 auto;" onclick="storyOtomeRoute=null;initStoryMode()">← 返回關卡選擇</button>
+    </div>`;
+    }
+
+    function selectOtomeRoute(dayData, routeKey) {
+      storyOtomeRoute = routeKey;
+      startStoryDay(dayData);
+    }
+
     /* ── 初始化：顯示關卡選擇 ── */
     function initStoryMode() {
+      storyOtomeRoute = null;
       const panel = document.getElementById('story-panel');
 
       /* 關卡選擇畫面 */
@@ -4928,30 +5288,43 @@
         <div style="font-size:1.05em;font-weight:bold;margin-bottom:5px;">💻 Day 5 ── 電商戰場的廣告法暗坑</div>
         <div style="font-size:0.82em;opacity:0.75;">網路廣告・廣告不實認定（§5/§6/§7/§8）・警告函・營業誹謗</div>
       </button>
+      <button class="story-day-select-btn" style="background:linear-gradient(135deg,#2d0045,#7b0060,#a0006a);border-color:rgba(255,150,200,0.4);" onclick="startStoryDay(storyDay6)">
+        <div style="font-size:1.05em;font-weight:bold;margin-bottom:5px;">💕 Day 6 ── 廣電法深夜告白</div>
+        <div style="font-size:0.82em;opacity:0.8;">廣播電視法・有線廣電法・乙女戀愛路線・4種攻略角色</div>
+      </button>
     </div>`;
     }
 
     /* ── 開始指定關卡 ── */
     function startStoryDay(dayData) {
+      // 乙女模式：若尚未選路線，先顯示路線選擇
+      if (dayData.type === 'otome' && !storyOtomeRoute) {
+        showOtomeRouteSelect(dayData);
+        return;
+      }
       currentDay = dayData;
       storyState = { qIdx: 0, score: 0, hearts: 3, streak: 0, answered: false, wrongList: [] };
       const panel = document.getElementById('story-panel');
-      const dayNum = dayData === storyDay1 ? 1 : dayData === storyDay2 ? 2 : dayData === storyDay3 ? 3 : dayData === storyDay4 ? 4 : 5;
-      const startLabel = dayNum === 1 ? '📡 開始！衛廣法の試練' : dayNum === 2 ? '⚖️ 開始！公平法戰場' : dayNum === 3 ? '🤳 開始！網紅廣告法' : dayNum === 4 ? '🛡️ 開始！消保法迷宮' : '💻 開始！電商廣告戰場';
+      const dayNum = dayData === storyDay1 ? 1 : dayData === storyDay2 ? 2 : dayData === storyDay3 ? 3 : dayData === storyDay4 ? 4 : dayData === storyDay5 ? 5 : 6;
+      const startLabel = dayNum === 1 ? '📡 開始！衛廣法の試練' : dayNum === 2 ? '⚖️ 開始！公平法戰場' : dayNum === 3 ? '🤳 開始！網紅廣告法' : dayNum === 4 ? '🛡️ 開始！消保法迷宮' : dayNum === 5 ? '💻 開始！電商廣告戰場' : '💕 開始！廣電法告白之夜';
+      const isOtome = dayData.type === 'otome' && storyOtomeRoute;
+      const route = isOtome ? dayData.routes[storyOtomeRoute] : null;
+      const heartsLabel = isOtome ? route.character + '好感度' : '主任好感度';
+      const headerStyle = isOtome ? 'background:linear-gradient(135deg,#1a0533 0%,#6b0059 50%,#a0006a 100%);' : '';
 
       panel.innerHTML = `
-    <div class="story-day-header">
+    <div class="story-day-header" style="${headerStyle}">
       <div style="font-size:0.78em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${dayData.daySubtitle}</div>
-      <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">${dayData.dayTitle}</div>
+      <div style="font-size:1.2em;font-weight:bold;letter-spacing:2px;">${isOtome ? '💕 ' : ''}${dayData.dayTitle}${isOtome ? ' ── ' + route.label : ''}</div>
     </div>
     <div class="story-intro-box" id="story-intro">
-      <div style="font-size:0.88em;color:rgba(255,215,180,0.9);white-space:pre-line;line-height:1.95;">${dayData.dayIntro}</div>
+      <div style="font-size:0.88em;color:rgba(255,215,180,0.9);white-space:pre-line;line-height:1.95;">${dayData.dayIntro}${isOtome && route.introLine ? '\n\n' + route.character + '：「' + route.introLine + '」' : ''}</div>
       <button class="story-next-btn" style="display:block;margin-top:16px;" onclick="storyDismissIntro()">${startLabel}</button>
     </div>
     <div id="story-game" style="display:none;">
       <div class="story-status-bar">
         <div>
-          <div style="font-size:0.72em;color:rgba(255,215,180,0.6);font-weight:bold;margin-bottom:3px;">主任好感度</div>
+          <div style="font-size:0.72em;color:rgba(255,215,180,0.6);font-weight:bold;margin-bottom:3px;">${heartsLabel}</div>
           <div class="story-hearts" id="s-hearts">${sHearts(3)}</div>
         </div>
         <div style="text-align:center;">
@@ -5004,18 +5377,23 @@
            <span class="story-mc-label">${S_LABELS[i]}</span><span>${o}</span>
          </button>`).join('')}</div>`;
 
-      const char = getCharacter(q.client);
-      const charColor = char ? char.color : '#9b59b6';
-      const charAvatar = char ? char.avatar : '';
-      const charTitle = char ? char.title : '';
+      // 乙女模式：從路線設定取角色；一般模式：從題目取角色
+      const isOtome = day.type === 'otome' && storyOtomeRoute;
+      const route = isOtome ? day.routes[storyOtomeRoute] : null;
+      const displayClient = isOtome ? route.character : q.client;
+      const displayLine   = isOtome ? q.routeLine[storyOtomeRoute] : q.clientLine;
+      const char = isOtome ? storyCharacters[route.character] : getCharacter(q.client);
+      const charColor  = isOtome ? route.color : (char ? char.color : '#9b59b6');
+      const charAvatar = isOtome ? route.avatarNormal : (char ? char.avatar : '');
+      const charTitle  = char ? char.title : '';
       const bg = getSceneBackground(q.setup);
 
-      // 2026-05-31 角色立繪重新去背（rembg），加版本參數強制刷新瀏覽器快取
+      // 角色立繪加版本參數強制刷新瀏覽器快取
       const AVATAR_VER = '20260531';
       const bust = (p) => p + (p.includes('?') ? '&' : '?') + 'v=' + AVATAR_VER;
       const spriteHTML = charAvatar
         ? `<div class="story-vn-sprite">
-         <img src="${bust(charAvatar)}" alt="${q.client}" onerror="this.parentElement.style.display='none'" />
+         <img src="${bust(charAvatar)}" alt="${displayClient}" onerror="this.parentElement.style.display='none'" />
        </div>`
         : '';
       const miniHTML = charAvatar
@@ -5037,10 +5415,10 @@
         <div class="story-vn-namerow">
           ${miniHTML}
           <span class="story-vn-namebox" style="background:${charColor}">
-            ${q.client}${charTitle ? `<span class="story-vn-title">${charTitle}</span>` : ''}
+            ${displayClient}${charTitle ? `<span class="story-vn-title">${charTitle}</span>` : ''}
           </span>
         </div>
-        <div class="story-vn-line">${q.clientLine}</div>
+        <div class="story-vn-line">${displayLine}</div>
         <div class="story-vn-dbox-arrow"></div>
       </div>
     </div>
@@ -5083,18 +5461,26 @@
     }
 
     function storyProcess(ok, q) {
+      const isOtome = currentDay.type === 'otome' && storyOtomeRoute;
+      const route = isOtome ? currentDay.routes[storyOtomeRoute] : null;
       if (ok) {
         storyState.score++;
         storyState.streak++;
+        if (storyState.hearts < 3) storyState.hearts = Math.min(S_MAX_HEARTS, storyState.hearts + 1);
         if (storyState.streak === 3) {
           storyState.hearts = Math.min(S_MAX_HEARTS, storyState.hearts + 1);
-          const msgs = [
-            '🎉 【幸運事件】阿肥端來咖啡：「學長！連對三題！拿鐵是我親手泡的！」',
-            '🎉 【幸運事件】主任突然說：「表現不錯，下午可以早走五分鐘。」',
-            '🎉 【幸運事件】酸酸難得說了句：「……今天狀態還可以。」（這大概是她能說出口最好的讚美了。）'
-          ];
           const el = document.getElementById('s-lucky');
-          el.textContent = sRand(msgs); el.style.display = 'block';
+          if (isOtome) {
+            el.textContent = route.luckyMsg;
+          } else {
+            const msgs = [
+              '🎉 【幸運事件】阿肥端來咖啡：「學長！連對三題！拿鐵是我親手泡的！」',
+              '🎉 【幸運事件】主任突然說：「表現不錯，下午可以早走五分鐘。」',
+              '🎉 【幸運事件】酸酸難得說了句：「……今天狀態還可以。」（這大概是她能說出口最好的讚美了。）'
+            ];
+            el.textContent = sRand(msgs);
+          }
+          el.style.display = 'block';
         }
       } else {
         storyState.streak = 0;
@@ -5107,12 +5493,16 @@
       const badge = ok
         ? '✅ 答對了！'
         : `❌ 答錯了！正確答案：${q.type === 'tf' ? (q.ans === 'O' ? '○ 正確' : '✕ 錯誤') : S_LABELS[q.ans] + '. ' + q.options[q.ans]}`;
+      // 乙女模式使用路線專屬反應文字；一般模式用題目自帶陣列
+      const reactions = isOtome
+        ? (ok ? q.correctR[storyOtomeRoute] : q.wrongR[storyOtomeRoute])
+        : (ok ? q.correctR : q.wrongR);
       const react = document.getElementById('s-react');
       react.className = 'story-reaction-box ' + (ok ? 'sreact-correct' : 'sreact-wrong');
       react.style.display = 'block';
       react.innerHTML = `
     <div class="story-reaction-badge">${badge}</div>
-    <div class="story-reaction-line">${sRand(ok ? q.correctR : q.wrongR)}</div>
+    <div class="story-reaction-line">${sRand(reactions)}</div>
     <div class="story-exp-box">${q.exp}</div>`;
       document.getElementById('s-next').style.display = 'block';
       setTimeout(() => { react.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
@@ -5144,17 +5534,13 @@
       if (introEl) introEl.style.display = 'none';
       const total = currentDay.questions.length;
       const score = storyState.score;
-      const pct = score / total;
       const hearts = storyState.hearts;
-      let verdict;
-      if (pct >= 0.9) verdict = hearts >= 4 ? '🏆 主任要給你加薪！（才怪，但至少今天沒被開除，而且主任心情很好！）' : '🏆 優秀！今晚可以正常下班！';
-      else if (pct >= 0.7) verdict = '🎯 還算能看的新人，至少沒讓事務所被客訴。繼續加油。';
-      else if (pct >= 0.5) verdict = '📖 勉強沒被開除，但主任說你明天要寫三份反省書。';
-      else verdict = '💀 王鐵嘴主任：「你確定你有法學院畢業嗎？！我要查你的畢業證書真偽！」';
+      const endEl = document.getElementById('s-end');
+      endEl.style.display = 'block';
 
       const recapHTML = storyState.wrongList.length > 0 ? `
     <div class="story-end-recap">
-      <strong>📋 今日錯題回顧（酸酸毒舌版）：</strong><br><br>
+      <strong>📋 今日法條回顧：</strong><br><br>
       ${storyState.wrongList.map(w => `
         <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.15);">
           <span style="opacity:0.7;font-size:0.85em;">第 ${w.no} 題</span><br>${w.q}<br>
@@ -5162,9 +5548,42 @@
         </div>`).join('')}
     </div>` : '';
 
-      const endEl = document.getElementById('s-end');
-      endEl.style.display = 'block';
-      const dayLabel = currentDay === storyDay1 ? 'Day 1' : currentDay === storyDay2 ? 'Day 2' : currentDay === storyDay3 ? 'Day 3' : currentDay === storyDay4 ? 'Day 4' : 'Day 5';
+      // ── 乙女模式：依好感度顯示三種結局 ──
+      const isOtome = currentDay.type === 'otome' && storyOtomeRoute;
+      if (isOtome) {
+        const route = currentDay.routes[storyOtomeRoute];
+        const endKey = hearts >= 4 ? 'good' : hearts >= 2 ? 'normal' : 'bad';
+        const ending = route.endings[endKey];
+        const endClass = endKey === 'good' ? 'otome-good-end' : endKey === 'normal' ? 'otome-normal-end' : 'otome-bad-end';
+        const AVATAR_VER = '20260531';
+        const bust = (p) => p + (p.includes('?') ? '&' : '?') + 'v=' + AVATAR_VER;
+        const avatarSrc = endKey === 'good' ? route.avatarHappy : route.avatarNormal;
+        endEl.innerHTML = `
+    <div class="${endClass}">
+      ${early ? '<div style="font-size:0.82em;opacity:0.7;margin-bottom:10px;color:rgba(255,255,255,0.6);">（提前離場）</div>' : ''}
+      <div class="otome-end-type-label">${ending.title}</div>
+      <img src="${bust(avatarSrc)}" class="otome-end-avatar" alt="${route.character}" onerror="this.style.display='none'" />
+      <div style="font-size:0.82em;color:rgba(255,200,220,0.7);margin-bottom:12px;">得分：${score} / ${total}　${sHearts(hearts)}</div>
+      <div class="otome-end-text">${ending.text}</div>
+    </div>
+    ${recapHTML}
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px;">
+      <button class="story-restart-btn" onclick="storyOtomeRoute=null;startStoryDay(currentDay)">💕 重新選擇路線</button>
+      <button class="story-restart-btn" onclick="storyOtomeRoute=null;initStoryMode()">📋 選擇關卡</button>
+    </div>`;
+        endEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // ── 一般模式結算 ──
+      const pct = score / total;
+      let verdict;
+      if (pct >= 0.9) verdict = hearts >= 4 ? '🏆 主任要給你加薪！（才怪，但至少今天沒被開除，而且主任心情很好！）' : '🏆 優秀！今晚可以正常下班！';
+      else if (pct >= 0.7) verdict = '🎯 還算能看的新人，至少沒讓事務所被客訴。繼續加油。';
+      else if (pct >= 0.5) verdict = '📖 勉強沒被開除，但主任說你明天要寫三份反省書。';
+      else verdict = '💀 王鐵嘴主任：「你確定你有法學院畢業嗎？！我要查你的畢業證書真偽！」';
+
+      const dayLabel = currentDay === storyDay1 ? 'Day 1' : currentDay === storyDay2 ? 'Day 2' : currentDay === storyDay3 ? 'Day 3' : currentDay === storyDay4 ? 'Day 4' : currentDay === storyDay5 ? 'Day 5' : 'Day 6';
       endEl.innerHTML = `
     <div class="story-end-title">${dayLabel} 結束！</div>
     ${early ? '<div style="font-size:0.82em;opacity:0.7;margin-bottom:10px;">（提前離場）</div>' : ''}

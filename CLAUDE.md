@@ -138,8 +138,10 @@
 | Day 3 | `storyDay3` | 薦證廣告規範・比較廣告・警告函處理原則・網路廣告基礎 | 10 | 美妝直播主圈圈 |
 | Day 4 | `storyDay4` | 消費者保護法・通訊交易・定型化契約・懲罰性賠償 | 10 | 消保官蘇主任 |
 | Day 5 | `storyDay5` | 網路廣告§4§10・廣告不實認定§5/§6/§7/§8・警告函§3・公平法§24/§42 | 10 | 葉小編（網拍主理人）、陳董（同業科技公司董事長） |
+| Day 6 | `storyDay6` | 廣播電視法§19/§23/§44・廣電法施行細則§19/§20/§22・有線廣電法§24/§25/§27 | 10 | **乙女路線**：王鐵嘴主任／林法務／林酸酸／阿肥（玩家開局選擇路線） |
 
 > Day 5 是 Day 3 的進階版：Day 3 涵蓋薦證／比較／警告函的入門級條文，Day 5 改聚焦在「廣告不實認定四條」（§5虛偽不實/§6引人錯誤/§7廣告認定/§8代理業認定）以及警告函§3 專利先行程序、營業誹謗（§24 vs §25）等更細節的考點。
+> Day 6 為**乙女遊戲主題**（`type: 'otome'`）：開局選擇4種攻略角色（傲嬌霸道型・溫柔守護型・腹黑神祕型・年下直球型），各路線有獨立台詞（`routeLine`）、反應（`correctR`/`wrongR` 為物件非陣列）、幸運事件（`luckyMsg`）、三種結局（好感度≥4 Good End / 2-3 Normal End / ≤1 Bad End）。
 
 ### 固定角色陣容
 | 角色 | 功能 |
@@ -212,7 +214,7 @@ function getCharacter(name) → storyCharacters 物件 | null
 > ⚠️ **圖片路徑**：期中 `./images/`，期末 `../images/`（final/ 子目錄，需往上一層）
 > 💡 Day 5 新角色（葉小編、陳董）沿用先前 commit 的「表情變體圖」（`shopping_confident.png`、`boss_happy.png`）作為新角色立繪，不需額外生圖。
 
-### 新增 Day（正確流程，2026-06-03 確認）
+### 新增普通 Day（正確流程，2026-06-03 確認）
 1. 在現有 `storyDayN` **之後**新增 `const storyDay(N+1) = { ... }`
 2. 在 `initStoryMode()` 的關卡選擇按鈕區加一顆按鈕：
    ```html
@@ -222,6 +224,20 @@ function getCharacter(name) → storyCharacters 物件 | null
 4. 在 `storyShowEnd()` 的 `dayLabel` 三元表達式末尾加入新 Day 對應
 5. 把新客戶角色加入 `storyCharacters`（圖片路徑 `../images/xxx.png`）
 6. （若沿用既有表情變體 PNG）確認該 PNG 已在 git 內，若未 commit 則一併 `git add images/xxx.png`
+
+### 新增乙女 Day（Day 6 架構，2026-06-04 新增）
+乙女 Day 的資料結構與一般 Day 不同：
+- `type: 'otome'` 標記此 Day 為乙女模式
+- `routes` 物件：4 個路線（key: `tsundere`/`gentle`/`cunning`/`junior`），每個路線含：
+  - `character`（角色名）、`label`（路線名稱）、`subtitle`（說明）
+  - `avatarNormal`/`avatarHappy`（圖片路徑）、`color`（名牌底色）
+  - `introLine`（開場台詞）、`luckyMsg`（連對3題幸運事件）
+  - `endings.good`/`.normal`/`.bad`（三種結局文字）
+- 每道題目的 `correctR`/`wrongR` 為**物件**（key 為路線 key），而非陣列
+- 每道題目有 `routeLine` 物件（key 為路線 key），取代 `clientLine`
+- 不需在 `storyCharacters` 加新角色（路線設定已含圖片路徑）
+- 程式邏輯：`startStoryDay` 偵測 `type==='otome'` 且無路線時 → 呼叫 `showOtomeRouteSelect()`；玩家選路線後呼叫 `selectOtomeRoute()` → 再次 `startStoryDay`
+- 結局判定：好感度（hearts）≥4 → Good End，2-3 → Normal End，≤1 → Bad End
 
 ### 好感度邏輯
 - 答對：streak++；連對 3 題 → hearts+1（幸運事件）；hearts < 3 時答對也 +1
