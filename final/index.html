@@ -2177,7 +2177,7 @@
       <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
       <button class="mode-btn" id="btn-mode-fill" onclick="switchMode('fill')">✏️ 填空題</button>
       <button class="mode-btn" id="btn-mode-map" onclick="switchMode('map')" style="display:none">🗺️ 概念地圖</button>
-      <button class="mode-btn" id="btn-mode-story" onclick="switchMode('story')" style="display:none">🎭 劇情模式</button>
+      <button class="mode-btn" id="btn-mode-story" onclick="switchMode('story')">🎭 劇情模式</button>
     </div>
   </div>
   <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
@@ -3238,7 +3238,6 @@
     if (isUnlocked) {
       document.querySelector('.exam-header h1').innerHTML = '廣告法規期末考 <span style="font-size:0.6em;opacity:0.8;">🔓</span>';
       document.getElementById('btn-mode-map').style.display = '';
-      document.getElementById('btn-mode-story').style.display = '';
     }
 
     /* ─── 匿名答題追蹤 ─── */
@@ -3327,7 +3326,7 @@
       document.querySelector('.exam-header').style.display = (isStory || isMap) ? 'none' : '';
 
       if (isStory) {
-        document.getElementById('mode-desc').textContent = '🔒 限密碼解鎖者遊玩・菜鳥律師小廣的廣告法求生記';
+        document.getElementById('mode-desc').textContent = '菜鳥律師小廣的廣告法求生記';
         resetAll();
         return;
       }
@@ -4747,21 +4746,6 @@
     /* ── 初始化：顯示關卡選擇 ── */
     function initStoryMode() {
       const panel = document.getElementById('story-panel');
-
-      /* 密碼鎖 */
-      if (!isUnlocked) {
-        panel.innerHTML = `
-      <div class="story-day-header">
-        <div style="font-size:0.8em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${storyDay1.daySubtitle}</div>
-        <div style="font-size:1.25em;font-weight:bold;letter-spacing:2px;">${storyDay1.dayTitle}</div>
-      </div>
-      <div class="story-lock-box">
-        <div style="font-size:2.5em;margin-bottom:12px;">🔒</div>
-        <div style="font-size:1.1em;font-weight:bold;color:#6c3483;margin-bottom:8px;">劇情模式限密碼解鎖者遊玩</div>
-        <div style="font-size:0.88em;color:#7f8c8d;line-height:1.8;">請在網址後方加上密碼參數<br><code style="background:#f0e6f9;padding:2px 8px;border-radius:4px;color:#6c3483;">?key=（密碼）</code><br>解鎖後即可進入小廣的求生日常！</div>
-      </div>`;
-        return;
-      }
 
       /* 關卡選擇畫面 */
       panel.innerHTML = `
