@@ -4546,7 +4546,7 @@
       // 解鎖後：若有錯題或猜題則顯示「匯出」按鈕
       const exportWrap = document.getElementById('export-wrong-wrap');
       const wrongCnt = countWrongForExport();
-      if (isUnlocked && wrongCnt > 0) {
+      if (wrongCnt > 0) {
         document.getElementById('btn-export-wrong').textContent = `📋 匯出錯題＋猜題（共 ${wrongCnt} 題，複習用）`;
         exportWrap.style.display = 'block';
       } else {
@@ -4782,7 +4782,6 @@
     }
 
     function exportWrongAnswers() {
-      if (!isUnlocked) { alert('此功能需解鎖後才能使用。'); return; }
       const text = buildWrongExportText();
       document.getElementById('export-text').value = text;
       document.getElementById('export-modal-mask').classList.add('show');
@@ -6574,11 +6573,9 @@
         const finalDiv = document.getElementById('cm-final');
         finalDiv.style.display = 'block';
         let html = `<div class="cm-final-summary">本概念 ${total} 題答對 ${right} 題（${pct}%）<br>${msg}</div>`;
-        if (isUnlocked) {
-          const reviewCnt = cmCurrentQs.filter((_, j) => !cmCorrectFlags[j] || cmGuessFlags[j]).length;
-          if (reviewCnt > 0) {
-            html += `<div class="cm-export-wrap"><button class="cm-export-btn" onclick="cmExportWrongAnswers()">📋 匯出錯題＋猜題（共 ${reviewCnt} 題，複習用）</button></div>`;
-          }
+        const reviewCnt = cmCurrentQs.filter((_, j) => !cmCorrectFlags[j] || cmGuessFlags[j]).length;
+        if (reviewCnt > 0) {
+          html += `<div class="cm-export-wrap"><button class="cm-export-btn" onclick="cmExportWrongAnswers()">📋 匯出錯題＋猜題（共 ${reviewCnt} 題，複習用）</button></div>`;
         }
         finalDiv.innerHTML = html;
       }
@@ -6697,7 +6694,6 @@
     }
 
     function cmExportWrongAnswers() {
-      if (!isUnlocked) { alert('此功能需解鎖後才能使用。'); return; }
       document.getElementById('export-text').value = cmBuildExportText();
       document.getElementById('export-modal-mask').classList.add('show');
       document.getElementById('copy-status').classList.remove('show');
