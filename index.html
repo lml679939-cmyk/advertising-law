@@ -63,6 +63,39 @@
       min-height: 1.4em;
     }
 
+    /* ── 題目來源篩選按鈕 ── */
+    .filter-toggle-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: -12px;
+      margin-bottom: 14px;
+    }
+    .filter-toggle {
+      display: inline-flex;
+      background: #eef2f7;
+      border-radius: 24px;
+      padding: 3px;
+      gap: 3px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .filter-btn {
+      padding: 5px 16px;
+      border-radius: 20px;
+      border: none;
+      background: transparent;
+      font-size: 0.82em;
+      font-weight: bold;
+      cursor: pointer;
+      color: #7f8c8d;
+      transition: all 0.2s;
+      font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    }
+    .filter-btn.active {
+      background: white;
+      color: #1a3c6e;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.12);
+    }
+
     /* ── Header ── */
     .exam-header {
       background: linear-gradient(135deg, #1a3c6e, #2e6da4);
@@ -1612,7 +1645,14 @@
       <button class="mode-btn" id="btn-mode-classic" onclick="switchMode('classic')">📝 傳統模式</button>
       <button class="mode-btn" id="btn-mode-mc" onclick="switchMode('mc')">📋 選擇題</button>
       <button class="mode-btn" id="btn-mode-fill" onclick="switchMode('fill')">✏️ 填空題</button>
-      <button class="mode-btn" id="btn-mode-story" onclick="switchMode('story')" style="display:none;">🎭 劇情模式</button>
+      <button class="mode-btn" id="btn-mode-story" onclick="switchMode('story')">🎭 劇情模式</button>
+    </div>
+  </div>
+  <div class="filter-toggle-wrap" id="filter-toggle-wrap">
+    <div class="filter-toggle">
+      <button class="filter-btn active" id="btn-filter-all" onclick="switchFilter('all')">全部題目</button>
+      <button class="filter-btn" id="btn-filter-past" onclick="switchFilter('past')">📚 考古題</button>
+      <button class="filter-btn" id="btn-filter-ai" onclick="switchFilter('ai')">🤖 AI生成題目</button>
     </div>
   </div>
   <div class="mode-desc" id="mode-desc">答題後立即顯示對錯與詳解，隨時掌握學習進度</div>
@@ -1720,50 +1760,50 @@
       { q: "54. 國家通訊傳播委員會組織法第8條第三項規定：「本會委員於其離職後三年內，不得擔任與其離職前五年內之職務直接相關之營利事業董事、監察人、經理、執行業務之股東或顧問。」", ans: "O", exp: "<span class='law-ref'>NCC組織法第8條第3項</span>確實規定旋轉門條款：委員<strong>離職後三年內</strong>，不得擔任與其<strong>離職前五年內</strong>之職務直接相關之營利事業董事、監察人、經理、執行業務之股東或顧問。此為防止委員利用任職期間知識或人脈，離職後為相關企業服務。故為<strong>○（正確）</strong>。", page: "p.56" },
 
       /* ── 以下為隱藏是非題（對應隱藏選擇題知識點）── */
-      { q: "藥事法第2條規定，中央衛生主管機關為行政院衛生署。", ans: "X", exp: "<span class='law-ref'>藥事法第2條</span>規定，本法所稱衛生主管機關：在中央為<strong>衛生福利部</strong>（非行政院衛生署，已改制）；在直轄市為直轄市政府；在縣（市）為縣（市）政府。故答案為<strong>✕（錯誤）</strong>。", page: "p.25", hidden: true },
-      { q: "藥事法第2條規定，在直轄市層級，衛生主管機關為直轄市衛生局。", ans: "X", exp: "<span class='law-ref'>藥事法第2條</span>規定，直轄市層級之衛生主管機關為<strong>直轄市政府</strong>，而非「直轄市衛生局」。注意是整個「政府」，而非其下屬機關。故答案為<strong>✕（錯誤）</strong>。", page: "p.25", hidden: true },
-      { q: "藥事法第24條規定，藥物廣告係指利用傳播方法，宣傳藥物品牌，以達提升知名度為目的之行為。", ans: "X", exp: "<span class='law-ref'>藥事法第24條</span>規定，藥物廣告係指利用傳播方法，宣傳<strong>醫療效能</strong>，以達<strong>招徠銷售</strong>為目的之行為。本題將「醫療效能」改為「藥物品牌」、將「招徠銷售」改為「提升知名度」，兩處均錯。故答案為<strong>✕（錯誤）</strong>。", page: "p.25", hidden: true },
-      { q: "藥事法第27條規定，申請為藥商者，應向中央衛生主管機關申請核准登記。", ans: "X", exp: "<span class='law-ref'>藥事法第27條</span>規定，申請為藥商者，應向<strong>直轄市或縣（市）衛生主管機關</strong>申請核准登記，繳納執照費，領得許可執照後方准營業。屬地方層級，非中央。故答案為<strong>✕（錯誤）</strong>。", page: "p.25", hidden: true },
-      { q: "藥事法第65條規定，醫療機構如有需要，亦得為藥物廣告。", ans: "X", exp: "<span class='law-ref'>藥事法第65條</span>明確規定：<strong>非藥商不得為藥物廣告</strong>。醫療機構並非藥商，故不得刊播藥物廣告。故答案為<strong>✕（錯誤）</strong>。", page: "p.26", hidden: true },
-      { q: "藥事法第66條第4項規定，傳播業者接受委託刊播藥物廣告後，應自廣告之日起一年保存委託者相關資料。", ans: "X", exp: "<span class='law-ref'>藥事法第66條第4項</span>規定，傳播業者應自廣告之日起<strong>六個月</strong>保存委託刊播廣告者之相關資料。本題將「六個月」誤改為「一年」。故答案為<strong>✕（錯誤）</strong>。", page: "p.26", hidden: true },
-      { q: "藥事法第66條第3項規定，傳播業者不得刊播已廢止之藥物廣告，但與核准事項不符之廣告仍可刊播。", ans: "X", exp: "<span class='law-ref'>藥事法第66條第3項</span>禁止傳播業者刊播的情形包括：①未經核准、②<strong>與核准事項不符</strong>、③已廢止、④經令停止刊播而尚未改善。與核准事項不符同屬禁止刊播範圍，本題說法錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.26", hidden: true },
-      { q: "藥事法第92條規定，違反第27條（未經核准登記即營業）者，罰鍰為新臺幣二十萬元以上五百萬元以下。", ans: "X", exp: "<span class='law-ref'>藥事法第92條</span>規定，違反第27條或第75條者，罰鍰為<strong>新臺幣三萬元以上二百萬元以下</strong>，本題金額有誤（二十萬至五百萬是違反第66條的罰則）。故答案為<strong>✕（錯誤）</strong>。", page: "p.28", hidden: true },
-      { q: "藥事法第93條規定，違反第28條等藥物管理規定者，罰鍰為新臺幣三萬元以上五百萬元以下。", ans: "O", exp: "<span class='law-ref'>藥事法第93條</span>規定，違反特定藥物/器材管理規定者，處新臺幣<strong>三萬元以上五百萬元以下</strong>罰鍰。本題正確，故為<strong>○（正確）</strong>。", page: "p.28", hidden: true },
-      { q: "藥事法第95條第1項規定，傳播業者違反第66條第3項，初次違反即處新臺幣六十萬元以上二千五百萬元以下罰鍰。", ans: "X", exp: "<span class='law-ref'>藥事法第95條第1項</span>規定，傳播業者初次違反第66條第3項，處<strong>新臺幣二十萬元以上五百萬元以下</strong>罰鍰；須經通知後<strong>仍繼續刊播</strong>，才加重處六十萬元以上二千五百萬元以下。本題將加重罰則誤套用於初次違反。故答案為<strong>✕（錯誤）</strong>。", page: "p.28-29", hidden: true },
-      { q: "在法律上，「視為」與「推定」相同，當事人均可舉反證推翻其效果。", ans: "X", exp: "「<strong>視為</strong>」：直接規定一定效果，<strong>不容許</strong>當事人舉證推翻（鐵板釘釘）。「<strong>推定</strong>」：假設一定效果，<strong>容許</strong>當事人舉證推翻（可翻案）。兩者核心差異在於是否允許反證，本題說兩者相同，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.30", hidden: true },
-      { q: "在法律上，「視為」係為避免舉證困難而設，「推定」係為保護社會公益而設。", ans: "X", exp: "兩者定義完全顛倒：「<strong>推定</strong>」係為<strong>避免舉證困難</strong>而設，容許反證；「<strong>視為</strong>」係為<strong>保護社會公益</strong>而設，不容反證。本題將兩者說法互換，故答案為<strong>✕（錯誤）</strong>。", page: "p.30", hidden: true },
-      { q: "藥事法第75條規定，藥物標籤、仿單或包裝應刊載市場售價及折扣資訊。", ans: "X", exp: "<span class='law-ref'>藥事法第75條</span>規定藥物標籤必載事項包括廠商名稱、品名、許可證字號、批號、製造日期、有效期間、主要成分含量用法、主治效能、副作用禁忌等。<strong>市場售價及折扣</strong>並非法定必要刊載項目。故答案為<strong>✕（錯誤）</strong>。", page: "p.26", hidden: true },
-      { q: "比例原則中的「必要性原則」，係指手段與目的之間必須合乎比例，不得以過強手段達成低重要性目的。", ans: "X", exp: "本題描述的是「<strong>衡平性原則（狹義比例原則）</strong>」的內涵，而非必要性原則。比例原則三子原則：①適當性：手段有助目的；②<strong>必要性</strong>：<strong>選擇對人民侵害最小的手段</strong>；③衡平性：手段與目的合乎比例。故答案為<strong>✕（錯誤）</strong>。", page: "p.7, 13", hidden: true },
-      { q: "藥事法第66條第1項規定，藥商刊播藥物廣告前，應向中央或直轄市衛生主管機關核准，並向傳播業者送驗核准文件。", ans: "O", exp: "<span class='law-ref'>藥事法第66條第1項</span>完整程序：藥商應於刊播前①向<strong>中央或直轄市衛生主管機關</strong>核准，②向<strong>傳播業者送驗核准文件</strong>。本題正確，故為<strong>○（正確）</strong>。", page: "p.26", hidden: true },
-      { q: "依民法第154條規定，寄送價目表屬於「要約」，受取人承諾即可成立契約。", ans: "X", exp: "民法第154條第2項規定：寄送<strong>價目表</strong>及其他類似行為，屬「<strong>要約之引誘</strong>」，非要約本身。企業保留是否接受的決定權。反之，<strong>貨架上標定賣價陳列</strong>才「視為要約」，消費者付錢即成立契約。故答案為<strong>✕（錯誤）</strong>。", page: "p.30", hidden: true },
-      { q: "網購平臺上的商品標價，在法律性質上屬於「要約」，業者一經標價即不得拒絕消費者下單。", ans: "X", exp: "網購平臺標價在法律上屬於「<strong>要約之引誘</strong>」，消費者下單只是「提出要約」，業者仍保留是否承諾的決定權。因此標錯價時，業者可主張契約尚未成立。反之，實體<strong>貨架標定賣價陳列</strong>才「視為要約」。故答案為<strong>✕（錯誤）</strong>。", page: "p.30", hidden: true },
-      { q: "大法官釋字第414號解釋認為，藥物廣告事前審查制度違反比例原則，應予廢除。", ans: "X", exp: "<span class='law-ref'>釋字第414號</span>認為，藥物廣告因牽涉<strong>國民生命健康與重大公共利益</strong>，規定事前審查是<strong>合憲</strong>的，並未違反比例原則。本題說法相反。故答案為<strong>✕（錯誤）</strong>。", page: "p.14", hidden: true },
-      { q: "大法官釋字第744號解釋認為，化粧品廣告事前審查制度與藥物廣告同屬合憲，均可維持。", ans: "X", exp: "<span class='law-ref'>釋字第744號</span>認為，化粧品屬一般日常用品，不會對生命健康產生直接立即危害，規定事前審查<strong>違反比例原則</strong>，被宣告<strong>違憲</strong>。與藥物廣告（釋字414合憲）結論<strong>相反</strong>。故答案為<strong>✕（錯誤）</strong>。", page: "p.34", hidden: true },
-      { q: "藥事法第69條規定，非本法所稱之藥物，不得為醫療效能之標示或宣傳；違反者依第91條處新臺幣六十萬元以上二千五百萬元以下罰鍰。", ans: "O", exp: "<span class='law-ref'>藥事法第91條第2項</span>：違反第69條（非藥物宣稱醫療效能）者，處新臺幣<strong>六十萬元以上二千五百萬元以下</strong>罰鍰，且得按次連續處罰。此為藥事法中最重級距的罰鍰。本題正確，故為<strong>○（正確）</strong>。", page: "p.27-28", hidden: true },
-      { q: "一般保健食品宣稱可治療疾病，違反藥事法第69條，最高可處新臺幣一千萬元罰鍰。", ans: "X", exp: "依<span class='law-ref'>藥事法第91條第2項</span>，違反第69條（非藥物宣稱醫療效能）最高罰鍰為<strong>新臺幣二千五百萬元</strong>，並非一千萬元。此為藥事法最嚴厲的罰則級距。故答案為<strong>✕（錯誤）</strong>。", page: "p.27-28", hidden: true },
-      { q: "依化粧品衛生安全管理法規定，民眾檢舉違規化粧品廣告，主管機關應發給罰鍰實收金額百分之十作為檢舉獎金。", ans: "X", exp: "依化粧品衛生安全管理法規定，民眾檢舉違規化粧品，主管機關應發給至少罰鍰實收金額<strong>百分之五（5%）</strong>作為檢舉獎金，並非10%。故答案為<strong>✕（錯誤）</strong>。", page: "p.51", hidden: true },
-      { q: "電視節目廣告區隔辦法第8條規定，菸品禁止置入性行銷，但酒類並未被列入置入禁止清單。", ans: "X", exp: "<span class='law-ref'>電視節目廣告區隔辦法第8條</span>明文禁止以下商品進行置入性行銷：菸品、<strong>酒類</strong>、跨國境婚姻媒合、須醫師處方藥物、法令禁止販賣之商品。<strong>酒類也禁止置入</strong>，本題說法錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.74-75", hidden: true },
-      { q: "電視節目廣告區隔辦法規定，酒類既禁止置入性行銷，也禁止贊助。", ans: "X", exp: "依電視節目廣告區隔辦法：第8條（置入）：酒類列入<strong>禁止</strong>清單→<strong>不可置入</strong>；第13條（贊助）：酒類<strong>未</strong>被列入禁止清單→<strong>可以贊助</strong>。酒類置入與贊助規範不對稱，本題說兩者都禁止，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.74-77", hidden: true },
-      { q: "依電視節目廣告區隔辦法，菸品禁止贊助，但酒類並未被列入贊助禁止名單，可以贊助節目。", ans: "O", exp: "依<span class='law-ref'>電視節目廣告區隔辦法第13條</span>（贊助禁止清單）：菸品、跨國境婚姻媒合、法令禁止販賣商品禁止贊助；<strong>酒類不在贊助禁止清單中</strong>，故可以贊助。本題正確，故為<strong>○（正確）</strong>。", page: "p.74-77", hidden: true },
-      { q: "電視節目廣告區隔辦法第12條規定，新聞節目完全禁止任何形式的贊助，包括提供播報道具及主播梳化粧等。", ans: "X", exp: "<span class='law-ref'>電視節目廣告區隔辦法第12條第1項</span>：新聞節目不得接受贊助及冠名贊助，但<strong>提供棚內播報之道具、主播及主持人梳化粧之贊助不在此限</strong>（例外許可）。本題遺漏此但書例外，故答案為<strong>✕（錯誤）</strong>。", page: "p.76", hidden: true },
-      { q: "依電視節目廣告區隔辦法規定，兒童節目禁止置入性行銷，但可接受冠名贊助。", ans: "X", exp: "依電視節目廣告區隔辦法：第7條禁止兒童節目進行<strong>置入性行銷</strong>；第12條第2項亦禁止兒童節目<strong>接受冠名贊助</strong>。兒童節目受最嚴格保護，置入與冠名贊助均禁止。故答案為<strong>✕（錯誤）</strong>。", page: "p.74-76", hidden: true },
-      { q: "依著作權法，著作人格權與著作財產權均可自由轉讓，廣告公司可將全部著作權讓與品牌方。", ans: "X", exp: "<strong>著作人格權</strong>（署名權、公開發表權等）依著作權法規定<strong>不得讓與或繼承</strong>，專屬於創作者本人。<strong>著作財產權</strong>（重製、播送等經濟利用權）則可自由轉讓或授權。本題說兩者均可轉讓，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.3", hidden: true },
-      { q: "廣告公司為品牌製作廣告後，品牌方若要取得完整使用權，應要求讓與著作人格權。", ans: "X", exp: "品牌方（業主）應要求讓與「<strong>著作財產權</strong>」（重製、公開播送、改作等經濟利用權）。<strong>著作人格權</strong>依法<strong>不得讓與</strong>，始終屬於創作者。實務上合約會另約定「不行使著作人格權」，但法律上人格權歸屬不變。故答案為<strong>✕（錯誤）</strong>。", page: "p.3", hidden: true },
-      { q: "在行政法上，「備查」與「核定」均需要主管機關進行實質審查，方可生效。", ans: "X", exp: "「<strong>核定</strong>」：上級機關須<strong>實質審查</strong>並作成決定後才具備法定效力。「<strong>備查</strong>」：只是<strong>觀念通知</strong>，讓主管機關知悉即可，陳報後即生效，無需等待審查批准。兩者性質根本不同，本題說兩者都需實質審查，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.72", hidden: true },
-      { q: "獨立機關雖然具有獨立超然的地位，但其做出的具體決策，仍必須接受行政院或其他行政機關在「適當性」與「合法性」上的實質監督。", ans: "X", exp: "依據獨立機關制度設計，獨立機關所做的決策<strong>不受</strong>行政院或其他行政機關的適當性和合法性監督。這正是獨立機關與一般行政機關最大的界線與差異，確保其能超然行使職權。故答案為<strong>✕（錯誤）</strong>。", page: "p.60", hidden: true },
-      { q: "國家通訊傳播委員會（NCC）、公平交易委員會、金融監督管理委員會與飛航安全調查委員會，依我國行政組織編制，皆屬於「二級獨立機關」。", ans: "X", exp: "國家通訊傳播委員會（NCC）、公平交易委員會、金融監督管理委員會等屬於<strong>二級獨立機關</strong>；而「<strong>飛航安全調查委員會</strong>」則屬於<strong>三級獨立機關</strong>，並非二級。本題將所有機關一律稱為二級，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.60", hidden: true },
-      { q: "《有線廣播電視法》第33條規定系統經營者「應」同時轉播無線電視台節目及廣告，此屬於「禁止規定」；第34條規定「不得」播送未經許可的頻道節目，則屬於「強制規定」。", ans: "X", exp: "兩者定義<strong>完全寫反</strong>！第33條要求系統經營者「應」轉播無線電視台節目（Must-carry義務），是必須遵守的「<strong>強制規定</strong>」；而第34條規定「不得」播送未經許可的節目，這才是「<strong>禁止規定</strong>」。強制規定＝應為；禁止規定＝不得為。故答案為<strong>✕（錯誤）</strong>。", page: "p.89", hidden: true },
-      { q: "依《衛星廣播電視法》更正請求權規定，若電視台認為報導無誤拒絕更正，主管機關（NCC）將主動介入並強制處罰該電視台。", ans: "X", exp: "利害關係人與業者之間的更正爭議，NCC<strong>不會</strong>主動介入。電視台若認為報導無誤，只要「<strong>附具理由書面答覆請求人</strong>」即可合法免責。<strong>僅當</strong>電視台完全未附理由書答覆請求人時，NCC才可依法介入並對業者開罰。故答案為<strong>✕（錯誤）</strong>。", page: "p.93", hidden: true },
+      { q: "藥事法第2條規定，中央衛生主管機關為行政院衛生署。", ans: "X", exp: "<span class='law-ref'>藥事法第2條</span>規定，本法所稱衛生主管機關：在中央為<strong>衛生福利部</strong>（非行政院衛生署，已改制）；在直轄市為直轄市政府；在縣（市）為縣（市）政府。故答案為<strong>✕（錯誤）</strong>。", page: "p.25", ai: true },
+      { q: "藥事法第2條規定，在直轄市層級，衛生主管機關為直轄市衛生局。", ans: "X", exp: "<span class='law-ref'>藥事法第2條</span>規定，直轄市層級之衛生主管機關為<strong>直轄市政府</strong>，而非「直轄市衛生局」。注意是整個「政府」，而非其下屬機關。故答案為<strong>✕（錯誤）</strong>。", page: "p.25", ai: true },
+      { q: "藥事法第24條規定，藥物廣告係指利用傳播方法，宣傳藥物品牌，以達提升知名度為目的之行為。", ans: "X", exp: "<span class='law-ref'>藥事法第24條</span>規定，藥物廣告係指利用傳播方法，宣傳<strong>醫療效能</strong>，以達<strong>招徠銷售</strong>為目的之行為。本題將「醫療效能」改為「藥物品牌」、將「招徠銷售」改為「提升知名度」，兩處均錯。故答案為<strong>✕（錯誤）</strong>。", page: "p.25", ai: true },
+      { q: "藥事法第27條規定，申請為藥商者，應向中央衛生主管機關申請核准登記。", ans: "X", exp: "<span class='law-ref'>藥事法第27條</span>規定，申請為藥商者，應向<strong>直轄市或縣（市）衛生主管機關</strong>申請核准登記，繳納執照費，領得許可執照後方准營業。屬地方層級，非中央。故答案為<strong>✕（錯誤）</strong>。", page: "p.25", ai: true },
+      { q: "藥事法第65條規定，醫療機構如有需要，亦得為藥物廣告。", ans: "X", exp: "<span class='law-ref'>藥事法第65條</span>明確規定：<strong>非藥商不得為藥物廣告</strong>。醫療機構並非藥商，故不得刊播藥物廣告。故答案為<strong>✕（錯誤）</strong>。", page: "p.26", ai: true },
+      { q: "藥事法第66條第4項規定，傳播業者接受委託刊播藥物廣告後，應自廣告之日起一年保存委託者相關資料。", ans: "X", exp: "<span class='law-ref'>藥事法第66條第4項</span>規定，傳播業者應自廣告之日起<strong>六個月</strong>保存委託刊播廣告者之相關資料。本題將「六個月」誤改為「一年」。故答案為<strong>✕（錯誤）</strong>。", page: "p.26", ai: true },
+      { q: "藥事法第66條第3項規定，傳播業者不得刊播已廢止之藥物廣告，但與核准事項不符之廣告仍可刊播。", ans: "X", exp: "<span class='law-ref'>藥事法第66條第3項</span>禁止傳播業者刊播的情形包括：①未經核准、②<strong>與核准事項不符</strong>、③已廢止、④經令停止刊播而尚未改善。與核准事項不符同屬禁止刊播範圍，本題說法錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.26", ai: true },
+      { q: "藥事法第92條規定，違反第27條（未經核准登記即營業）者，罰鍰為新臺幣二十萬元以上五百萬元以下。", ans: "X", exp: "<span class='law-ref'>藥事法第92條</span>規定，違反第27條或第75條者，罰鍰為<strong>新臺幣三萬元以上二百萬元以下</strong>，本題金額有誤（二十萬至五百萬是違反第66條的罰則）。故答案為<strong>✕（錯誤）</strong>。", page: "p.28", ai: true },
+      { q: "藥事法第93條規定，違反第28條等藥物管理規定者，罰鍰為新臺幣三萬元以上五百萬元以下。", ans: "O", exp: "<span class='law-ref'>藥事法第93條</span>規定，違反特定藥物/器材管理規定者，處新臺幣<strong>三萬元以上五百萬元以下</strong>罰鍰。本題正確，故為<strong>○（正確）</strong>。", page: "p.28", ai: true },
+      { q: "藥事法第95條第1項規定，傳播業者違反第66條第3項，初次違反即處新臺幣六十萬元以上二千五百萬元以下罰鍰。", ans: "X", exp: "<span class='law-ref'>藥事法第95條第1項</span>規定，傳播業者初次違反第66條第3項，處<strong>新臺幣二十萬元以上五百萬元以下</strong>罰鍰；須經通知後<strong>仍繼續刊播</strong>，才加重處六十萬元以上二千五百萬元以下。本題將加重罰則誤套用於初次違反。故答案為<strong>✕（錯誤）</strong>。", page: "p.28-29", ai: true },
+      { q: "在法律上，「視為」與「推定」相同，當事人均可舉反證推翻其效果。", ans: "X", exp: "「<strong>視為</strong>」：直接規定一定效果，<strong>不容許</strong>當事人舉證推翻（鐵板釘釘）。「<strong>推定</strong>」：假設一定效果，<strong>容許</strong>當事人舉證推翻（可翻案）。兩者核心差異在於是否允許反證，本題說兩者相同，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.30", ai: true },
+      { q: "在法律上，「視為」係為避免舉證困難而設，「推定」係為保護社會公益而設。", ans: "X", exp: "兩者定義完全顛倒：「<strong>推定</strong>」係為<strong>避免舉證困難</strong>而設，容許反證；「<strong>視為</strong>」係為<strong>保護社會公益</strong>而設，不容反證。本題將兩者說法互換，故答案為<strong>✕（錯誤）</strong>。", page: "p.30", ai: true },
+      { q: "藥事法第75條規定，藥物標籤、仿單或包裝應刊載市場售價及折扣資訊。", ans: "X", exp: "<span class='law-ref'>藥事法第75條</span>規定藥物標籤必載事項包括廠商名稱、品名、許可證字號、批號、製造日期、有效期間、主要成分含量用法、主治效能、副作用禁忌等。<strong>市場售價及折扣</strong>並非法定必要刊載項目。故答案為<strong>✕（錯誤）</strong>。", page: "p.26", ai: true },
+      { q: "比例原則中的「必要性原則」，係指手段與目的之間必須合乎比例，不得以過強手段達成低重要性目的。", ans: "X", exp: "本題描述的是「<strong>衡平性原則（狹義比例原則）</strong>」的內涵，而非必要性原則。比例原則三子原則：①適當性：手段有助目的；②<strong>必要性</strong>：<strong>選擇對人民侵害最小的手段</strong>；③衡平性：手段與目的合乎比例。故答案為<strong>✕（錯誤）</strong>。", page: "p.7, 13", ai: true },
+      { q: "藥事法第66條第1項規定，藥商刊播藥物廣告前，應向中央或直轄市衛生主管機關核准，並向傳播業者送驗核准文件。", ans: "O", exp: "<span class='law-ref'>藥事法第66條第1項</span>完整程序：藥商應於刊播前①向<strong>中央或直轄市衛生主管機關</strong>核准，②向<strong>傳播業者送驗核准文件</strong>。本題正確，故為<strong>○（正確）</strong>。", page: "p.26", ai: true },
+      { q: "依民法第154條規定，寄送價目表屬於「要約」，受取人承諾即可成立契約。", ans: "X", exp: "民法第154條第2項規定：寄送<strong>價目表</strong>及其他類似行為，屬「<strong>要約之引誘</strong>」，非要約本身。企業保留是否接受的決定權。反之，<strong>貨架上標定賣價陳列</strong>才「視為要約」，消費者付錢即成立契約。故答案為<strong>✕（錯誤）</strong>。", page: "p.30", ai: true },
+      { q: "網購平臺上的商品標價，在法律性質上屬於「要約」，業者一經標價即不得拒絕消費者下單。", ans: "X", exp: "網購平臺標價在法律上屬於「<strong>要約之引誘</strong>」，消費者下單只是「提出要約」，業者仍保留是否承諾的決定權。因此標錯價時，業者可主張契約尚未成立。反之，實體<strong>貨架標定賣價陳列</strong>才「視為要約」。故答案為<strong>✕（錯誤）</strong>。", page: "p.30", ai: true },
+      { q: "大法官釋字第414號解釋認為，藥物廣告事前審查制度違反比例原則，應予廢除。", ans: "X", exp: "<span class='law-ref'>釋字第414號</span>認為，藥物廣告因牽涉<strong>國民生命健康與重大公共利益</strong>，規定事前審查是<strong>合憲</strong>的，並未違反比例原則。本題說法相反。故答案為<strong>✕（錯誤）</strong>。", page: "p.14", ai: true },
+      { q: "大法官釋字第744號解釋認為，化粧品廣告事前審查制度與藥物廣告同屬合憲，均可維持。", ans: "X", exp: "<span class='law-ref'>釋字第744號</span>認為，化粧品屬一般日常用品，不會對生命健康產生直接立即危害，規定事前審查<strong>違反比例原則</strong>，被宣告<strong>違憲</strong>。與藥物廣告（釋字414合憲）結論<strong>相反</strong>。故答案為<strong>✕（錯誤）</strong>。", page: "p.34", ai: true },
+      { q: "藥事法第69條規定，非本法所稱之藥物，不得為醫療效能之標示或宣傳；違反者依第91條處新臺幣六十萬元以上二千五百萬元以下罰鍰。", ans: "O", exp: "<span class='law-ref'>藥事法第91條第2項</span>：違反第69條（非藥物宣稱醫療效能）者，處新臺幣<strong>六十萬元以上二千五百萬元以下</strong>罰鍰，且得按次連續處罰。此為藥事法中最重級距的罰鍰。本題正確，故為<strong>○（正確）</strong>。", page: "p.27-28", ai: true },
+      { q: "一般保健食品宣稱可治療疾病，違反藥事法第69條，最高可處新臺幣一千萬元罰鍰。", ans: "X", exp: "依<span class='law-ref'>藥事法第91條第2項</span>，違反第69條（非藥物宣稱醫療效能）最高罰鍰為<strong>新臺幣二千五百萬元</strong>，並非一千萬元。此為藥事法最嚴厲的罰則級距。故答案為<strong>✕（錯誤）</strong>。", page: "p.27-28", ai: true },
+      { q: "依化粧品衛生安全管理法規定，民眾檢舉違規化粧品廣告，主管機關應發給罰鍰實收金額百分之十作為檢舉獎金。", ans: "X", exp: "依化粧品衛生安全管理法規定，民眾檢舉違規化粧品，主管機關應發給至少罰鍰實收金額<strong>百分之五（5%）</strong>作為檢舉獎金，並非10%。故答案為<strong>✕（錯誤）</strong>。", page: "p.51", ai: true },
+      { q: "電視節目廣告區隔辦法第8條規定，菸品禁止置入性行銷，但酒類並未被列入置入禁止清單。", ans: "X", exp: "<span class='law-ref'>電視節目廣告區隔辦法第8條</span>明文禁止以下商品進行置入性行銷：菸品、<strong>酒類</strong>、跨國境婚姻媒合、須醫師處方藥物、法令禁止販賣之商品。<strong>酒類也禁止置入</strong>，本題說法錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.74-75", ai: true },
+      { q: "電視節目廣告區隔辦法規定，酒類既禁止置入性行銷，也禁止贊助。", ans: "X", exp: "依電視節目廣告區隔辦法：第8條（置入）：酒類列入<strong>禁止</strong>清單→<strong>不可置入</strong>；第13條（贊助）：酒類<strong>未</strong>被列入禁止清單→<strong>可以贊助</strong>。酒類置入與贊助規範不對稱，本題說兩者都禁止，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.74-77", ai: true },
+      { q: "依電視節目廣告區隔辦法，菸品禁止贊助，但酒類並未被列入贊助禁止名單，可以贊助節目。", ans: "O", exp: "依<span class='law-ref'>電視節目廣告區隔辦法第13條</span>（贊助禁止清單）：菸品、跨國境婚姻媒合、法令禁止販賣商品禁止贊助；<strong>酒類不在贊助禁止清單中</strong>，故可以贊助。本題正確，故為<strong>○（正確）</strong>。", page: "p.74-77", ai: true },
+      { q: "電視節目廣告區隔辦法第12條規定，新聞節目完全禁止任何形式的贊助，包括提供播報道具及主播梳化粧等。", ans: "X", exp: "<span class='law-ref'>電視節目廣告區隔辦法第12條第1項</span>：新聞節目不得接受贊助及冠名贊助，但<strong>提供棚內播報之道具、主播及主持人梳化粧之贊助不在此限</strong>（例外許可）。本題遺漏此但書例外，故答案為<strong>✕（錯誤）</strong>。", page: "p.76", ai: true },
+      { q: "依電視節目廣告區隔辦法規定，兒童節目禁止置入性行銷，但可接受冠名贊助。", ans: "X", exp: "依電視節目廣告區隔辦法：第7條禁止兒童節目進行<strong>置入性行銷</strong>；第12條第2項亦禁止兒童節目<strong>接受冠名贊助</strong>。兒童節目受最嚴格保護，置入與冠名贊助均禁止。故答案為<strong>✕（錯誤）</strong>。", page: "p.74-76", ai: true },
+      { q: "依著作權法，著作人格權與著作財產權均可自由轉讓，廣告公司可將全部著作權讓與品牌方。", ans: "X", exp: "<strong>著作人格權</strong>（署名權、公開發表權等）依著作權法規定<strong>不得讓與或繼承</strong>，專屬於創作者本人。<strong>著作財產權</strong>（重製、播送等經濟利用權）則可自由轉讓或授權。本題說兩者均可轉讓，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.3", ai: true },
+      { q: "廣告公司為品牌製作廣告後，品牌方若要取得完整使用權，應要求讓與著作人格權。", ans: "X", exp: "品牌方（業主）應要求讓與「<strong>著作財產權</strong>」（重製、公開播送、改作等經濟利用權）。<strong>著作人格權</strong>依法<strong>不得讓與</strong>，始終屬於創作者。實務上合約會另約定「不行使著作人格權」，但法律上人格權歸屬不變。故答案為<strong>✕（錯誤）</strong>。", page: "p.3", ai: true },
+      { q: "在行政法上，「備查」與「核定」均需要主管機關進行實質審查，方可生效。", ans: "X", exp: "「<strong>核定</strong>」：上級機關須<strong>實質審查</strong>並作成決定後才具備法定效力。「<strong>備查</strong>」：只是<strong>觀念通知</strong>，讓主管機關知悉即可，陳報後即生效，無需等待審查批准。兩者性質根本不同，本題說兩者都需實質審查，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.72", ai: true },
+      { q: "獨立機關雖然具有獨立超然的地位，但其做出的具體決策，仍必須接受行政院或其他行政機關在「適當性」與「合法性」上的實質監督。", ans: "X", exp: "依據獨立機關制度設計，獨立機關所做的決策<strong>不受</strong>行政院或其他行政機關的適當性和合法性監督。這正是獨立機關與一般行政機關最大的界線與差異，確保其能超然行使職權。故答案為<strong>✕（錯誤）</strong>。", page: "p.60", ai: true },
+      { q: "國家通訊傳播委員會（NCC）、公平交易委員會、金融監督管理委員會與飛航安全調查委員會，依我國行政組織編制，皆屬於「二級獨立機關」。", ans: "X", exp: "國家通訊傳播委員會（NCC）、公平交易委員會、金融監督管理委員會等屬於<strong>二級獨立機關</strong>；而「<strong>飛航安全調查委員會</strong>」則屬於<strong>三級獨立機關</strong>，並非二級。本題將所有機關一律稱為二級，錯誤。故答案為<strong>✕（錯誤）</strong>。", page: "p.60", ai: true },
+      { q: "《有線廣播電視法》第33條規定系統經營者「應」同時轉播無線電視台節目及廣告，此屬於「禁止規定」；第34條規定「不得」播送未經許可的頻道節目，則屬於「強制規定」。", ans: "X", exp: "兩者定義<strong>完全寫反</strong>！第33條要求系統經營者「應」轉播無線電視台節目（Must-carry義務），是必須遵守的「<strong>強制規定</strong>」；而第34條規定「不得」播送未經許可的節目，這才是「<strong>禁止規定</strong>」。強制規定＝應為；禁止規定＝不得為。故答案為<strong>✕（錯誤）</strong>。", page: "p.89", ai: true },
+      { q: "依《衛星廣播電視法》更正請求權規定，若電視台認為報導無誤拒絕更正，主管機關（NCC）將主動介入並強制處罰該電視台。", ans: "X", exp: "利害關係人與業者之間的更正爭議，NCC<strong>不會</strong>主動介入。電視台若認為報導無誤，只要「<strong>附具理由書面答覆請求人</strong>」即可合法免責。<strong>僅當</strong>電視台完全未附理由書答覆請求人時，NCC才可依法介入並對業者開罰。故答案為<strong>✕（錯誤）</strong>。", page: "p.93", ai: true },
 
-      { q: "《廣播電視法》第21條明文規定廣播、電視節目內容「不得」有妨害公共秩序或善良風俗等情形，此在法理上屬於命令當事人應為一定行為的「強制規定」。", ans: "X", exp: "法條中明文規定「<strong>不得</strong>」有下列情形，係命當事人「<strong>不得為</strong>」一定行為，在法理上屬於「<strong>禁止規定</strong>」，而非強制規定。命令當事人「<strong>應為</strong>」一定行為者（例如系統經營者「應」同時轉播無線電視台節目），才叫做「強制規定」。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", hidden: true },
-      { q: "電視節目中出現「非藥物卻宣稱醫療效能」或「播出菸草產品廣告」，在《廣播電視法》第21條的分類中屬於「妨害公共秩序或善良風俗」的範圍。", ans: "X", exp: "「非藥物宣稱醫療效能」違反《藥事法》，「播出菸草產品廣告」違反《菸害防制法》等相關規定，兩者在<span class='law-ref'>廣播電視法第21條</span>的歸類中均屬<strong>第1款「違反法律強制或禁止規定」</strong>，而非第3款妨害公共秩序或善良風俗。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", hidden: true },
-      { q: "電視台節目涉嫌「妨害兒童或少年身心健康」時，主管機關NCC通常會直接依《廣播電視法》第21條第2款自行認定並對業者開罰。", ans: "X", exp: "這是實務管轄權陷阱。關於第21條第2款「妨害兒童或少年身心健康」，除明顯違反電視節目分級處理辦法外，NCC實務上<strong>未曾認定</strong>，多交由「<strong>衛生福利部（衛福部）</strong>」適用兒童及少年相關法規處理，而非NCC自行開罰。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", hidden: true },
-      { q: "依據《衛星廣播電視法》貫徹「黨政軍退出媒體」之精神，政府、政黨及其捐助成立之財團法人，僅能以「間接投資」之方式持有衛星廣播電視事業之股份。", ans: "X", exp: "<span class='law-ref'>衛星廣播電視法第5條第1項</span>明文規定，政府、政黨、其捐助成立之財團法人及其受託人「<strong>不得直接、間接投資</strong>」衛星廣播電視事業。無論直接或間接投資皆在禁止之列，並非僅限制直接投資。故答案為<strong>✕（錯誤）</strong>。", page: "", hidden: true },
-      { q: "依據藥事法規定，須由醫師處方之藥物（處方藥），只要經過衛生主管機關事前核准，即可在電視、廣播或一般報章雜誌上向大眾刊播廣告。", ans: "X", exp: "<span class='law-ref'>藥事法第67條</span>規定，須由醫師處方或經中央衛生主管機關公告指定之藥物，其廣告「<strong>以登載於學術性醫療刊物為限</strong>」，不得向一般大眾刊播，即使事前核准亦然。故答案為<strong>✕（錯誤）</strong>。", page: "", hidden: true },
-      { q: "依據藥事法規定，中藥材之廣告所用文字，其效能之宣傳應以《本草綱目》所載者為限。", ans: "O", exp: "<span class='law-ref'>藥事法施行細則第45條第2項</span>規定，中藥材廣告宣傳效能，確實依法必須以《<strong>本草綱目</strong>》所載者為限。本題敘述正確，故答案為<strong>○（正確）</strong>。", page: "", hidden: true },
-      { q: "依據司法院釋字第 364 號解釋，為保障人民言論自由，傳播媒體必須「無條件強制接受」民眾表達其反對意見之要求，以落實人民之「接近使用傳播媒體權（媒體近用權）」。", ans: "X", exp: "<span class='law-ref'>釋字第364號</span>解釋明確指出，若無條件強制媒體接受民眾表達意見之要求，無異於剝奪媒體之「<strong>編輯自由</strong>」。因此，民眾的媒體近用權必須在「<strong>兼顧傳播媒體編輯自由</strong>」之原則下予以尊重，並非無條件強制。故答案為<strong>✕（錯誤）</strong>。", page: "", hidden: true },
-      { q: "傳播業者接受委託刊播廣告，依法須保存委託者資料六個月。若未保存該資料，無論是依《藥事法》或《化粧品衛生安全管理法》之規定，皆是處新臺幣六萬元以上三十萬元以下罰鍰。", ans: "O", exp: "這是跨法規的共通點！傳播業者未保存廣告主資料的行政疏失，依<span class='law-ref'>藥事法第95條第2項</span>及<span class='law-ref'>化粧品衛生安全管理法第21條</span>，罰鍰金額統一皆為新臺幣<strong>6萬元以上30萬元以下</strong>。故答案為<strong>○（正確）</strong>。", page: "", hidden: true },
-      { q: "依《衛星廣播電視法》規定，衛星頻道節目供應事業若播送「違反法律強制或禁止規定」之節目或廣告，最高可處新臺幣四百萬元罰鍰。", ans: "X", exp: "依<span class='law-ref'>衛星廣播電視法第48條第1項</span>規定，違反第27條第3項第1款（違反法律強制或禁止規定）者，處新臺幣<strong>40萬元以上200萬元以下</strong>罰鍰，最高罰鍰為<strong>200萬元</strong>，並非400萬元。📌 對比記憶：《有線廣播電視法》中系統經營者違規的許多罰則上限才是400萬（如違反Must-carry義務或擅用插播式字幕）。故答案為<strong>✕（錯誤）</strong>。", page: "", hidden: true }
+      { q: "《廣播電視法》第21條明文規定廣播、電視節目內容「不得」有妨害公共秩序或善良風俗等情形，此在法理上屬於命令當事人應為一定行為的「強制規定」。", ans: "X", exp: "法條中明文規定「<strong>不得</strong>」有下列情形，係命當事人「<strong>不得為</strong>」一定行為，在法理上屬於「<strong>禁止規定</strong>」，而非強制規定。命令當事人「<strong>應為</strong>」一定行為者（例如系統經營者「應」同時轉播無線電視台節目），才叫做「強制規定」。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", ai: true },
+      { q: "電視節目中出現「非藥物卻宣稱醫療效能」或「播出菸草產品廣告」，在《廣播電視法》第21條的分類中屬於「妨害公共秩序或善良風俗」的範圍。", ans: "X", exp: "「非藥物宣稱醫療效能」違反《藥事法》，「播出菸草產品廣告」違反《菸害防制法》等相關規定，兩者在<span class='law-ref'>廣播電視法第21條</span>的歸類中均屬<strong>第1款「違反法律強制或禁止規定」</strong>，而非第3款妨害公共秩序或善良風俗。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", ai: true },
+      { q: "電視台節目涉嫌「妨害兒童或少年身心健康」時，主管機關NCC通常會直接依《廣播電視法》第21條第2款自行認定並對業者開罰。", ans: "X", exp: "這是實務管轄權陷阱。關於第21條第2款「妨害兒童或少年身心健康」，除明顯違反電視節目分級處理辦法外，NCC實務上<strong>未曾認定</strong>，多交由「<strong>衛生福利部（衛福部）</strong>」適用兒童及少年相關法規處理，而非NCC自行開罰。故答案為<strong>✕（錯誤）</strong>。", page: "p.65", ai: true },
+      { q: "依據《衛星廣播電視法》貫徹「黨政軍退出媒體」之精神，政府、政黨及其捐助成立之財團法人，僅能以「間接投資」之方式持有衛星廣播電視事業之股份。", ans: "X", exp: "<span class='law-ref'>衛星廣播電視法第5條第1項</span>明文規定，政府、政黨、其捐助成立之財團法人及其受託人「<strong>不得直接、間接投資</strong>」衛星廣播電視事業。無論直接或間接投資皆在禁止之列，並非僅限制直接投資。故答案為<strong>✕（錯誤）</strong>。", page: "", ai: true },
+      { q: "依據藥事法規定，須由醫師處方之藥物（處方藥），只要經過衛生主管機關事前核准，即可在電視、廣播或一般報章雜誌上向大眾刊播廣告。", ans: "X", exp: "<span class='law-ref'>藥事法第67條</span>規定，須由醫師處方或經中央衛生主管機關公告指定之藥物，其廣告「<strong>以登載於學術性醫療刊物為限</strong>」，不得向一般大眾刊播，即使事前核准亦然。故答案為<strong>✕（錯誤）</strong>。", page: "", ai: true },
+      { q: "依據藥事法規定，中藥材之廣告所用文字，其效能之宣傳應以《本草綱目》所載者為限。", ans: "O", exp: "<span class='law-ref'>藥事法施行細則第45條第2項</span>規定，中藥材廣告宣傳效能，確實依法必須以《<strong>本草綱目</strong>》所載者為限。本題敘述正確，故答案為<strong>○（正確）</strong>。", page: "", ai: true },
+      { q: "依據司法院釋字第 364 號解釋，為保障人民言論自由，傳播媒體必須「無條件強制接受」民眾表達其反對意見之要求，以落實人民之「接近使用傳播媒體權（媒體近用權）」。", ans: "X", exp: "<span class='law-ref'>釋字第364號</span>解釋明確指出，若無條件強制媒體接受民眾表達意見之要求，無異於剝奪媒體之「<strong>編輯自由</strong>」。因此，民眾的媒體近用權必須在「<strong>兼顧傳播媒體編輯自由</strong>」之原則下予以尊重，並非無條件強制。故答案為<strong>✕（錯誤）</strong>。", page: "", ai: true },
+      { q: "傳播業者接受委託刊播廣告，依法須保存委託者資料六個月。若未保存該資料，無論是依《藥事法》或《化粧品衛生安全管理法》之規定，皆是處新臺幣六萬元以上三十萬元以下罰鍰。", ans: "O", exp: "這是跨法規的共通點！傳播業者未保存廣告主資料的行政疏失，依<span class='law-ref'>藥事法第95條第2項</span>及<span class='law-ref'>化粧品衛生安全管理法第21條</span>，罰鍰金額統一皆為新臺幣<strong>6萬元以上30萬元以下</strong>。故答案為<strong>○（正確）</strong>。", page: "", ai: true },
+      { q: "依《衛星廣播電視法》規定，衛星頻道節目供應事業若播送「違反法律強制或禁止規定」之節目或廣告，最高可處新臺幣四百萬元罰鍰。", ans: "X", exp: "依<span class='law-ref'>衛星廣播電視法第48條第1項</span>規定，違反第27條第3項第1款（違反法律強制或禁止規定）者，處新臺幣<strong>40萬元以上200萬元以下</strong>罰鍰，最高罰鍰為<strong>200萬元</strong>，並非400萬元。📌 對比記憶：《有線廣播電視法》中系統經營者違規的許多罰則上限才是400萬（如違反Must-carry義務或擅用插播式字幕）。故答案為<strong>✕（錯誤）</strong>。", page: "", ai: true }
     ];
 
     /* ─── 選擇題資料（45題）─── */
@@ -2013,222 +2053,222 @@
       {
         q: "藥事法第2條規定，中央衛生主管機關為何？",
         options: ["行政院衛生署", "衛生福利部", "國家通訊傳播委員會", "內政部"],
-        ans: 1, exp: "<span class='law-ref'>藥事法第2條</span>規定，本法所稱衛生主管機關：在中央為<strong>衛生福利部</strong>；在直轄市為直轄市政府；在縣（市）為縣（市）政府。", page: "p.25", hidden: true
+        ans: 1, exp: "<span class='law-ref'>藥事法第2條</span>規定，本法所稱衛生主管機關：在中央為<strong>衛生福利部</strong>；在直轄市為直轄市政府；在縣（市）為縣（市）政府。", page: "p.25", ai: true
       },
       {
         q: "藥事法第2條規定，在直轄市層級，衛生主管機關為何？",
         options: ["衛生福利部", "直轄市衛生局", "直轄市政府", "中央衛生主管機關指定機構"],
-        ans: 2, exp: "<span class='law-ref'>藥事法第2條</span>規定衛生主管機關：中央為<strong>衛生福利部</strong>；直轄市為<strong>直轄市政府</strong>；縣（市）為<strong>縣（市）政府</strong>。注意是「政府」而非「衛生局」。", page: "p.25", hidden: true
+        ans: 2, exp: "<span class='law-ref'>藥事法第2條</span>規定衛生主管機關：中央為<strong>衛生福利部</strong>；直轄市為<strong>直轄市政府</strong>；縣（市）為<strong>縣（市）政府</strong>。注意是「政府」而非「衛生局」。", page: "p.25", ai: true
       },
       {
         q: "藥事法第24條規定，「藥物廣告」的定義為何？",
         options: ["利用傳播方法，宣傳藥物品牌，以達知名度為目的之行為", "利用傳播方法，宣傳醫療效能，以達招徠銷售為目的之行為", "利用口頭推薦，宣傳療效，以達教育為目的之行為", "利用傳播方法，宣傳藥物價格，以達促銷為目的之行為"],
-        ans: 1, exp: "<span class='law-ref'>藥事法第24條</span>規定：藥物廣告，係指利用<strong>傳播方法</strong>，宣傳<strong>醫療效能</strong>，以達<strong>招徠銷售</strong>為目的之行為。三個要素缺一不可。", page: "p.25", hidden: true
+        ans: 1, exp: "<span class='law-ref'>藥事法第24條</span>規定：藥物廣告，係指利用<strong>傳播方法</strong>，宣傳<strong>醫療效能</strong>，以達<strong>招徠銷售</strong>為目的之行為。三個要素缺一不可。", page: "p.25", ai: true
       },
       {
         q: "藥事法第27條規定，申請為藥商者，應向哪個機關申請核准登記？",
         options: ["中央衛生主管機關", "衛生福利部", "直轄市或縣（市）衛生主管機關", "目的事業主管機關"],
-        ans: 2, exp: "<span class='law-ref'>藥事法第27條</span>規定：凡申請為藥商者，應申請<strong>直轄市或縣（市）衛生主管機關</strong>核准登記，繳納執照費，領得許可執照後，方准營業。注意是地方層級，非中央。", page: "p.25", hidden: true
+        ans: 2, exp: "<span class='law-ref'>藥事法第27條</span>規定：凡申請為藥商者，應申請<strong>直轄市或縣（市）衛生主管機關</strong>核准登記，繳納執照費，領得許可執照後，方准營業。注意是地方層級，非中央。", page: "p.25", ai: true
       },
       {
         q: "依藥事法第65條，下列何者方得為藥物廣告？",
         options: ["醫療機構", "傳播業者", "藥商", "任何自然人或法人"],
-        ans: 2, exp: "<span class='law-ref'>藥事法第65條</span>明確規定：<strong>非藥商不得為藥物廣告</strong>。只有合法登記的藥商才有資格刊播藥物廣告。", page: "p.26", hidden: true
+        ans: 2, exp: "<span class='law-ref'>藥事法第65條</span>明確規定：<strong>非藥商不得為藥物廣告</strong>。只有合法登記的藥商才有資格刊播藥物廣告。", page: "p.26", ai: true
       },
       {
         q: "藥事法第66條第4項規定，傳播業者接受委託刊播廣告後，應保存委託者相關資料多久？",
         options: ["三個月", "六個月", "一年", "二年"],
-        ans: 1, exp: "<span class='law-ref'>藥事法第66條第4項</span>規定，傳播業者應自廣告之日起<strong>六個月</strong>，保存委託刊播廣告者之姓名、身分證字號、住居所及電話等資料，且於主管機關要求提供時，不得規避、妨礙或拒絕。", page: "p.26", hidden: true
+        ans: 1, exp: "<span class='law-ref'>藥事法第66條第4項</span>規定，傳播業者應自廣告之日起<strong>六個月</strong>，保存委託刊播廣告者之姓名、身分證字號、住居所及電話等資料，且於主管機關要求提供時，不得規避、妨礙或拒絕。", page: "p.26", ai: true
       },
       {
         q: "藥事法第66條第3項規定，傳播業者「不得」刊播的藥物廣告，下列何者不在禁止範圍內？",
         options: ["未經主管機關核准的藥物廣告", "與核准事項不符的藥物廣告", "已經核准且在有效期間內的藥物廣告", "已廢止的藥物廣告"],
-        ans: 2, exp: "<span class='law-ref'>藥事法第66條第3項</span>規定傳播業者不得刊播：①<strong>未經核准</strong>、②<strong>與核准事項不符</strong>、③<strong>已廢止</strong>、④<strong>經令停止刊播而尚未改善</strong>的藥物廣告。已經核准且在有效期間內的廣告可以合法刊播。", page: "p.26", hidden: true
+        ans: 2, exp: "<span class='law-ref'>藥事法第66條第3項</span>規定傳播業者不得刊播：①<strong>未經核准</strong>、②<strong>與核准事項不符</strong>、③<strong>已廢止</strong>、④<strong>經令停止刊播而尚未改善</strong>的藥物廣告。已經核准且在有效期間內的廣告可以合法刊播。", page: "p.26", ai: true
       },
       {
         q: "藥事法第92條規定，違反第27條（藥商未經核准登記即營業）或第75條（藥物標示不符）者，處多少罰鍰？",
         options: ["新臺幣一萬元以上五萬元以下", "新臺幣三萬元以上二百萬元以下", "新臺幣二十萬元以上五百萬元以下", "新臺幣六十萬元以上二千五百萬元以下"],
-        ans: 1, exp: "<span class='law-ref'>藥事法第92條</span>規定，違反第27條（未經核准登記即營業）或第75條（藥物標示不符）等規定者，處<strong>新臺幣三萬元以上二百萬元以下</strong>罰鍰。注意此金額與違反第66條的罰則不同。", page: "p.28", hidden: true
+        ans: 1, exp: "<span class='law-ref'>藥事法第92條</span>規定，違反第27條（未經核准登記即營業）或第75條（藥物標示不符）等規定者，處<strong>新臺幣三萬元以上二百萬元以下</strong>罰鍰。注意此金額與違反第66條的罰則不同。", page: "p.28", ai: true
       },
       {
         q: "藥事法第93條規定，違反第16條第2項、第28條、第30條等規定者，處多少罰鍰？",
         options: ["新臺幣三萬元以上二百萬元以下", "新臺幣三萬元以上五百萬元以下", "新臺幣二十萬元以上五百萬元以下", "新臺幣六十萬元以上二千五百萬元以下"],
-        ans: 1, exp: "<span class='law-ref'>藥事法第93條</span>規定，違反特定藥物/器材管理規定者，處<strong>新臺幣三萬元以上五百萬元以下</strong>罰鍰。此外，違反第16條第2項或第30條者，除罰鍰外，衛生主管機關並得<strong>停止其營業</strong>。", page: "p.28", hidden: true
+        ans: 1, exp: "<span class='law-ref'>藥事法第93條</span>規定，違反特定藥物/器材管理規定者，處<strong>新臺幣三萬元以上五百萬元以下</strong>罰鍰。此外，違反第16條第2項或第30條者，除罰鍰外，衛生主管機關並得<strong>停止其營業</strong>。", page: "p.28", ai: true
       },
       {
         q: "藥事法第95條第1項規定，傳播業者違反第66條第3項（刊播不合格藥物廣告），經通知後「仍繼續刊播」者，加重罰鍰為多少？",
         options: ["新臺幣六萬元以上三十萬元以下", "新臺幣二十萬元以上五百萬元以下", "新臺幣六十萬元以上二千五百萬元以下", "新臺幣一百萬元以上五千萬元以下"],
-        ans: 2, exp: "<span class='law-ref'>藥事法第95條第1項</span>：傳播業者違反第66條第3項，初次處<strong>二十萬元以上五百萬元以下</strong>；經通知後仍繼續刊播者，加重處<strong>六十萬元以上二千五百萬元以下</strong>，並應按次連續處罰至停止刊播為止。", page: "p.28-29", hidden: true
+        ans: 2, exp: "<span class='law-ref'>藥事法第95條第1項</span>：傳播業者違反第66條第3項，初次處<strong>二十萬元以上五百萬元以下</strong>；經通知後仍繼續刊播者，加重處<strong>六十萬元以上二千五百萬元以下</strong>，並應按次連續處罰至停止刊播為止。", page: "p.28-29", ai: true
       },
       {
         q: "在法律上，「視為」與「推定」的核心差異為何？",
         options: ["視為可舉反證推翻，推定不可", "視為不可舉反證推翻，推定可以", "兩者皆可舉反證推翻", "兩者皆不可舉反證推翻"],
-        ans: 1, exp: "「<strong>視為</strong>」：直接規定一定情形發生一定效果，<strong>不容許</strong>當事人事後舉證推翻。<br>「<strong>推定</strong>」：假設一定情形發生一定效果，但<strong>容許</strong>當事人事後舉證推翻。<br>📌&nbsp;口訣：視為＝當作（鐵板釘釘）；推定＝假設（可翻案）。", page: "p.30", hidden: true
+        ans: 1, exp: "「<strong>視為</strong>」：直接規定一定情形發生一定效果，<strong>不容許</strong>當事人事後舉證推翻。<br>「<strong>推定</strong>」：假設一定情形發生一定效果，但<strong>容許</strong>當事人事後舉證推翻。<br>📌&nbsp;口訣：視為＝當作（鐵板釘釘）；推定＝假設（可翻案）。", page: "p.30", ai: true
       },
       {
         q: "在法律上，「視為」的立法目的主要是什麼？",
         options: ["避免舉證困難", "保護社會公益", "節省司法資源", "保障當事人權利"],
-        ans: 1, exp: "「<strong>視為</strong>」係為<strong>保護社會的公益</strong>而設，不論事實是否相符，均不得舉證推翻。<br>對比：「<strong>推定</strong>」則是為<strong>避免舉證困難</strong>而設，若事實與推定不同，自得舉證推翻。", page: "p.30", hidden: true
+        ans: 1, exp: "「<strong>視為</strong>」係為<strong>保護社會的公益</strong>而設，不論事實是否相符，均不得舉證推翻。<br>對比：「<strong>推定</strong>」則是為<strong>避免舉證困難</strong>而設，若事實與推定不同，自得舉證推翻。", page: "p.30", ai: true
       },
       {
         q: "藥事法第75條規定，藥物之標籤、仿單或包裝應刊載多項事項，下列何者「非」法定必要刊載事項？",
         options: ["廠商名稱及地址", "品名及許可證字號", "市場售價及折扣資訊", "副作用、禁忌及其他注意事項"],
-        ans: 2, exp: "<span class='law-ref'>藥事法第75條</span>規定藥物標籤、仿單或包裝應刊載：①廠商名稱及地址、②品名及許可證字號、③批號、④製造日期及有效期間、⑤主要成分含量用量用法、⑥主治效能、⑦副作用禁忌注意事項等。<strong>市場售價及折扣</strong>並非法定必要刊載項目。", page: "p.26", hidden: true
+        ans: 2, exp: "<span class='law-ref'>藥事法第75條</span>規定藥物標籤、仿單或包裝應刊載：①廠商名稱及地址、②品名及許可證字號、③批號、④製造日期及有效期間、⑤主要成分含量用量用法、⑥主治效能、⑦副作用禁忌注意事項等。<strong>市場售價及折扣</strong>並非法定必要刊載項目。", page: "p.26", ai: true
       },
       {
         q: "比例原則中「衡平性原則（狹義比例原則）」的核心概念為何？",
         options: ["手段必須有助於目的之達成", "必須選擇對人民侵害最小的手段", "手段與目的之間必須合乎比例，不得以過強手段達成低重要性目的", "行政行為必須經過正當法律程序"],
-        ans: 2, exp: "比例原則三子原則：①<strong>適當性</strong>：手段能有助於目的達成；②<strong>必要性</strong>：選擇最小侵害手段；③<strong>衡平性（狹義比例原則）</strong>：手段與目的之間必須<strong>合乎比例</strong>，不能以過於強烈之手段只為達成重要性極低之目的（殺雞焉用牛刀）。", page: "p.7, 13", hidden: true
+        ans: 2, exp: "比例原則三子原則：①<strong>適當性</strong>：手段能有助於目的達成；②<strong>必要性</strong>：選擇最小侵害手段；③<strong>衡平性（狹義比例原則）</strong>：手段與目的之間必須<strong>合乎比例</strong>，不能以過於強烈之手段只為達成重要性極低之目的（殺雞焉用牛刀）。", page: "p.7, 13", ai: true
       },
       {
         q: "藥事法第66條第1項規定，藥商刊播藥物廣告時的完整程序為何？",
         options: ["刊播前向NCC核准，再向傳播業者送驗", "刊播前向中央或直轄市衛生主管機關核准，再向傳播業者送驗核准文件", "直接向傳播業者提交廣告內容即可刊播", "刊播後30日內向衛生主管機關備查"],
-        ans: 1, exp: "<span class='law-ref'>藥事法第66條第1項</span>完整程序：<strong>藥商</strong>應於刊播前將所有文字、圖畫或言詞，申請<strong>中央或直轄市衛生主管機關</strong>核准，並向<strong>傳播業者送驗核准文件</strong>。兩步驟缺一不可。", page: "p.26", hidden: true
+        ans: 1, exp: "<span class='law-ref'>藥事法第66條第1項</span>完整程序：<strong>藥商</strong>應於刊播前將所有文字、圖畫或言詞，申請<strong>中央或直轄市衛生主管機關</strong>核准，並向<strong>傳播業者送驗核准文件</strong>。兩步驟缺一不可。", page: "p.26", ai: true
       },
 
       /* ─── 🔒 隱藏題：來自NotebookLM上課重點 ─── */
       {
         q: "依民法規定，賣場貨架上標定賣價陳列的商品，在法律上屬於什麼？",
         options: ["要約之引誘", "要約", "承諾", "意思表示"],
-        ans: 1, exp: "民法第154條第2項規定：「貨物<strong>標定賣價陳列</strong>者，<strong>視為要約</strong>。」消費者付錢時，契約即成立。<br>📌&nbsp;對比：寄送的<strong>價目表</strong>、電視廣告、網購平臺標價則屬「<strong>要約之引誘</strong>」，企業主保留最終是否成立契約的決定權。", page: "p.30", hidden: true
+        ans: 1, exp: "民法第154條第2項規定：「貨物<strong>標定賣價陳列</strong>者，<strong>視為要約</strong>。」消費者付錢時，契約即成立。<br>📌&nbsp;對比：寄送的<strong>價目表</strong>、電視廣告、網購平臺標價則屬「<strong>要約之引誘</strong>」，企業主保留最終是否成立契約的決定權。", page: "p.30", ai: true
       },
       {
         q: "網購平臺上商品「標錯價」時，業者在法理上可主張契約未成立，其法律基礎為何？",
         options: ["網購標價屬「要約」，業者不得反悔", "網購標價屬「要約之引誘」，業者保留決定權", "網購標價屬「承諾」，但可撤銷", "標錯價一律無效，無須法律依據"],
-        ans: 1, exp: "網購平臺上的商品標價在法律上屬於「<strong>要約之引誘</strong>」，消費者下單只是「提出要約」，業者仍保留<strong>是否接受</strong>（承諾）的決定權。因此標錯價時，業者可主張契約尚未成立。<br>📌&nbsp;對比：實體貨架標定賣價陳列 →「視為要約」→ 消費者付錢即成立契約。", page: "p.30", hidden: true
+        ans: 1, exp: "網購平臺上的商品標價在法律上屬於「<strong>要約之引誘</strong>」，消費者下單只是「提出要約」，業者仍保留<strong>是否接受</strong>（承諾）的決定權。因此標錯價時，業者可主張契約尚未成立。<br>📌&nbsp;對比：實體貨架標定賣價陳列 →「視為要約」→ 消費者付錢即成立契約。", page: "p.30", ai: true
       },
       {
         q: "大法官釋字第414號對「藥物廣告事前審查」的見解為何？",
         options: ["違反比例原則，違憲", "合憲，因藥物廣告牽涉國民生命健康", "合憲，但應限期改善", "違憲，因侵害言論自由"],
-        ans: 1, exp: "<span class='law-ref'>釋字第414號</span>認為，藥物廣告屬於<strong>商業言論</strong>，雖受言論自由保障，但因牽涉<strong>國民生命健康與重大公共利益</strong>，規定廣告須<strong>事前審查</strong>是<strong>合憲</strong>的，並未違反比例原則。", page: "p.14", hidden: true
+        ans: 1, exp: "<span class='law-ref'>釋字第414號</span>認為，藥物廣告屬於<strong>商業言論</strong>，雖受言論自由保障，但因牽涉<strong>國民生命健康與重大公共利益</strong>，規定廣告須<strong>事前審查</strong>是<strong>合憲</strong>的，並未違反比例原則。", page: "p.14", ai: true
       },
       {
         q: "大法官釋字第744號對「化粧品廣告事前審查」的見解為何？",
         options: ["合憲，因化粧品也涉及健康", "違憲，因化粧品為一般日常用品，事前審查違反比例原則", "合憲，但需縮短審查期限", "違憲，因侵害業者營業自由"],
-        ans: 1, exp: "<span class='law-ref'>釋字第744號</span>認為，化粧品屬<strong>一般日常用品</strong>，不會對生命健康產生直接、立即危害，規定「事前審查」<strong>違反比例原則</strong>，被宣告<strong>違憲</strong>。現行法已取消化粧品廣告的事前審查。<br>📌&nbsp;對比：藥物廣告（釋字414號）→ 事前審查<strong>合憲</strong>。", page: "p.34", hidden: true
+        ans: 1, exp: "<span class='law-ref'>釋字第744號</span>認為，化粧品屬<strong>一般日常用品</strong>，不會對生命健康產生直接、立即危害，規定「事前審查」<strong>違反比例原則</strong>，被宣告<strong>違憲</strong>。現行法已取消化粧品廣告的事前審查。<br>📌&nbsp;對比：藥物廣告（釋字414號）→ 事前審查<strong>合憲</strong>。", page: "p.34", ai: true
       },
       {
         q: "藥事法第69條規定「非本法所稱之藥物，不得為醫療效能之標示或宣傳」，違反者依第91條處多少罰鍰？",
         options: ["新臺幣三萬元以上二百萬元以下", "新臺幣二十萬元以上五百萬元以下", "新臺幣六十萬元以上二千五百萬元以下", "新臺幣一百萬元以上五千萬元以下"],
-        ans: 2, exp: "<span class='law-ref'>藥事法第91條第2項</span>：違反<strong>第69條</strong>（非藥物宣稱醫療效能）者，處<strong>新臺幣六十萬元以上二千五百萬元以下</strong>罰鍰，且得按次連續處罰。<br>⚠️&nbsp;此為藥事法中<strong>最重級距</strong>的罰鍰！例如一般食品、保健食品宣稱可治療疾病，即屬此違規。", page: "p.27-28", hidden: true
+        ans: 2, exp: "<span class='law-ref'>藥事法第91條第2項</span>：違反<strong>第69條</strong>（非藥物宣稱醫療效能）者，處<strong>新臺幣六十萬元以上二千五百萬元以下</strong>罰鍰，且得按次連續處罰。<br>⚠️&nbsp;此為藥事法中<strong>最重級距</strong>的罰鍰！例如一般食品、保健食品宣稱可治療疾病，即屬此違規。", page: "p.27-28", ai: true
       },
       {
         q: "某網紅販售一般保健食品，卻在廣告中宣稱可「治療高血壓、修復受損器官」。依藥事法，此行為最高可面臨多少罰鍰？",
         options: ["新臺幣二百萬元", "新臺幣五百萬元", "新臺幣一千萬元", "新臺幣二千五百萬元"],
-        ans: 3, exp: "一般保健食品<strong>非藥事法所稱之藥物</strong>，卻宣稱「治療高血壓、修復器官」等<strong>醫療效能</strong>，違反<span class='law-ref'>藥事法第69條</span>。依<span class='law-ref'>第91條第2項</span>，處新臺幣<strong>六十萬元以上二千五百萬元以下</strong>罰鍰。最高即為<strong>2,500萬元</strong>，為藥事法最嚴厲的罰則級距。", page: "p.27-28", hidden: true
+        ans: 3, exp: "一般保健食品<strong>非藥事法所稱之藥物</strong>，卻宣稱「治療高血壓、修復器官」等<strong>醫療效能</strong>，違反<span class='law-ref'>藥事法第69條</span>。依<span class='law-ref'>第91條第2項</span>，處新臺幣<strong>六十萬元以上二千五百萬元以下</strong>罰鍰。最高即為<strong>2,500萬元</strong>，為藥事法最嚴厲的罰則級距。", page: "p.27-28", ai: true
       },
       {
         q: "依《化粧品衛生安全管理法》規定，民眾檢舉違規化粧品廣告，主管機關應發給檢舉獎金至少為罰鍰實收金額的多少？",
         options: ["1%", "3%", "5%", "10%"],
-        ans: 2, exp: "依<span class='law-ref'>化粧品衛生安全管理法</span>規定，民眾檢舉違規化粧品，主管機關須在接獲檢舉次日起<strong>30日內</strong>通知檢舉人處理情形，並發給至少罰鍰實收金額的<strong>5%</strong>作為檢舉獎金。此為鼓勵民眾參與監督的制度設計。", page: "p.51", hidden: true
+        ans: 2, exp: "依<span class='law-ref'>化粧品衛生安全管理法</span>規定，民眾檢舉違規化粧品，主管機關須在接獲檢舉次日起<strong>30日內</strong>通知檢舉人處理情形，並發給至少罰鍰實收金額的<strong>5%</strong>作為檢舉獎金。此為鼓勵民眾參與監督的制度設計。", page: "p.51", ai: true
       },
       {
         q: "電視節目廣告區隔辦法第8條規定，下列哪些商品明文禁止進行「置入性行銷」？",
         options: ["菸品與酒類", "僅菸品", "菸品、酒類與政黨", "僅酒類"],
-        ans: 0, exp: "<span class='law-ref'>電視節目廣告區隔辦法第8條</span>明文禁止以下商品進行置入性行銷：①<strong>菸品</strong>、②<strong>酒類</strong>、③跨國境婚姻媒合、④須醫師處方藥物、⑤法令禁止販賣之商品。<br>📌&nbsp;注意：菸品與酒類<strong>都禁止</strong>置入。", page: "p.74-75", hidden: true
+        ans: 0, exp: "<span class='law-ref'>電視節目廣告區隔辦法第8條</span>明文禁止以下商品進行置入性行銷：①<strong>菸品</strong>、②<strong>酒類</strong>、③跨國境婚姻媒合、④須醫師處方藥物、⑤法令禁止販賣之商品。<br>📌&nbsp;注意：菸品與酒類<strong>都禁止</strong>置入。", page: "p.74-75", ai: true
       },
       {
         q: "電視節目廣告區隔辦法規定，下列哪個商品禁止「置入性行銷」，但並未禁止「贊助」？（陷阱題）",
         options: ["菸品", "酒類", "跨國境婚姻媒合", "政黨"],
-        ans: 1, exp: "⚠️&nbsp;<strong>超級陷阱</strong>：<br>「<strong>置入</strong>」禁止清單（第8條）：菸品、酒類、跨國婚姻媒合、處方藥、違法商品。<br>「<strong>贊助</strong>」禁止清單（第13條）：菸品、跨國婚姻媒合、違法商品。<br>📌&nbsp;<strong>酒類</strong>被禁止置入（第8條），但<strong>並未</strong>被列入贊助禁止名單（第13條），故酒類<strong>可以贊助</strong>。<br>菸品與跨國境婚姻媒合則是置入與贊助<strong>雙重禁止</strong>。", page: "p.74-77", hidden: true
+        ans: 1, exp: "⚠️&nbsp;<strong>超級陷阱</strong>：<br>「<strong>置入</strong>」禁止清單（第8條）：菸品、酒類、跨國婚姻媒合、處方藥、違法商品。<br>「<strong>贊助</strong>」禁止清單（第13條）：菸品、跨國婚姻媒合、違法商品。<br>📌&nbsp;<strong>酒類</strong>被禁止置入（第8條），但<strong>並未</strong>被列入贊助禁止名單（第13條），故酒類<strong>可以贊助</strong>。<br>菸品與跨國境婚姻媒合則是置入與贊助<strong>雙重禁止</strong>。", page: "p.74-77", ai: true
       },
       {
         q: "關於「酒類」在電視節目中的規範，下列敘述何者正確？",
         options: ["酒類禁止置入性行銷，也禁止贊助", "酒類禁止置入性行銷，但可以贊助", "酒類可以置入性行銷，也可以贊助", "酒類可以置入性行銷，但禁止贊助"],
-        ans: 1, exp: "依電視節目廣告區隔辦法：<br>・<span class='law-ref'>第8條</span>（置入）：酒類列入<strong>禁止</strong>清單 → <strong>不可置入</strong><br>・<span class='law-ref'>第13條</span>（贊助）：酒類<strong>未</strong>被列入禁止清單 → <strong>可以贊助</strong><br>📌&nbsp;這是老師上課特別提醒的陷阱：酒類置入與贊助的規範<strong>不對稱</strong>。", page: "p.74-77", hidden: true
+        ans: 1, exp: "依電視節目廣告區隔辦法：<br>・<span class='law-ref'>第8條</span>（置入）：酒類列入<strong>禁止</strong>清單 → <strong>不可置入</strong><br>・<span class='law-ref'>第13條</span>（贊助）：酒類<strong>未</strong>被列入禁止清單 → <strong>可以贊助</strong><br>📌&nbsp;這是老師上課特別提醒的陷阱：酒類置入與贊助的規範<strong>不對稱</strong>。", page: "p.74-77", ai: true
       },
       {
         q: "依電視節目廣告區隔辦法第12條，「新聞節目」在贊助方面的唯一例外為何？",
         options: ["可接受冠名贊助，但需揭露", "可接受提供棚內播報道具、主播服裝及梳化粧之贊助", "可接受政府機關贊助", "可接受公益團體贊助"],
-        ans: 1, exp: "<span class='law-ref'>電視節目廣告區隔辦法第12條第1項</span>：新聞節目<strong>不得接受贊助及冠名贊助</strong>。<br>但書例外：提供新聞節目<strong>棚內播報之道具</strong>、<strong>主播及主持人梳化粧</strong>等贊助不在此限。<br>📌&nbsp;這是新聞節目唯一允許的贊助形式。", page: "p.76", hidden: true
+        ans: 1, exp: "<span class='law-ref'>電視節目廣告區隔辦法第12條第1項</span>：新聞節目<strong>不得接受贊助及冠名贊助</strong>。<br>但書例外：提供新聞節目<strong>棚內播報之道具</strong>、<strong>主播及主持人梳化粧</strong>等贊助不在此限。<br>📌&nbsp;這是新聞節目唯一允許的贊助形式。", page: "p.76", ai: true
       },
       {
         q: "依電視節目廣告區隔辦法第12條，「兒童節目」在置入性行銷與冠名贊助方面的規範為何？",
         options: ["禁止置入性行銷，但可接受冠名贊助", "可置入性行銷，但禁止冠名贊助", "禁止置入性行銷，也禁止冠名贊助", "兩者皆可，但需標示"],
-        ans: 2, exp: "依<span class='law-ref'>電視節目廣告區隔辦法</span>：<br>・<span class='law-ref'>第7條</span>：兒童節目<strong>禁止置入性行銷</strong>（與新聞節目同）<br>・<span class='law-ref'>第12條第2項</span>：兒童節目<strong>不得接受冠名贊助</strong><br>📌&nbsp;兒童節目受到最嚴格保護，置入與冠名贊助都被禁止。", page: "p.74-76", hidden: true
+        ans: 2, exp: "依<span class='law-ref'>電視節目廣告區隔辦法</span>：<br>・<span class='law-ref'>第7條</span>：兒童節目<strong>禁止置入性行銷</strong>（與新聞節目同）<br>・<span class='law-ref'>第12條第2項</span>：兒童節目<strong>不得接受冠名贊助</strong><br>📌&nbsp;兒童節目受到最嚴格保護，置入與冠名贊助都被禁止。", page: "p.74-76", ai: true
       },
       {
         q: "關於「著作人格權」與「著作財產權」，下列敘述何者正確？",
         options: ["著作人格權可轉讓，著作財產權不可", "著作人格權不可轉讓，著作財產權可以轉讓或授權", "兩者皆不可轉讓", "兩者皆可自由轉讓"],
-        ans: 1, exp: "<strong>著作人格權</strong>：屬於創作者本人的人身權利（如署名權、公開發表權），<strong>不得讓與或繼承</strong>，專屬於創作者。<br><strong>著作財產權</strong>：可用來營利、自由使用修改的經濟權利，<strong>可以轉讓、授權</strong>。<br>📌&nbsp;業界簽約時，業主要求讓與的是「著作財產權」，而非人格權。", page: "p.3", hidden: true
+        ans: 1, exp: "<strong>著作人格權</strong>：屬於創作者本人的人身權利（如署名權、公開發表權），<strong>不得讓與或繼承</strong>，專屬於創作者。<br><strong>著作財產權</strong>：可用來營利、自由使用修改的經濟權利，<strong>可以轉讓、授權</strong>。<br>📌&nbsp;業界簽約時，業主要求讓與的是「著作財產權」，而非人格權。", page: "p.3", ai: true
       },
       {
         q: "廣告公司為品牌製作一支電視廣告，品牌方在合約中要求取得完整使用權。依著作權法，品牌方應要求讓與的是？",
         options: ["著作人格權", "著作財產權", "著作人格權與著作財產權", "著作鄰接權"],
-        ans: 1, exp: "品牌方（業主）應要求讓與「<strong>著作財產權</strong>」，包括重製、公開播送、改作等<strong>經濟利用權</strong>。<br><strong>著作人格權</strong>（署名權等）依法<strong>不得讓與</strong>，屬於創作者本人。<br>📌&nbsp;實務上合約會另約定「不行使著作人格權」，但法律上人格權始終歸屬創作者。", page: "p.3", hidden: true
+        ans: 1, exp: "品牌方（業主）應要求讓與「<strong>著作財產權</strong>」，包括重製、公開播送、改作等<strong>經濟利用權</strong>。<br><strong>著作人格權</strong>（署名權等）依法<strong>不得讓與</strong>，屬於創作者本人。<br>📌&nbsp;實務上合約會另約定「不行使著作人格權」，但法律上人格權始終歸屬創作者。", page: "p.3", ai: true
       },
       {
         q: "下列關於「核定」與「備查」的法律效果，何者正確？",
         options: ["核定只是通知上級知悉，備查才需要實質審查", "核定需上級實質審查作成決定後才生效，備查只是通知主管機關知悉即可", "兩者都需要主管機關實質審查", "兩者都只是通知性質，無需審查"],
-        ans: 1, exp: "「<strong>核定</strong>」：上級機關必須<strong>實質審查</strong>並作成決定，決定後才具備法定效力。<br>「<strong>備查</strong>」：只是<strong>觀念通知</strong>，讓主管機關知悉即可，主管機關<strong>不需要審查批准</strong>，陳報後即生效。<br>📌&nbsp;範例：節目時間表「登載資料庫」→ 備查性質；廣告內容「核准」→ 核定性質。", page: "p.72", hidden: true
+        ans: 1, exp: "「<strong>核定</strong>」：上級機關必須<strong>實質審查</strong>並作成決定，決定後才具備法定效力。<br>「<strong>備查</strong>」：只是<strong>觀念通知</strong>，讓主管機關知悉即可，主管機關<strong>不需要審查批准</strong>，陳報後即生效。<br>📌&nbsp;範例：節目時間表「登載資料庫」→ 備查性質；廣告內容「核准」→ 核定性質。", page: "p.72", ai: true
       },
 
       {
         q: "關於獨立機關的「職權限制」，下列哪一項公共任務是獨立機關「不宜」兼負的？",
         options: ["裁決性任務", "管制性任務", "政策協調統合", "調查性任務"],
-        ans: 2, exp: "依據獨立機關設計原則，獨立機關僅負責提供<strong>裁決性、管制性或調查性</strong>的公共任務，<strong>不宜</strong>兼負「政策諮詢、政策協調統合」的作用。若負責統合政府政策，將失去其獨立超然的特性。", page: "p.60", hidden: true
+        ans: 2, exp: "依據獨立機關設計原則，獨立機關僅負責提供<strong>裁決性、管制性或調查性</strong>的公共任務，<strong>不宜</strong>兼負「政策諮詢、政策協調統合」的作用。若負責統合政府政策，將失去其獨立超然的特性。", page: "p.60", ai: true
       },
       {
         q: "為保障獨立機關自主決策不受政治干預，獨立機關首長在面對立法委員質詢時，得合法「拒絕回答」下列哪一種問題？",
         options: ["機關年度預算的整體編列原則", "機關行政程序中的「個別、具體案件」", "機關未來的施政目標與政策願景", "機關內部的人事出缺狀況"],
-        ans: 1, exp: "立法院雖可對獨立機關進行預算審查與質詢，但獨立機關首長或主任委員得<strong>拒絕回答</strong>立法委員針對其機關行政程序中「<strong>個別、具體案件</strong>」所提出的質詢，以避免個案決策遭到政治力干預。", page: "p.60", hidden: true
+        ans: 1, exp: "立法院雖可對獨立機關進行預算審查與質詢，但獨立機關首長或主任委員得<strong>拒絕回答</strong>立法委員針對其機關行政程序中「<strong>個別、具體案件</strong>」所提出的質詢，以避免個案決策遭到政治力干預。", page: "p.60", ai: true
       },
       {
         q: "在現行我國實務上，只有哪一個獨立機關依法得「免除訴願程序」直接提起行政訴訟？",
         options: ["國家通訊傳播委員會（NCC）", "中央選舉委員會", "公平交易委員會", "金融監督管理委員會"],
-        ans: 2, exp: "⚠️【實務與修法陷阱】依據老師講義，過去實務上僅有<strong>公平會</strong>依《公平交易法》第48條免除訴願程序，其他機關仍需訴願，故本題依講義答<strong>(C) 公平會</strong>。<br>但請注意：<strong>現行廣電三法已修法！</strong>依現行《廣電法》§50-2、《有線廣電法》§75-1、《衛廣法》§66-1，對NCC所為之行政處分不服者，現已改為「直接適用行政訴訟程序」（NCC也免訴願了）。建議本題<strong>依講義作答為(C)</strong>，但務必知悉現行法規之變動。", page: "p.60", hidden: true
+        ans: 2, exp: "⚠️【實務與修法陷阱】依據老師講義，過去實務上僅有<strong>公平會</strong>依《公平交易法》第48條免除訴願程序，其他機關仍需訴願，故本題依講義答<strong>(C) 公平會</strong>。<br>但請注意：<strong>現行廣電三法已修法！</strong>依現行《廣電法》§50-2、《有線廣電法》§75-1、《衛廣法》§66-1，對NCC所為之行政處分不服者，現已改為「直接適用行政訴訟程序」（NCC也免訴願了）。建議本題<strong>依講義作答為(C)</strong>，但務必知悉現行法規之變動。", page: "p.60", ai: true
       },
 
       {
         q: "依《有線廣播電視法》規定，系統經營者與其關係企業的「訂戶數」，合計不得超過全國總訂戶數的多少比例？",
         options: ["四分之一", "三分之一", "二分之一", "五分之一"],
-        ans: 1, exp: "依<span class='law-ref'>有線廣播電視法第24條</span>規定，系統經營者與其關係企業及直接間接控制的系統經營者，<strong>訂戶數</strong>合計不得超過全國總訂戶數的<strong>三分之一</strong>。📌 注意勿與第25條混淆：由系統經營者及其關係企業供應的<strong>節目頻道</strong>，不得超過可利用頻道的<strong>四分之一</strong>，兩者數字不同。", page: "p.88", hidden: true
+        ans: 1, exp: "依<span class='law-ref'>有線廣播電視法第24條</span>規定，系統經營者與其關係企業及直接間接控制的系統經營者，<strong>訂戶數</strong>合計不得超過全國總訂戶數的<strong>三分之一</strong>。📌 注意勿與第25條混淆：由系統經營者及其關係企業供應的<strong>節目頻道</strong>，不得超過可利用頻道的<strong>四分之一</strong>，兩者數字不同。", page: "p.88", ai: true
       },
       {
         q: "依《衛星廣播電視法》規定，廣告時間不得超過每一節目播送總時間的多少比例？且單則廣告時間若超過多久，必須於畫面上標示「廣告」二字？",
         options: ["六分之一；三分鐘", "六分之一；五分鐘", "五分之一；三分鐘", "五分之一；五分鐘"],
-        ans: 0, exp: "依<span class='law-ref'>衛星廣播電視法第36條</span>規定，廣告時間不得超過每一節目播送總時間的<strong>六分之一</strong>。單則廣告時間若超過<strong>三分鐘</strong>或以節目型態播送者（節目化廣告），必須於畫面上明確標示「廣告」二字，避免觀眾與節目內容混淆。", page: "p.97", hidden: true
+        ans: 0, exp: "依<span class='law-ref'>衛星廣播電視法第36條</span>規定，廣告時間不得超過每一節目播送總時間的<strong>六分之一</strong>。單則廣告時間若超過<strong>三分鐘</strong>或以節目型態播送者（節目化廣告），必須於畫面上明確標示「廣告」二字，避免觀眾與節目內容混淆。", page: "p.97", ai: true
       },
       {
         q: "《衛星廣播電視法》第27條第1項「尊重多元文化、維護人性尊嚴」及第2項「注意事實查證及公平原則」，在法律性質上屬於何者？",
         options: ["強制規定", "禁止規定", "訓示規定", "效力規定"],
-        ans: 2, exp: "《衛星廣播電視法》第27條第1、2項屬於「<strong>訓示規定</strong>」，違反這兩項原則並<strong>無直接對應罰則</strong>，但主管機關（NCC）會將業者是否落實這些原則作為未來<strong>評鑑與換照</strong>的重要依據。📌 注意對比：同條第3項第4款「製播新聞違反事實查證原則，致損害公共利益」則<strong>有具體罰則</strong>。", page: "p.93", hidden: true
+        ans: 2, exp: "《衛星廣播電視法》第27條第1、2項屬於「<strong>訓示規定</strong>」，違反這兩項原則並<strong>無直接對應罰則</strong>，但主管機關（NCC）會將業者是否落實這些原則作為未來<strong>評鑑與換照</strong>的重要依據。📌 注意對比：同條第3項第4款「製播新聞違反事實查證原則，致損害公共利益」則<strong>有具體罰則</strong>。", page: "p.93", ai: true
       },
 
       {
         q: "電視事業播送節目或廣告違反《廣播電視法》第21條第2款或第3款情節重大者，除停播處分外，應處多少罰鍰？",
         options: ["新臺幣九萬元以上一百二十萬元以下", "新臺幣二十萬元以上二百萬元以下", "新臺幣四十萬元以上二百萬元以下", "新臺幣六十萬元以上二百五十萬元以下"],
-        ans: 2, exp: "依<span class='law-ref'>廣播電視法第44條第1項</span>規定，<strong>電視事業</strong>違反第21條第2、3款情節重大者，除停播處分外，處新臺幣<strong>四十萬元以上二百萬元以下</strong>罰鍰。📌 注意對比：<strong>廣播事業</strong>才是處新臺幣九萬元以上一百二十萬元以下罰鍰，兩者不同。", page: "p.67", hidden: true
+        ans: 2, exp: "依<span class='law-ref'>廣播電視法第44條第1項</span>規定，<strong>電視事業</strong>違反第21條第2、3款情節重大者，除停播處分外，處新臺幣<strong>四十萬元以上二百萬元以下</strong>罰鍰。📌 注意對比：<strong>廣播事業</strong>才是處新臺幣九萬元以上一百二十萬元以下罰鍰，兩者不同。", page: "p.67", ai: true
       },
       {
         q: "電視台播出廣告「宣揚迷信」並「對身體、屍體作不當之表現」，此最主要違反《廣播電視法》第21條哪一款？",
         options: ["違反法律強制或禁止規定", "妨害兒童或少年身心健康", "妨害公共秩序或善良風俗", "違反事實查證原則"],
-        ans: 2, exp: "「宣揚迷信」、「歧視或嘲笑身心殘障者」、「廣告表現涉及性的內容」及「對身體、屍體作不當之表現」，皆屬<span class='law-ref'>廣播電視法第21條第3款</span>「<strong>妨害公共秩序或善良風俗</strong>」的例示違規行為。📌 注意：若違反《藥事法》或《菸害防制法》等具體法律，則歸類為第1款「違反法律強制或禁止規定」。", page: "p.65", hidden: true
+        ans: 2, exp: "「宣揚迷信」、「歧視或嘲笑身心殘障者」、「廣告表現涉及性的內容」及「對身體、屍體作不當之表現」，皆屬<span class='law-ref'>廣播電視法第21條第3款</span>「<strong>妨害公共秩序或善良風俗</strong>」的例示違規行為。📌 注意：若違反《藥事法》或《菸害防制法》等具體法律，則歸類為第1款「違反法律強制或禁止規定」。", page: "p.65", ai: true
       },
       {
         q: "為了確保國內媒體產業的自主性與多樣性，依據《衛星廣播電視法》規定，外國人直接持有衛星廣播電視事業之股份，最高不得達該事業已發行股份總數的多少比例？",
         options: ["百分之二十", "百分之三十", "百分之四十九", "百分之五十"],
-        ans: 3, exp: "<span class='law-ref'>衛星廣播電視法第4條</span>規定，外國人直接持有衛星廣播電視事業之股份，應「<strong>低於</strong>」該事業已發行股份總數<strong>百分之五十</strong>。換言之，外資最多持有 49.99...%，不得達到或超過50%。此規定為防範外資過度控制我國媒體的重要紅線。", page: "", hidden: true
+        ans: 3, exp: "<span class='law-ref'>衛星廣播電視法第4條</span>規定，外國人直接持有衛星廣播電視事業之股份，應「<strong>低於</strong>」該事業已發行股份總數<strong>百分之五十</strong>。換言之，外資最多持有 49.99...%，不得達到或超過50%。此規定為防範外資過度控制我國媒體的重要紅線。", page: "", ai: true
       },
       {
         q: "購物頻道是電視事業重要的獲利來源，但為了避免排擠一般節目的播送空間，依據《衛星廣播電視法》規定，直播衛星廣播電視服務事業播出之購物頻道數，應低於頻道總數的多少比例？",
         options: ["百分之五", "百分之十", "百分之十五", "百分之二十"],
-        ans: 1, exp: "<span class='law-ref'>衛星廣播電視法第24條</span>規定，直播衛星廣播電視服務事業播出之購物頻道數，應低於頻道總數「<strong>百分之十</strong>」。此為購物頻道總量管制規定，以保障一般節目的播送空間。", page: "", hidden: true
+        ans: 1, exp: "<span class='law-ref'>衛星廣播電視法第24條</span>規定，直播衛星廣播電視服務事業播出之購物頻道數，應低於頻道總數「<strong>百分之十</strong>」。此為購物頻道總量管制規定，以保障一般節目的播送空間。", page: "", ai: true
       },
       {
         q: "《消費者保護法》第22條規定：「企業經營者『應』確保廣告內容之真實，其對消費者所負之義務『不得』低於廣告之內容。」這條法規在法理性質上屬於下列何者？",
         options: ["僅為強制規定", "僅為禁止規定", "兼具強制規定與禁止規定", "屬無法律效果之訓示規定"],
-        ans: 2, exp: "條文前段的「<strong>應</strong>」確保廣告內容真實，是命令當事人為一定行為的「<strong>強制規定</strong>」；後段的「<strong>不得</strong>」低於廣告內容，則是命令當事人不為一定行為的「<strong>禁止規定</strong>」，故此條文<strong>兼具強制規定與禁止規定</strong>兩種性質。此為講者特別舉例說明的重要考點。", page: "", hidden: true
+        ans: 2, exp: "條文前段的「<strong>應</strong>」確保廣告內容真實，是命令當事人為一定行為的「<strong>強制規定</strong>」；後段的「<strong>不得</strong>」低於廣告內容，則是命令當事人不為一定行為的「<strong>禁止規定</strong>」，故此條文<strong>兼具強制規定與禁止規定</strong>兩種性質。此為講者特別舉例說明的重要考點。", page: "", ai: true
       },
       {
         q: "依《公平交易法》規定，事業若在商品或廣告上為虛偽不實或引人錯誤之表示（即不實廣告），主管機關最高可處新臺幣多少罰鍰？",
         options: ["二百萬元", "五百萬元", "二千五百萬元", "五千萬元"],
-        ans: 2, exp: "依<span class='law-ref'>公平交易法第42條</span>規定，對於違反第21條（不實廣告）之事業，得限期令停止、改正其行為，並得處新臺幣<strong>5萬元以上2500萬元以下</strong>罰鍰。📌 記憶連結：公平法的不實廣告最高罰鍰（2500萬），與藥事法中「非藥物宣稱醫療效能」的最高罰鍰（2500萬）是一模一樣的天價數字。", page: "", hidden: true
+        ans: 2, exp: "依<span class='law-ref'>公平交易法第42條</span>規定，對於違反第21條（不實廣告）之事業，得限期令停止、改正其行為，並得處新臺幣<strong>5萬元以上2500萬元以下</strong>罰鍰。📌 記憶連結：公平法的不實廣告最高罰鍰（2500萬），與藥事法中「非藥物宣稱醫療效能」的最高罰鍰（2500萬）是一模一樣的天價數字。", page: "", ai: true
       },
       {
         q: "關於《藥事法》對違規廣告之罰鍰，下列敘述何者「錯誤」？",
         options: ["藥商初次未經核准刊播藥物廣告，處20萬至500萬元", "傳播業者初次違法刊播藥物廣告，處20萬至500萬元", "傳播業者經通知限期停止仍繼續刊播，加重處60萬至2500萬元", "藥商經通知限期停止仍繼續刊播，加重處60萬至2500萬元"],
-        ans: 3, exp: "這題是考試中最愛考的「身分錯置」陷阱！依<span class='law-ref'>藥事法第92條</span>，藥商違法刊播罰鍰就是<strong>20萬至500萬元</strong>，並無加重規定。而<span class='law-ref'>藥事法第95條第1項</span>明文規定，是「<strong>傳播業者</strong>」經通知仍繼續刊播時，才會面臨60萬元以上2500萬元以下的加重連續處罰。「60萬至2500萬」的加重罰則<strong>專屬於傳播業者，不適用於藥商</strong>。", page: "", hidden: true
+        ans: 3, exp: "這題是考試中最愛考的「身分錯置」陷阱！依<span class='law-ref'>藥事法第92條</span>，藥商違法刊播罰鍰就是<strong>20萬至500萬元</strong>，並無加重規定。而<span class='law-ref'>藥事法第95條第1項</span>明文規定，是「<strong>傳播業者</strong>」經通知仍繼續刊播時，才會面臨60萬元以上2500萬元以下的加重連續處罰。「60萬至2500萬」的加重罰則<strong>專屬於傳播業者，不適用於藥商</strong>。", page: "", ai: true
       }
     ];
 
@@ -2412,239 +2452,213 @@
         q: "依據廣電法規，廣播事業揭露「贊助者」或「置入者」訊息，時間上限皆不得超過___秒；而電視事業揭露「贊助者」訊息，時間上限則不得超過___秒。",
         blanks: [["45", "四十五", "45秒"], ["20", "二十", "20秒"]],
         answers: ["45秒", "20秒"],
-        exp: "依據《廣播節目廣告區隔與置入性行銷及贊助管理辦法》第11條（置入揭露）與第16條（贊助揭露），廣播揭露上限皆為<strong>45秒</strong>。《電視節目廣告區隔與置入性行銷及贊助管理辦法》第16條規定，電視的贊助揭露上限則較嚴格，僅為<strong>20秒</strong>。📌 廣播45秒、電視20秒，兩者不同，為常見陷阱。", page: "", hidden: true
+        exp: "依據《廣播節目廣告區隔與置入性行銷及贊助管理辦法》第11條（置入揭露）與第16條（贊助揭露），廣播揭露上限皆為<strong>45秒</strong>。《電視節目廣告區隔與置入性行銷及贊助管理辦法》第16條規定，電視的贊助揭露上限則較嚴格，僅為<strong>20秒</strong>。📌 廣播45秒、電視20秒，兩者不同，為常見陷阱。", page: "", ai: true
       },
       {
         q: "現行《藥事法》第4條明文規定：「本法所稱藥物，係指___及___。」",
         blanks: [["藥品", "醫療器材"], ["醫療器材", "藥品"]],
         answers: ["藥品", "醫療器材"],
-        exp: "現行《藥事法》第4條明文規定：「本法所稱藥物，係指<strong>藥品</strong>及<strong>醫療器材</strong>。」兩空可互換。📌 考題常故意將「藥品」替換為「原料藥、製劑」，或誆稱醫療器材已從藥物定義中移除，均為錯誤。雖然醫療器材在2020年已有《醫療器材管理法》，但《藥事法》第4條原文仍未將其刪除。", page: "p.25", hidden: true
+        exp: "現行《藥事法》第4條明文規定：「本法所稱藥物，係指<strong>藥品</strong>及<strong>醫療器材</strong>。」兩空可互換。📌 考題常故意將「藥品」替換為「原料藥、製劑」，或誆稱醫療器材已從藥物定義中移除，均為錯誤。雖然醫療器材在2020年已有《醫療器材管理法》，但《藥事法》第4條原文仍未將其刪除。", page: "p.25", ai: true
       },
       {
         q: "依據《電視節目廣告區隔與置入性行銷及贊助管理辦法》，「酒類」在節目中被明文禁止進行___，但法規並未禁止，因此「可以」接受___。",
         blanks: [["置入", "置入性行銷"], ["贊助", "冠名贊助"]],
         answers: ["置入（置入性行銷）", "贊助（冠名贊助）"],
-        exp: "依第8條（置入禁止清單），<strong>酒類不可置入</strong>；但依第13條（贊助禁止清單），酒類未被列入，故<strong>可以接受贊助</strong>。📌 規範不對稱！禁止置入但允許贊助，為極易出錯的實務陷阱。", page: "", hidden: true
+        exp: "依第8條（置入禁止清單），<strong>酒類不可置入</strong>；但依第13條（贊助禁止清單），酒類未被列入，故<strong>可以接受贊助</strong>。📌 規範不對稱！禁止置入但允許贊助，為極易出錯的實務陷阱。", page: "", ai: true
       },
       {
         q: "大法官釋字第414號認為「___廣告」因牽涉國民生命健康，事前審查合憲；但釋字第744號認為「___廣告」事前審查違反比例原則，宣告違憲。",
         blanks: [["藥物", "藥品"], ["化粧品", "化妝品"]],
         answers: ["藥物", "化粧品"],
-        exp: "<span class='law-ref'>釋字第414號</span>認定<strong>藥物廣告</strong>事前審查<strong>合憲</strong>（因牽涉國民生命健康，國家得加以管制）；<span class='law-ref'>釋字第744號</span>則認定<strong>化粧品廣告</strong>事前審查<strong>違憲</strong>（化粧品為日常用品，不會產生立即危害，事前審查違反比例原則）。📌 法定用字為「化<strong>粧</strong>品」（粧字）非「化妝品」。", page: "", hidden: true
+        exp: "<span class='law-ref'>釋字第414號</span>認定<strong>藥物廣告</strong>事前審查<strong>合憲</strong>（因牽涉國民生命健康，國家得加以管制）；<span class='law-ref'>釋字第744號</span>則認定<strong>化粧品廣告</strong>事前審查<strong>違憲</strong>（化粧品為日常用品，不會產生立即危害，事前審查違反比例原則）。📌 法定用字為「化<strong>粧</strong>品」（粧字）非「化妝品」。", page: "", ai: true
       },
       {
         q: "在行政程序法理上，___需上級機關實質審查並作成決定後才生效；而___只是觀念通知，陳報讓主管機關知悉即可，無需等待審查批准即生效。",
         blanks: [["核定"], ["備查"]],
         answers: ["核定", "備查"],
-        exp: "<strong>核定</strong>：需上級機關實質審查並作成決定後始生效，例如《有線廣播電視法》第27條鎖碼方式應報請「核定」。<br><strong>備查</strong>：僅為觀念通知，陳報後即生效，例如《廣播電視法施行細則》第20條節目時間表登載於資料庫為「備查」。📌 考題常混淆「核定」、「核准」、「核備」、「備查」等用語。", page: "", hidden: true
+        exp: "<strong>核定</strong>：需上級機關實質審查並作成決定後始生效，例如《有線廣播電視法》第27條鎖碼方式應報請「核定」。<br><strong>備查</strong>：僅為觀念通知，陳報後即生效，例如《廣播電視法施行細則》第20條節目時間表登載於資料庫為「備查」。📌 考題常混淆「核定」、「核准」、「核備」、「備查」等用語。", page: "", ai: true
       },
       {
         q: "依《廣播電視法》第23條規定，對於電台之報導，利害關係人認為錯誤要求更正時，電臺應於接到要求後___日內，在原節目或同一時間之節目中加以更正。",
         blanks: [["7", "七", "7日", "七日"]],
         answers: ["7日（七日）"],
-        exp: "<span class='law-ref'>廣播電視法第23條第1項</span>規定，電臺應於接到要求後<strong>七日內</strong>更正。📌 考題常故意寫成「五日」來混淆考生，正確答案為七日。", page: "p.67", hidden: true
+        exp: "<span class='law-ref'>廣播電視法第23條第1項</span>規定，電臺應於接到要求後<strong>七日內</strong>更正。📌 考題常故意寫成「五日」來混淆考生，正確答案為七日。", page: "p.67", ai: true
       },
       {
         q: "在法律用語中，「___」是直接規定一定情形發生一定效果，不容許當事人事後舉證推翻；「___」則是假設一定情形發生一定效果，但容許當事人事後舉證推翻。",
         blanks: [["視為"], ["推定"]],
         answers: ["視為", "推定"],
-        exp: "<strong>視為</strong>：直接規定一定情形發生一定效果，<strong>不容許</strong>當事人舉證推翻，具有鐵板釘釘的效果（例如貨架上標價陳列的商品「視為」要約）。<br><strong>推定</strong>：假設一定情形發生一定效果，<strong>容許</strong>當事人舉證推翻（例如無從確定出生月日時「推定」為7月1日出生，若有真實證明則可推翻）。", page: "", hidden: true
+        exp: "<strong>視為</strong>：直接規定一定情形發生一定效果，<strong>不容許</strong>當事人舉證推翻，具有鐵板釘釘的效果（例如貨架上標價陳列的商品「視為」要約）。<br><strong>推定</strong>：假設一定情形發生一定效果，<strong>容許</strong>當事人舉證推翻（例如無從確定出生月日時「推定」為7月1日出生，若有真實證明則可推翻）。", page: "", ai: true
       },
       {
         q: "為了防止媒體被過度壟斷，依《有線廣播電視法》規定，系統經營者與其關係企業的「訂戶數」，合計不得超過全國總訂戶數的___；而由系統經營者及其關係企業供應的「節目」，不得超過可利用頻道的___。",
         blanks: [["三分之一", "1/3"], ["四分之一", "1/4"]],
         answers: ["三分之一（1/3）", "四分之一（1/4）"],
-        exp: "依《有線廣播電視法》第24條規定，系統經營者與其關係企業的訂戶數，合計不得超過全國總訂戶數的<strong>三分之一</strong>。同法第25條則規定，由系統經營者及其關係企業供應的節目，不得超過可利用頻道的<strong>四分之一</strong>。📌 訂戶上限較寬（1/3）；節目上限較嚴（1/4），兩者極易混淆。", page: "p.89", hidden: true
+        exp: "依《有線廣播電視法》第24條規定，系統經營者與其關係企業的訂戶數，合計不得超過全國總訂戶數的<strong>三分之一</strong>。同法第25條則規定，由系統經營者及其關係企業供應的節目，不得超過可利用頻道的<strong>四分之一</strong>。📌 訂戶上限較寬（1/3）；節目上限較嚴（1/4），兩者極易混淆。", page: "p.89", ai: true
       },
       {
         q: "《有線廣播電視法》規定系統經營者「應」同時轉播依法設立的無線電視台節目，在法理上屬於___規定；而規定「不得」播送未經許可的節目，則屬於___規定。",
         blanks: [["強制"], ["禁止"]],
         answers: ["強制", "禁止"],
-        exp: "《有線廣播電視法》第33條規定系統經營者「<strong>應</strong>」同時轉播無線電視台節目（Must-carry義務），屬於命令當事人應為一定行為的「<strong>強制規定</strong>」。而第34條規定「<strong>不得</strong>」播送未經許可的節目，則屬於命令當事人不為一定行為的「<strong>禁止規定</strong>」。📌 強制規定＝應為；禁止規定＝不得為。", page: "p.89", hidden: true
+        exp: "《有線廣播電視法》第33條規定系統經營者「<strong>應</strong>」同時轉播無線電視台節目（Must-carry義務），屬於命令當事人應為一定行為的「<strong>強制規定</strong>」。而第34條規定「<strong>不得</strong>」播送未經許可的節目，則屬於命令當事人不為一定行為的「<strong>禁止規定</strong>」。📌 強制規定＝應為；禁止規定＝不得為。", page: "p.89", ai: true
       },
       {
         q: "依《廣播電視法》規定，電臺播送廣告，不得超過播送總時間的___；但依《衛星廣播電視法》規定，廣告時間不得超過每一節目播送總時間的___。",
         blanks: [["15%", "百分之十五", "百分之15"], ["1/6", "六分之一"]],
         answers: ["百分之十五（15%）", "六分之一（1/6）"],
-        exp: "依《廣播電視法》第31條第1項規定，電臺播送廣告不得超過播送總時間的<strong>百分之十五（15%）</strong>。依《衛星廣播電視法》第36條第1項規定，廣告時間不得超過每一節目播送總時間的<strong>六分之一</strong>。📌 無線廣電用百分比（15%）；衛星廣電用分數（1/6），為常見混淆點。", page: "", hidden: true
+        exp: "依《廣播電視法》第31條第1項規定，電臺播送廣告不得超過播送總時間的<strong>百分之十五（15%）</strong>。依《衛星廣播電視法》第36條第1項規定，廣告時間不得超過每一節目播送總時間的<strong>六分之一</strong>。📌 無線廣電用百分比（15%）；衛星廣電用分數（1/6），為常見混淆點。", page: "", ai: true
       },
       {
         q: "依《消費者保護法》第19條規定，消費者於「___交易」或「___交易」中，得於收受商品或接受服務後七日內，以退回商品或書面通知方式解除契約，無須說明理由及負擔任何費用。",
         blanks: [["通訊", "訪問"], ["訪問", "通訊"]],
         answers: ["通訊", "訪問"],
-        exp: "依《消費者保護法》第2條及第19條規定，<strong>通訊交易</strong>（如透過網際網路、電視未能檢視實體商品）或<strong>訪問交易</strong>（如未經邀約之推銷）之消費者，得於收受商品或接受服務後<strong>七日內</strong>，以退回商品或書面通知方式解除契約，無須說明理由。📌 兩空可互換。", page: "", hidden: true
+        exp: "依《消費者保護法》第2條及第19條規定，<strong>通訊交易</strong>（如透過網際網路、電視未能檢視實體商品）或<strong>訪問交易</strong>（如未經邀約之推銷）之消費者，得於收受商品或接受服務後<strong>七日內</strong>，以退回商品或書面通知方式解除契約，無須說明理由。📌 兩空可互換。", page: "", ai: true
       },
       {
         q: "依《國家通訊傳播委員會組織法》旋轉門條款，NCC委員於離職後___年內，不得擔任與其離職前___年內職務直接相關之營利事業董事、監察人或顧問等職務。",
         blanks: [["3", "三"], ["5", "五"]],
         answers: ["3年", "5年"],
-        exp: "依《國家通訊傳播委員會組織法》第8條第3項規定，本會委員於其離職後<strong>三年</strong>內，不得擔任與其離職前<strong>五年</strong>內之職務直接相關之營利事業董事、監察人、經理、執行業務之股東或顧問。📌 離職後限制3年；追溯過去職務5年，兩數字勿混淆。", page: "", hidden: true
+        exp: "依《國家通訊傳播委員會組織法》第8條第3項規定，本會委員於其離職後<strong>三年</strong>內，不得擔任與其離職前<strong>五年</strong>內之職務直接相關之營利事業董事、監察人、經理、執行業務之股東或顧問。📌 離職後限制3年；追溯過去職務5年，兩數字勿混淆。", page: "", ai: true
       },
       {
         q: "依《公平交易法》規定，廣告薦證者明知引人錯誤仍為薦證須負連帶賠償責任；但若薦證者「非屬」知名公眾人物、專業人士或機構，僅於受廣告主報酬___倍之範圍內，負連帶損害賠償責任。",
         blanks: [["10", "十"]],
         answers: ["10倍"],
-        exp: "依《公平交易法》第21條第5項規定，廣告薦證者明知或可得而知其所從事之薦證有引人錯誤之虞，仍為薦證者，與廣告主負連帶損害賠償責任；但若薦證者非屬知名公眾人物、專業人士或機構，僅於受廣告主報酬<strong>十倍</strong>之範圍內，負連帶損害賠償責任。", page: "", hidden: true
+        exp: "依《公平交易法》第21條第5項規定，廣告薦證者明知或可得而知其所從事之薦證有引人錯誤之虞，仍為薦證者，與廣告主負連帶損害賠償責任；但若薦證者非屬知名公眾人物、專業人士或機構，僅於受廣告主報酬<strong>十倍</strong>之範圍內，負連帶損害賠償責任。", page: "", ai: true
       },
       {
         q: "依《衛星廣播電視法》規定，外國人直接持有衛星廣播電視事業之股份應低於___；而直播衛星廣播電視播出的「購物頻道」數量，應低於頻道總數的___。",
         blanks: [["50%", "百分之五十", "半數"], ["10%", "百分之十"]],
         answers: ["百分之五十（50%）", "百分之十（10%）"],
-        exp: "依《衛星廣播電視法》第4條規定，外國人直接持有衛星廣播電視事業之股份，應低於該事業已發行股份總數<strong>百分之五十</strong>。同法第24條規定，播出之購物頻道數應低於頻道總數<strong>百分之十</strong>。📌 外資不能過半（50%）；購物頻道不能超過一成（10%）。", page: "", hidden: true
+        exp: "依《衛星廣播電視法》第4條規定，外國人直接持有衛星廣播電視事業之股份，應低於該事業已發行股份總數<strong>百分之五十</strong>。同法第24條規定，播出之購物頻道數應低於頻道總數<strong>百分之十</strong>。📌 外資不能過半（50%）；購物頻道不能超過一成（10%）。", page: "", ai: true
       },
       {
         q: "遇有天然災害或緊急事故時，依法規定，系統經營者通常只能透過「___（如跑馬燈）」的方式播送公共服務資訊及應變措施。",
         blanks: [["插播式字幕"]],
         answers: ["插播式字幕"],
-        exp: "依《有線廣播電視法》第39條及相關子法，系統經營者遇天然災害、緊急事故訊息或公共服務資訊之播送時，可使用「<strong>插播式字幕</strong>」。插播式字幕係指另經編輯製作而在電視螢幕上展現，且非屬於原有播出內容之文字或圖形。", page: "", hidden: true
+        exp: "依《有線廣播電視法》第39條及相關子法，系統經營者遇天然災害、緊急事故訊息或公共服務資訊之播送時，可使用「<strong>插播式字幕</strong>」。插播式字幕係指另經編輯製作而在電視螢幕上展現，且非屬於原有播出內容之文字或圖形。", page: "", ai: true
       },
       {
         q: "原本人民不服行政機關處分，須先提起「___」。但現行《公平交易法》及修法後的廣電三法規定，業者對NCC或公平會的行政處分不服時，可免除上述程序，直接適用「___」程序。",
         blanks: [["訴願"], ["行政訴訟"]],
         answers: ["訴願", "行政訴訟"],
-        exp: "一般行政救濟程序需先提起「<strong>訴願</strong>」，再提行政訴訟。但為尊重獨立機關的專業決定，依《公平交易法》第48條及修法後之《廣播電視法》第50-2條等規定，對主管機關所為之行政處分不服者，<strong>免除訴願程序</strong>，直接適用「<strong>行政訴訟</strong>」程序。", page: "", hidden: true
+        exp: "一般行政救濟程序需先提起「<strong>訴願</strong>」，再提行政訴訟。但為尊重獨立機關的專業決定，依《公平交易法》第48條及修法後之《廣播電視法》第50-2條等規定，對主管機關所為之行政處分不服者，<strong>免除訴願程序</strong>，直接適用「<strong>行政訴訟</strong>」程序。", page: "", ai: true
       },
       {
         q: "大法官釋字第364號確立了人民的「媒體近用權」，但同時強調，要求媒體提供版面或時間表達意見時，必須在兼顧傳播媒體的「___自由」原則下予以尊重，不能無條件強制媒體接受。",
         blanks: [["編輯"]],
         answers: ["編輯"],
-        exp: "依大法官<span class='law-ref'>釋字第364號</span>解釋，對於人民平等「接近使用傳播媒體」（媒體近用權）之權利，應在兼顧傳播媒體「<strong>編輯自由</strong>」原則下予以尊重，以避免無條件強制接受反對意見，反而剝奪媒體的公正報導功能與獨立自主。", page: "", hidden: true
+        exp: "依大法官<span class='law-ref'>釋字第364號</span>解釋，對於人民平等「接近使用傳播媒體」（媒體近用權）之權利，應在兼顧傳播媒體「<strong>編輯自由</strong>」原則下予以尊重，以避免無條件強制接受反對意見，反而剝奪媒體的公正報導功能與獨立自主。", page: "", ai: true
       },
       {
         q: "依《藥事法》規定，藥物廣告經核准後，其有效期間為___；若期滿需要繼續廣告，得申請核定展延，每次展延之期間不得超過___。",
         blanks: [["1年", "一年", "1"], ["1年", "一年", "1"]],
         answers: ["1年（一年）", "1年（一年）"],
-        exp: "依《藥事法》第66-1條第1項，藥物廣告核准有效期間為<strong>一年</strong>，自核發證明文件之日起算。期滿仍需廣告者，得申請核定展延，每次不得超過<strong>一年</strong>。📌 兩空皆為「一年」，為常見混淆考點。", page: "", hidden: true
+        exp: "依《藥事法》第66-1條第1項，藥物廣告核准有效期間為<strong>一年</strong>，自核發證明文件之日起算。期滿仍需廣告者，得申請核定展延，每次不得超過<strong>一年</strong>。📌 兩空皆為「一年」，為常見混淆考點。", page: "", ai: true
       },
       {
         q: "《廣播電視法》第25條規定：「電臺播送之節目，除___節目外，主管機關均得審查。」",
         blanks: [["新聞"]],
         answers: ["新聞"],
-        exp: "<span class='law-ref'>廣播電視法第25條</span>明文規定：「電臺播送之節目，除<strong>新聞</strong>節目外，主管機關均得審查。」為保障新聞自由與第四權的獨立性，新聞節目是政府絕對不得事先審查的例外。📌 考題常故意漏掉「除新聞節目外」的但書。", page: "p.65", hidden: true
+        exp: "<span class='law-ref'>廣播電視法第25條</span>明文規定：「電臺播送之節目，除<strong>新聞</strong>節目外，主管機關均得審查。」為保障新聞自由與第四權的獨立性，新聞節目是政府絕對不得事先審查的例外。📌 考題常故意漏掉「除新聞節目外」的但書。", page: "p.65", ai: true
       },
       {
         q: "《有線廣播電視法》規定，系統經營者播送之頻道節目及廣告，___依著作權法或其他相關法規取得合法授權。",
         blanks: [["應", "必須"]],
         answers: ["應"],
-        exp: "<span class='law-ref'>有線廣播電視法第36條第1項</span>規定：系統經營者播送頻道節目及廣告，「<strong>應</strong>」依著作權法取得合法授權。這是強制義務，非裁量。📌 考試常故意將「應」（強制）改成「得」（裁量）來混淆考生。", page: "p.91", hidden: true
+        exp: "<span class='law-ref'>有線廣播電視法第36條第1項</span>規定：系統經營者播送頻道節目及廣告，「<strong>應</strong>」依著作權法取得合法授權。這是強制義務，非裁量。📌 考試常故意將「應」（強制）改成「得」（裁量）來混淆考生。", page: "p.91", ai: true
       },
       {
         q: "依電視節目分級處理辦法規定，電視事業播送節目，應於該節目開始及每段節目開始時，以疊印或插播卡方式，至少標示分級標識___秒鐘。",
         blanks: [["10", "十", "10秒", "十秒"]],
         answers: ["10秒（十秒）"],
-        exp: "<span class='law-ref'>電視節目分級處理辦法第10條第1項</span>規定，應以疊印或插播卡方式，於節目開始時至少標示分級標識<strong>十秒鐘</strong>，其大小應與螢幕上電視事業之識別標識相當。", page: "p.84", hidden: true
+        exp: "<span class='law-ref'>電視節目分級處理辦法第10條第1項</span>規定，應以疊印或插播卡方式，於節目開始時至少標示分級標識<strong>十秒鐘</strong>，其大小應與螢幕上電視事業之識別標識相當。", page: "p.84", ai: true
       },
       {
         q: "依電視節目廣告區隔辦法規定，電視節目中只有___節目與___節目這兩種類型，是「絕對禁止」進行置入性行銷的。",
         blanks: [["新聞", "兒童"], ["兒童", "新聞"]],
         answers: ["新聞", "兒童"],
-        exp: "電視節目廣告區隔辦法第7條規定，電視節目除<strong>新聞節目</strong>（保障新聞獨立）及<strong>兒童節目</strong>（保護兒童心智）外，得為置入性行銷。兩空可互換。", page: "", hidden: true
+        exp: "電視節目廣告區隔辦法第7條規定，電視節目除<strong>新聞節目</strong>（保障新聞獨立）及<strong>兒童節目</strong>（保護兒童心智）外，得為置入性行銷。兩空可互換。", page: "", ai: true
       },
       {
         q: "藥商若未經核准就擅自刊播藥物廣告（初次違反），依《藥事法》第92條規定，將處新台幣___萬元以上___萬元以下罰鍰。",
         blanks: [["20", "二十"], ["500", "五百"]],
         answers: ["20萬", "500萬"],
-        exp: "<span class='law-ref'>藥事法第92條</span>規定，藥商違反第66條第1項（初次未取得核准即刊播），處新台幣<strong>二十萬元以上五百萬元以下</strong>罰鍰。📌 常與傳播業者加重罰則「60萬至2500萬」混淆，請注意區別。", page: "p.28", hidden: true
+        exp: "<span class='law-ref'>藥事法第92條</span>規定，藥商違反第66條第1項（初次未取得核准即刊播），處新台幣<strong>二十萬元以上五百萬元以下</strong>罰鍰。📌 常與傳播業者加重罰則「60萬至2500萬」混淆，請注意區別。", page: "p.28", ai: true
       },
       {
         q: "依《廣播電視法》第19條第1項規定，廣播、電視中之「本國自製節目」，不得少於___。",
         blanks: [["70%", "百分之七十", "七成", "70"]],
         answers: ["百分之七十（70%）"],
-        exp: "<span class='law-ref'>廣播電視法第19條第1項</span>規定，廣播、電視中之本國自製節目，不得少於<strong>百分之七十（70%）</strong>。此為保護本土文化產業的重要規定。", page: "", hidden: true
+        exp: "<span class='law-ref'>廣播電視法第19條第1項</span>規定，廣播、電視中之本國自製節目，不得少於<strong>百分之七十（70%）</strong>。此為保護本土文化產業的重要規定。", page: "", ai: true
       },
       {
         q: "依廣播電視法施行細則規定，廣播電臺除了播音開始、結束及更換節目應播報臺名外，於節目進行中，亦應每___簡報臺名一次。",
         blanks: [["半小時", "30分鐘", "三十分鐘", "1/2小時"]],
         answers: ["半小時（30分鐘）"],
-        exp: "<span class='law-ref'>廣播電視法施行細則第22條</span>規定，節目進行中應每<strong>半小時</strong>簡報臺名一次。📌 播音開始、結束及更換節目時應播報「臺名、呼號及頻率」；節目進行中每半小時僅簡報「臺名」即可，兩者範圍不同。", page: "p.71", hidden: true
+        exp: "<span class='law-ref'>廣播電視法施行細則第22條</span>規定，節目進行中應每<strong>半小時</strong>簡報臺名一次。📌 播音開始、結束及更換節目時應播報「臺名、呼號及頻率」；節目進行中每半小時僅簡報「臺名」即可，兩者範圍不同。", page: "p.71", ai: true
       },
       {
         q: "依《化粧品衛生安全管理法》規定，化粧品廣告若僅是「虛偽或誇大」，處新臺幣___萬元以上___萬元以下罰鍰；但若嚴重到宣稱「醫療效能」，則加重處新臺幣___萬元以上___萬元以下罰鍰。",
         blanks: [["4", "四"], ["20", "二十"], ["60", "六十"], ["500", "五百"]],
         answers: ["4萬", "20萬", "60萬", "500萬"],
-        exp: "<span class='law-ref'>化粧品衛生安全管理法第20條</span>規定，違反第10條第1項（虛偽誇大）處新臺幣<strong>4萬元以上20萬元以下</strong>罰鍰；違反同條第2項（宣稱醫療效能）處新臺幣<strong>60萬元以上500萬元以下</strong>罰鍰。📌 這兩組數字極易互換作為陷阱。", page: "", hidden: true
+        exp: "<span class='law-ref'>化粧品衛生安全管理法第20條</span>規定，違反第10條第1項（虛偽誇大）處新臺幣<strong>4萬元以上20萬元以下</strong>罰鍰；違反同條第2項（宣稱醫療效能）處新臺幣<strong>60萬元以上500萬元以下</strong>罰鍰。📌 這兩組數字極易互換作為陷阱。", page: "", ai: true
       },
       {
         q: "傳播業者接受委託刊播廣告，若違反保存委託者資料6個月的義務，不論依《藥事法》或《化粧品衛生安全管理法》規定，皆處新臺幣___萬元以上___萬元以下罰鍰。",
         blanks: [["6", "六"], ["30", "三十"]],
         answers: ["6萬", "30萬"],
-        exp: "依<span class='law-ref'>藥事法第95條第2項</span>及<span class='law-ref'>化粧品衛生安全管理法第21條</span>，傳播業者未依法保存廣告主資料的罰鍰皆為<strong>6萬元以上30萬元以下</strong>。📌 注意這與違法「刊播廣告」的罰則（20萬起跳）完全不同。", page: "", hidden: true
+        exp: "依<span class='law-ref'>藥事法第95條第2項</span>及<span class='law-ref'>化粧品衛生安全管理法第21條</span>，傳播業者未依法保存廣告主資料的罰鍰皆為<strong>6萬元以上30萬元以下</strong>。📌 注意這與違法「刊播廣告」的罰則（20萬起跳）完全不同。", page: "", ai: true
       },
       {
         q: "一般食品或保健食品（非藥物）若在廣告中宣稱可治療、預防疾病等醫療效能，依《藥事法》第91條規定，將處新臺幣___萬元以上___萬元以下罰鍰。",
         blanks: [["60", "六十"], ["2500", "二千五百", "2,500"]],
         answers: ["60萬", "2500萬"],
-        exp: "依<span class='law-ref'>藥事法第91條第2項</span>，違反第69條（非藥物宣稱醫療效能）者，處新臺幣<strong>60萬元以上2500萬元以下</strong>罰鍰，且得按次連續處罰。這是藥事法中金額最高的罰則，近年網紅賣食品宣稱療效遭重罰即是適用此條。", page: "", hidden: true
+        exp: "依<span class='law-ref'>藥事法第91條第2項</span>，違反第69條（非藥物宣稱醫療效能）者，處新臺幣<strong>60萬元以上2500萬元以下</strong>罰鍰，且得按次連續處罰。這是藥事法中金額最高的罰則，近年網紅賣食品宣稱療效遭重罰即是適用此條。", page: "", ai: true
       },
       {
         q: "依《廣播電視法》第44條規定，播送節目或廣告若情節重大（妨害兒少或公序良俗），「電視事業」將處新臺幣___萬元以上___萬元以下罰鍰；而「廣播事業」則是處新臺幣___萬元以上___萬元以下罰鍰。",
         blanks: [["40", "四十"], ["200", "二百"], ["9", "九"], ["120", "一百二十"]],
         answers: ["40萬", "200萬", "9萬", "120萬"],
-        exp: "<span class='law-ref'>廣播電視法第44條第1項</span>針對情節重大的違規，電視事業罰新臺幣<strong>40萬元以上200萬元以下</strong>；廣播事業罰新臺幣<strong>9萬元以上120萬元以下</strong>。📌 電視與廣播罰鍰金額明確不同，極易出現在陷阱題中。", page: "", hidden: true
+        exp: "<span class='law-ref'>廣播電視法第44條第1項</span>針對情節重大的違規，電視事業罰新臺幣<strong>40萬元以上200萬元以下</strong>；廣播事業罰新臺幣<strong>9萬元以上120萬元以下</strong>。📌 電視與廣播罰鍰金額明確不同，極易出現在陷阱題中。", page: "", ai: true
       },
       {
         q: "依《廣播電視法》第43條規定，電臺違規經警告不改正，對「電視事業」處新臺幣___萬元以上___萬元以下罰鍰；對「廣播事業」則處新臺幣___仟元以上___萬元以下罰鍰。",
         blanks: [["20", "二十"], ["200", "二百"], ["9", "九"], ["9", "九"]],
         answers: ["20萬", "200萬", "9仟元", "9萬"],
-        exp: "<span class='law-ref'>廣播電視法第43條第1項</span>，電視事業罰新臺幣<strong>20萬元以上200萬元以下</strong>；廣播事業罰新臺幣<strong>9千元以上9萬元以下</strong>。📌 陷阱注意：廣播事業的起跳單位是「仟元」而非萬元，考試時眼睛要放亮！", page: "", hidden: true
+        exp: "<span class='law-ref'>廣播電視法第43條第1項</span>，電視事業罰新臺幣<strong>20萬元以上200萬元以下</strong>；廣播事業罰新臺幣<strong>9千元以上9萬元以下</strong>。📌 陷阱注意：廣播事業的起跳單位是「仟元」而非萬元，考試時眼睛要放亮！", page: "", ai: true
       },
       {
         q: "事業若在廣告上為虛偽不實或引人錯誤之表示（不實廣告），依《公平交易法》第42條規定，主管機關得處新臺幣___萬元以上___萬元以下罰鍰。",
         blanks: [["5", "五"], ["2500", "二千五百", "2,500"]],
         answers: ["5萬", "2500萬"],
-        exp: "依<span class='law-ref'>公平交易法第42條</span>，對於違反第21條（不實廣告）之事業，可處新臺幣<strong>5萬元以上2500萬元以下</strong>罰鍰；屆期不改正者甚至可按次處10萬至5000萬元。📌 起跳金額僅5萬，但上限與藥事法「非藥物宣稱療效」同為2500萬。", page: "", hidden: true
+        exp: "依<span class='law-ref'>公平交易法第42條</span>，對於違反第21條（不實廣告）之事業，可處新臺幣<strong>5萬元以上2500萬元以下</strong>罰鍰；屆期不改正者甚至可按次處10萬至5000萬元。📌 起跳金額僅5萬，但上限與藥事法「非藥物宣稱療效」同為2500萬。", page: "", ai: true
       },
       {
         q: "傳播業者若違法刊播藥物廣告，初次會被處新臺幣___萬元以上___萬元以下罰鍰；若經衛生主管機關通知限期停止後「仍繼續刊播」者，則加重處新臺幣___萬元以上___萬元以下罰鍰。",
         blanks: [["20", "二十"], ["500", "五百"], ["60", "六十"], ["2500", "二千五百", "2,500"]],
         answers: ["20萬", "500萬", "60萬", "2500萬"],
-        exp: "依<span class='law-ref'>藥事法第95條第1項</span>，傳播業者違法刊播初次處新臺幣<strong>20萬元以上500萬元以下</strong>；通知後仍繼續刊播則加重至<strong>60萬元以上2500萬元以下</strong>。📌 考試最愛把「藥商」與「傳播業者」的主體，以及這兩個罰鍰級距互相錯置來出是非題。", page: "", hidden: true
+        exp: "依<span class='law-ref'>藥事法第95條第1項</span>，傳播業者違法刊播初次處新臺幣<strong>20萬元以上500萬元以下</strong>；通知後仍繼續刊播則加重至<strong>60萬元以上2500萬元以下</strong>。📌 考試最愛把「藥商」與「傳播業者」的主體，以及這兩個罰鍰級距互相錯置來出是非題。", page: "", ai: true
       },
       {
         q: "依《廣播電視法》第43條規定，若電視事業違規經警告後不予改正，將處新臺幣___萬元以上___萬元以下罰鍰；若為廣播事業，則處新臺幣___仟元以上___萬元以下罰鍰。",
         blanks: [["20", "二十"], ["200", "二百"], ["9", "九"], ["9", "九"]],
         answers: ["20萬", "200萬", "9仟元", "9萬"],
-        exp: "依<span class='law-ref'>廣播電視法第43條第1項</span>規定，電視事業處新臺幣<strong>20萬元以上200萬元以下</strong>；廣播事業處新臺幣<strong>9千元以上9萬元以下</strong>。📌 請特別注意廣播的起跳單位是「仟元」而非萬元，考試時眼睛要放亮！", page: "", hidden: true
+        exp: "依<span class='law-ref'>廣播電視法第43條第1項</span>規定，電視事業處新臺幣<strong>20萬元以上200萬元以下</strong>；廣播事業處新臺幣<strong>9千元以上9萬元以下</strong>。📌 請特別注意廣播的起跳單位是「仟元」而非萬元，考試時眼睛要放亮！", page: "", ai: true
       },
       {
         q: "一般食品（非藥物）廣告中若宣稱醫療效能，依《藥事法》第91條最高可罰新臺幣___萬元；但若是「化粧品」廣告宣稱醫療效能，依《化粧品衛生安全管理法》第20條最高則是罰新臺幣___萬元。",
         blanks: [["2500", "二千五百", "2,500"], ["500", "五百"]],
         answers: ["2500萬", "500萬"],
-        exp: "依<span class='law-ref'>藥事法第91條第2項</span>，非藥物宣稱醫療效能處新臺幣<strong>60萬元以上2500萬元以下</strong>罰鍰；依<span class='law-ref'>化粧品衛生安全管理法第20條第1項</span>，化粧品宣稱醫療效能處新臺幣<strong>60萬元以上500萬元以下</strong>罰鍰。📌 兩者起跳金額相同（60萬），但上限不同：食品假冒藥品天價2500萬，化粧品上限500萬。", page: "", hidden: true
+        exp: "依<span class='law-ref'>藥事法第91條第2項</span>，非藥物宣稱醫療效能處新臺幣<strong>60萬元以上2500萬元以下</strong>罰鍰；依<span class='law-ref'>化粧品衛生安全管理法第20條第1項</span>，化粧品宣稱醫療效能處新臺幣<strong>60萬元以上500萬元以下</strong>罰鍰。📌 兩者起跳金額相同（60萬），但上限不同：食品假冒藥品天價2500萬，化粧品上限500萬。", page: "", ai: true
       },
       {
         q: "依《有線廣播電視法》規定，系統經營者若違反「不得使用插播式字幕」之規定，依第62條處新臺幣___萬元以上___萬元以下罰鍰；若違反Must-carry義務（應轉播無線電視台節目），依第61條則處新臺幣___萬元以上___萬元以下罰鍰。",
         blanks: [["20", "二十"], ["400", "四百"], ["20", "二十"], ["400", "四百"]],
         answers: ["20萬", "400萬", "20萬", "400萬"],
-        exp: "依<span class='law-ref'>有線廣播電視法第61條</span>及<span class='law-ref'>第62條</span>規定，違法使用插播式字幕或違反Must-carry義務，罰鍰級距皆為新臺幣<strong>20萬元以上400萬元以下</strong>。📌 兩條的罰鍰級距完全一模一樣！有線電視的罰則金額多半偏高，與廣電法的廣播9千元起跳形成強烈對比。", page: "", hidden: true
+        exp: "依<span class='law-ref'>有線廣播電視法第61條</span>及<span class='law-ref'>第62條</span>規定，違法使用插播式字幕或違反Must-carry義務，罰鍰級距皆為新臺幣<strong>20萬元以上400萬元以下</strong>。📌 兩條的罰鍰級距完全一模一樣！有線電視的罰則金額多半偏高，與廣電法的廣播9千元起跳形成強烈對比。", page: "", ai: true
       }
     ];
-
-    /* ─── 解鎖檢查 ─── */
-    // 密碼以 SHA-256 hash 儲存，不在原始碼中保留明文
-    const UNLOCK_HASH = '175917e084446d364d5a393b25cddb3a0d0a71b6745b0a120b77e925518c112e';
-    const SESSION_FLAG = 'adlaw_ok';
-
-    // 同步：從 sessionStorage 恢復解鎖狀態（僅儲存旗標，不儲存原始密碼）
-    let isUnlocked = sessionStorage.getItem(SESSION_FLAG) === '1';
-
-    // 非同步：首次以 URL key 解鎖（hash 比對後 reload 以套用狀態）
-    (async () => {
-      const urlKey = new URLSearchParams(window.location.search).get('key');
-      if (urlKey && !isUnlocked) {
-        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(urlKey));
-        const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-        if (hex === UNLOCK_HASH) {
-          sessionStorage.setItem(SESSION_FLAG, '1');
-          location.href = location.pathname; // 移除 URL 中的密碼，並重新載入套用解鎖
-        }
-      }
-    })();
-
-    if (isUnlocked) {
-      document.querySelector('.exam-header h1').innerHTML = '廣告法規期中考 <span style="font-size:0.6em;opacity:0.8;">🔓</span>';
-      document.getElementById('btn-mode-story').style.display = '';
-    }
 
     /* ─── 匿名答題追蹤 ─── */
     const TRACK_URL = 'https://script.google.com/macros/s/AKfycby1OBl_GcVcmUvz4jcdL-KnufhZRs9wadvrUT82IHC9U8Elal-2fBuJp1JvB9aNzAeA/exec';
@@ -2664,15 +2678,32 @@
         qId: qText ? makeQId(qText) : '',
         qSnippet: qText ? qText.slice(0, 30) : '',
         userAns: String(userAns), correct, ts: Date.now(),
-        token: TRACK_TOKEN, unlocked: isUnlocked
+        token: TRACK_TOKEN
       });
       fetch(TRACK_URL, { method: 'POST', body, mode: 'no-cors', headers: { 'Content-Type': 'text/plain' } }).catch(() => {});
     }
 
-    /* ─── 依解鎖狀態篩選題目 ─── */
-    const activeQuestions = questions.filter(q => isUnlocked || !q.hidden);
-    const activeMCQuestions = mcQuestions.filter(q => isUnlocked || !q.hidden);
-    const activeFillQuestions = fillQuestions.filter(q => isUnlocked || !q.hidden);
+    /* ─── 題目來源篩選 ─── */
+    let questionFilter = 'all'; // 'all' | 'past' | 'ai'
+    let activeQuestions = questions.slice();
+    let activeMCQuestions = mcQuestions.slice();
+    let activeFillQuestions = fillQuestions.slice();
+
+    function applyFilter() {
+      const fn = questionFilter === 'ai' ? q => q.ai : questionFilter === 'past' ? q => !q.ai : () => true;
+      activeQuestions = questions.filter(fn);
+      activeMCQuestions = mcQuestions.filter(fn);
+      activeFillQuestions = fillQuestions.filter(fn);
+    }
+
+    function switchFilter(filter) {
+      if (questionFilter === filter) return;
+      questionFilter = filter;
+      document.getElementById('btn-filter-all').classList.toggle('active', filter === 'all');
+      document.getElementById('btn-filter-past').classList.toggle('active', filter === 'past');
+      document.getElementById('btn-filter-ai').classList.toggle('active', filter === 'ai');
+      resetAll();
+    }
 
     /* ─── 模式狀態 ─── */
     let currentMode = 'learn'; // 'learn' | 'classic'
@@ -2688,12 +2719,9 @@
     let mcGuessFlags = Array(activeMCQuestions.length).fill(false);
     let mcOptionOrders = []; // shuffled option order per question [0-3]
     let mcMappedAns = []; // correct answer index after shuffling options
-    const TOTAL = activeQuestions.length;
-    const MC_TOTAL = activeMCQuestions.length;
     let fillUserAnswers = Array(activeFillQuestions.length).fill(null);
     let fillCorrectCount = 0, fillWrongCount = 0;
     let displayFillQuestions = [...activeFillQuestions];
-    const FILL_TOTAL = activeFillQuestions.length;
 
     /* ─── 隨機排序 ─── */
     function toggleShuffle() {
@@ -2726,9 +2754,10 @@
       document.getElementById('final-box').style.display = 'none';
       document.querySelector('.sticky-bar').style.display = isStory ? 'none' : '';
       document.querySelector('.exam-header').style.display = isStory ? 'none' : '';
+      document.getElementById('filter-toggle-wrap').style.display = isStory ? 'none' : '';
 
       if (isStory) {
-        document.getElementById('mode-desc').textContent = '🔒 限密碼解鎖者遊玩・菜鳥律師小廣的廣告法求生記';
+        document.getElementById('mode-desc').textContent = '菜鳥律師小廣的廣告法求生記';
         resetAll();
         return;
       }
@@ -2738,28 +2767,28 @@
       const btnCheck = document.getElementById('btn-check-all');
 
       if (mode === 'learn') {
-        document.getElementById('total-count').textContent = TOTAL;
+        document.getElementById('total-count').textContent = activeQuestions.length;
         desc.textContent = '答題後立即顯示對錯與詳解，隨時掌握學習進度';
         headerSub.innerHTML = '選擇答案後，<strong>立即顯示對錯與詳解</strong>・不確定可標記「🎲 猜的」・每題可新增個人筆記';
         btnCheck.style.display = 'none';
         document.getElementById('correct-stat').style.display = '';
         document.getElementById('wrong-stat').style.display = '';
       } else if (mode === 'classic') {
-        document.getElementById('total-count').textContent = TOTAL;
+        document.getElementById('total-count').textContent = activeQuestions.length;
         desc.textContent = '作答完所有題目後，點「對答案」一次看完所有結果與詳解';
         headerSub.innerHTML = '選擇 ○（正確）或 ✕（錯誤）・不確定時可點「🎲 猜的」標記・作答後點<strong>「✅ 對答案」</strong>查看結果';
         btnCheck.style.display = '';
         document.getElementById('correct-stat').style.display = 'none';
         document.getElementById('wrong-stat').style.display = 'none';
       } else if (mode === 'mc') {
-        document.getElementById('total-count').textContent = MC_TOTAL;
-        desc.textContent = '共 ' + MC_TOTAL + ' 題四選一，融會貫通易混淆觀念・答題後立即顯示詳解';
+        document.getElementById('total-count').textContent = activeMCQuestions.length;
+        desc.textContent = '共 ' + activeMCQuestions.length + ' 題四選一，融會貫通易混淆觀念・答題後立即顯示詳解';
         headerSub.innerHTML = '從判斷題中精選<strong>最容易混淆的觀念</strong>，製成四選一選擇題・答題後<strong>立即顯示正確答案與詳解</strong>';
         btnCheck.style.display = 'none';
         document.getElementById('correct-stat').style.display = '';
         document.getElementById('wrong-stat').style.display = '';
       } else { // fill
-        document.getElementById('total-count').textContent = FILL_TOTAL;
+        document.getElementById('total-count').textContent = activeFillQuestions.length;
         desc.textContent = '填入關鍵數字與詞彙，強化法條細節記憶・答對才算完成';
         headerSub.innerHTML = '從法條中挖空<strong>最容易記錯的數字與關鍵詞</strong>・輸入答案後按「✅ 確認答案」・<strong>答對才算完成</strong>';
         btnCheck.style.display = 'none';
@@ -3246,6 +3275,7 @@
 
     /* ─── 重置 ─── */
     function resetAll() {
+      applyFilter();
       document.getElementById('final-box').style.display = 'none';
       if (currentMode === 'story') { initStoryMode(); return; }
       document.getElementById('answered-count').textContent = '0';
@@ -3267,8 +3297,8 @@
         fillCorrectCount = 0; fillWrongCount = 0;
       } else {
         displayQuestions = shuffleEnabled ? shuffleArray([...activeQuestions]) : [...activeQuestions];
-        userAnswers = Array(TOTAL).fill(null);
-        guessFlags = Array(TOTAL).fill(false);
+        userAnswers = Array(activeQuestions.length).fill(null);
+        guessFlags = Array(activeQuestions.length).fill(false);
         correctCount = 0; wrongCount = 0;
         classicChecked = false;
       }
@@ -3916,21 +3946,6 @@
     /* ── 初始化：顯示關卡選擇 ── */
     function initStoryMode() {
       const panel = document.getElementById('story-panel');
-
-      /* 密碼鎖 */
-      if (!isUnlocked) {
-        panel.innerHTML = `
-      <div class="story-day-header">
-        <div style="font-size:0.8em;opacity:0.75;letter-spacing:2px;margin-bottom:4px;">${storyDay1.daySubtitle}</div>
-        <div style="font-size:1.25em;font-weight:bold;letter-spacing:2px;">${storyDay1.dayTitle}</div>
-      </div>
-      <div class="story-lock-box">
-        <div style="font-size:2.5em;margin-bottom:12px;">🔒</div>
-        <div style="font-size:1.1em;font-weight:bold;color:#6c3483;margin-bottom:8px;">劇情模式限密碼解鎖者遊玩</div>
-        <div style="font-size:0.88em;color:#7f8c8d;line-height:1.8;">請在網址後方加上密碼參數<br><code style="background:#f0e6f9;padding:2px 8px;border-radius:4px;color:#6c3483;">?key=（密碼）</code><br>解鎖後即可進入小廣的求生日常！</div>
-      </div>`;
-        return;
-      }
 
       /* 關卡選擇畫面 */
       panel.innerHTML = `
