@@ -1,0 +1,1128 @@
+# 廣告法規題庫 — Codex 交接文件
+
+## 專案概覽
+這是一個單頁 HTML 廣告法規練習題庫（含期中＆期末），部署於 GitHub Pages。
+
+| 項目 | 期中考 | 期末考 |
+|------|--------|--------|
+| **本地路徑** | `advertising-law/index.html` | `advertising-law/final/index.html` |
+| **GitHub Pages** | https://lml679939-cmyk.github.io/advertising-law/ | https://lml679939-cmyk.github.io/advertising-law/final/ |
+| **題庫資料夾** | `midterm-exam/` | `final-exam/` |
+
+- **本地根目錄**：`C:\Users\user\Downloads\廣告法規\advertising-law`
+- **GitHub Repo**：https://github.com/lml679939-cmyk/advertising-law
+- **本地預覽**：`python -m http.server 7788 --directory C:/Users/user/Downloads/廣告法規/advertising-law`（launch.json 已設定，可用 `quiz` 啟動）
+
+---
+
+## 題庫現況（2026-06-15 更新）
+
+### 期中考（`index.html`）
+
+| 題型 | 考古題 | AI生成 | 合計 |
+|------|--------|--------|------|
+| 是非題 | 54 | 41 | **95** |
+| 選擇題 | 48 | 41 | **89** |
+| 填充題 | 30 | 25 | **55** |
+| **合計** | **132** | **107** | **239** |
+
+### 期末考（`final/index.html`）
+
+| 題型 | 考古題 | AI生成 | 合計 |
+|------|--------|--------|------|
+| 是非題 | 73 | 40 | **113** |
+| 選擇題 | 73 | 40 | **113**（由是非題一對一轉換）|
+| 填充題 | 31 | 35 | **66** |
+| **合計** | **177** | **115** | **292** |
+
+> AI生成題（標有 `ai: true`）的主要來源：消費者保護法、公平交易法（深度延伸）、薦證廣告規範、網路廣告處理原則等。
+> 期末劇情模式已擴充至 **6 關卡 60 題**，全面開放（無需密碼）。Day1 衛廣法、Day2 公平法、Day3 薦證廣告、Day4 消保法、Day5 廣告不實進階、Day6 廣電法（乙女遊戲模式）。
+
+---
+
+## 模式列表（`currentMode`）
+
+### 期中考（`index.html`）—— 五種模式
+
+| ID | 按鈕 | 說明 |
+|----|------|------|
+| `learn` | 📖 學習模式 | 答題後立即顯示對錯與詳解 |
+| `classic` | 📝 傳統模式 | 全部作答後點「對答案」 |
+| `mc` | 📋 選擇題 | 選擇題四選一，答後立即顯示 |
+| `fill` | ✏️ 填空題 | 填入關鍵數字/詞彙 |
+| `story` | 🎭 劇情模式 | 菜鳥律師小廣的廣告法求生記 |
+
+### 期末考（`final/index.html`）—— 六種模式（全部開放）
+
+| ID | 按鈕 | 說明 |
+|----|------|------|
+| `learn` | 📖 學習模式 | 答題後立即顯示對錯與詳解 |
+| `classic` | 📝 傳統模式 | 全部作答後點「對答案」 |
+| `mc` | 📋 選擇題 | 選擇題四選一，答後立即顯示 |
+| `fill` | ✏️ 填空題 | 填入關鍵數字/詞彙 |
+| `map` | 🗺️ 概念地圖 | 依法規分類 → 核心概念 → 白話故事 + 隨堂 5 題；含 🎲 猜的＋匯出錯題 |
+| `story` | 🎭 劇情模式 | 菜鳥律師小廣的廣告法求生記（6 關卡 60 題） |
+
+> 期末考劇情模式（Day1~6）、概念地圖模式均為**全面開放**，無需密碼。固定客戶角色：公平會黃調查官（ftc_normal.png）、消保官蘇主任（consumer_normal.png）、葉小編（shopping_confident.png）、陳董（boss_happy.png）。
+
+切換模式時 `switchMode(mode)` 會：
+1. 切換按鈕 active 狀態
+2. story 模式：隱藏 `.sticky-bar`、`.exam-header`、`#quiz-container`、`#filter-toggle-wrap`，顯示 `#story-panel`
+3. map 模式：隱藏 `.sticky-bar`、`.exam-header`、`#quiz-container`、`#filter-toggle-wrap`，顯示 `#concept-map-panel`
+4. 非 story/map 模式：反向操作，顯示 `#filter-toggle-wrap`
+5. 呼叫 `resetAll()` → 若為 story 則 `initStoryMode()`，若為 map 則 `initConceptMap()`，否則走原本流程（含 `applyFilter()`）
+
+> **初始化注意**：`let currentMode = ''`（空字串，非 `'learn'`）。這樣頁面載入時 `switchMode('learn')` 才能完整執行（若初始為 `'learn'`，函式開頭的 `if (currentMode === mode) return` 會直接跳過，導致 quiz 不建立）。
+
+---
+
+## 題目來源標記與篩選系統（2026-06-15 密碼解鎖系統已移除）
+
+> ⚠️ **舊版密碼解鎖系統（UNLOCK_HASH / isUnlocked / sessionStorage）已於 2026-06-15 完全移除**，所有題目對所有人公開。
+
+- **AI生成題標記**：題目物件加上 `ai: true` 屬性（原 `hidden: true` 一律改為 `ai: true`）
+- **來源篩選 UI**：模式按鈕列下方有「全部題目 / 📚 考古題 / 🤖 AI生成題目」三選一按鈕（`#filter-toggle-wrap`）
+- **篩選僅作用於** 學習 / 傳統 / 選擇題 / 填空題 四種模式；劇情模式和概念地圖不受影響
+- **匯出錯題功能**：全員開放（不再需要解鎖）
+- **篩選邏輯**：
+  ```javascript
+  let questionFilter = 'all'; // 'all' | 'past' | 'ai'
+  let activeQuestions = questions.slice();
+  let activeMCQuestions = mcQuestions.slice();
+  let activeFillQuestions = fillQuestions.slice();
+
+  function applyFilter() {
+    const fn = questionFilter === 'ai'   ? q => q.ai
+             : questionFilter === 'past' ? q => !q.ai
+             :                             () => true;
+    activeQuestions     = questions.filter(fn);
+    activeMCQuestions   = mcQuestions.filter(fn);
+    activeFillQuestions = fillQuestions.filter(fn);
+  }
+
+  function switchFilter(filter) {
+    if (questionFilter === filter) return;
+    questionFilter = filter;
+    // 更新按鈕 active 狀態後呼叫 resetAll()
+    resetAll();
+  }
+  ```
+- **`applyFilter()` 呼叫時機**：`resetAll()` 第一行（每次模式切換、篩選切換、重試時自動執行）
+
+---
+
+## 程式架構重點
+
+### 資料結構
+- **是非題**：`const questions = [...]`，欄位：`q`、`ans`（"O"/"X"）、`exp`、`page`、`ai`（選填，AI生成題加此屬性）
+- **選擇題**：`const mcQuestions = [...]`，欄位：`q`、`options`（陣列）、`ans`（0-3 整數）、`exp`、`page`、`ai`（選填）
+- **填充題**：`const fillQuestions = [...]`，欄位：`q`、`blanks`（接受答案陣列的陣列）、`answers`（顯示用）、`exp`、`page`、`ai`（選填）
+
+### 選擇題選項洗牌
+每次建題時執行 `shuffleArray([0,1,2,3])`，結果存於：
+- `mcOptionOrders[]`：每題的選項順序
+- `mcMappedAns[]`：洗牌後正確答案的位置索引
+
+### 複製為圖片功能
+- 複製按鈕（雙頁圖示）位於 **「猜的」按鈕右側**（是非題）及「確認答案」按鈕右側（填充題）
+- 點擊後呼叫 `captureCard(idx)`，使用 `html2canvas` 擷取題目卡
+- 擷取結果透過 `navigator.clipboard.write()` 複製到剪貼簿，可直接 `Ctrl+V` 貼上
+- 依賴：`html2canvas 1.4.1`（CDN，已加 SRI 雜湊保護）
+
+### 重要函式守則
+- `updateBar()`：story / map 模式開頭有 early return
+- `buildQuiz()`：story / map 模式開頭有 early return
+- `resetAll()`：第一行呼叫 `applyFilter()`；story 模式執行 `initStoryMode(); return;`；map 模式執行 `initConceptMap(); return;`
+
+---
+
+## 劇情模式架構（多關卡 VN 視覺小說系統）
+
+### 已完成關卡（期中考）
+
+| 關卡 | 常數 | 主題 | 題數 | 客戶角色 |
+|------|------|------|------|---------|
+| Day 1 | `storyDay1` | 藥事法・藥物廣告・釋字414/744 | 10 | 藥廠業務陳經理、電視台業務小陳 |
+| Day 2 | `storyDay2` | 廣播電視法・有線廣電法・衛星廣電法 | 10 | 全台電視林法務 |
+| Day 3 | `storyDay3` | 化粧品衛生安全管理法・釋字744 | 10 | 美妝直播主圈圈 |
+| Day 4 | `storyDay4` | 衛星廣電法・消保法・NCC組織法・公平交易法 | 10 | 購物頻道副理何副理 |
+
+### 已完成關卡（期末考，2026-06-03 已擴充至 Day 5）
+
+| 關卡 | 常數 | 主題 | 題數 | 客戶角色 |
+|------|------|------|------|---------|
+| Day 1 | `storyDay1` | 衛廣法・外資持股・購物頻道比例・鎖碼核定・更正期限 | 10 | 購物頻道副理何副理 |
+| Day 2 | `storyDay2` | 公平交易法・廣告不實處理原則・贈品贈獎辦法 | 10 | 公平會黃調查官 |
+| Day 3 | `storyDay3` | 薦證廣告規範・比較廣告・警告函處理原則・網路廣告基礎 | 10 | 美妝直播主圈圈 |
+| Day 4 | `storyDay4` | 消費者保護法・通訊交易・定型化契約・懲罰性賠償 | 10 | 消保官蘇主任 |
+| Day 5 | `storyDay5` | 網路廣告§4§10・廣告不實認定§5/§6/§7/§8・警告函§3・公平法§24/§42 | 10 | 葉小編（網拍主理人）、陳董（同業科技公司董事長） |
+| Day 6 | `storyDay6` | 廣播電視法§19/§23/§44・廣電法施行細則§19/§20/§22・有線廣電法§24/§25/§27 | 10 | **乙女路線**：王鐵嘴主任／林法務／林酸酸／阿肥（玩家開局選擇路線） |
+
+> Day 5 是 Day 3 的進階版：Day 3 涵蓋薦證／比較／警告函的入門級條文，Day 5 改聚焦在「廣告不實認定四條」（§5虛偽不實/§6引人錯誤/§7廣告認定/§8代理業認定）以及警告函§3 專利先行程序、營業誹謗（§24 vs §25）等更細節的考點。
+> Day 6 為**乙女遊戲主題**（`type: 'otome'`）：開局選擇4種攻略角色（傲嬌霸道型・溫柔守護型・腹黑神祕型・年下直球型），各路線有獨立台詞（`routeLine`）、反應（`correctR`/`wrongR` 為物件非陣列）、幸運事件（`luckyMsg`）、三種結局（好感度≥4 Good End / 2-3 Normal End / ≤1 Bad End）。
+
+### 固定角色陣容
+| 角色 | 功能 |
+|------|------|
+| 王鐵嘴主任 | 答對時誇獎（罕見），答錯時怒吼；「😡 主任發飆」指令 |
+| 林酸酸資深律師 | 毒舌版解析；「🧊 酸酸講解」指令 |
+| 阿肥實習生 | 共患難，答對超開心、答錯超緊張 |
+
+### 題目資料結構
+```javascript
+{
+  setup: '情境描述（含時間地點，white-space:pre-line 格式）',
+  client: '說話的角色名稱',         // 用於查找 storyCharacters 頭像
+  clientLine: '角色說的話',
+  type: 'tf' | 'mc',
+  q: '法律判斷題目文字',
+  ans: 'O' | 'X',                 // tf 用
+  options: ['A','B','C','D'],      // mc 用
+  ans: 0,                          // mc 用（0-3）
+  exp: '詳解 HTML',
+  sour: '酸酸版講解文字',
+  rage: '主任發飆文字',
+  correctR: ['答對反應1','答對反應2','答對反應3'],
+  wrongR:   ['答錯反應1','答錯反應2','答錯反應3'],
+}
+```
+
+### 關卡常數結構
+```javascript
+const storyDayN = {
+  dayTitle: 'Day N ── 標題',
+  daySubtitle: '菜鳥律師小廣的廣告法求生記',
+  dayIntro: '開場白（pre-line 格式）',
+  questions: [ /* 10 題 */ ]
+};
+```
+
+### 核心狀態與函式
+```
+storyState          → { qIdx, score, hearts(0-5), streak, answered, wrongList[] }
+currentDay          → 當前遊玩的 storyDayN 物件（切換關卡時更新）
+initStoryMode()     → 顯示關卡選擇畫面（全面開放，無密碼鎖）
+startStoryDay(data) → 設定 currentDay、重置 storyState、建立 HTML
+storyBuildScene(idx)→ 渲染 VN 舞台（呼叫 getCharacter + getSceneBackground）
+storyTF / storyMC   → 作答（讀 currentDay.questions）
+storyCmd(cmd)       → 'sour'|'rage'|'end' 指令
+storyNext()         → 下一題
+storyShowEnd(early) → 結算（顯示「重新挑戰」+「選擇關卡」按鈕）
+```
+
+### VN 視覺小說舞台（已廢棄的舊設計，請參考下方「2026-04-19 重設計」章節）
+
+> ⚠️ 以下為舊版架構圖，實際實作已大幅更新，請以本文件末尾「劇情模式 UI 重設計」章節為準。
+
+**背景系統 `getSceneBackground(setupText)`**：
+- 解析 setup 文字中的時間關鍵字，自動對應場景漸層
+  - 早上 9-11 點 → 藍天曙光
+  - 中午 12 點 → 暖金陽光
+  - 下午 2-3 點 → 午後藍天
+  - 下午 4 點 → 橘紅夕陽
+  - 下午 5 點 / 夜晚 → 深藍夜空
+
+### 角色頭像系統（⚠️ 已改用本地 PNG，見「重設計」章節）
+```javascript
+// 目前實際定義（使用本地圖片）
+function getCharacter(name) → storyCharacters 物件 | null
+// 自動剝除括號補述，如「陳經理（驚慌失措）」→ 查「陳經理」
+```
+現有角色（共 **12 個**，2026-06-03 更新）：王鐵嘴主任、林酸酸、阿肥、陳經理、電視台業務小陳、林法務、圈圈、何副理、**公平會黃調查官**（ftc_normal.png）、**消保官蘇主任**（consumer_normal.png）、**葉小編**（shopping_confident.png）、**陳董**（boss_happy.png）
+> ⚠️ **圖片路徑**：期中 `./images/`，期末 `../images/`（final/ 子目錄，需往上一層）
+> 💡 Day 5 新角色（葉小編、陳董）沿用先前 commit 的「表情變體圖」（`shopping_confident.png`、`boss_happy.png`）作為新角色立繪，不需額外生圖。
+
+### 新增普通 Day（正確流程，2026-06-03 確認）
+1. 在現有 `storyDayN` **之後**新增 `const storyDay(N+1) = { ... }`
+2. 在 `initStoryMode()` 的關卡選擇按鈕區加一顆按鈕：
+   ```html
+   <button class="story-day-select-btn" onclick="startStoryDay(storyDay5)">...</button>
+   ```
+3. 在 `startStoryDay()` 的 `dayNum` 三元表達式與 `startLabel` 三元表達式末尾加入新 Day 對應
+4. 在 `storyShowEnd()` 的 `dayLabel` 三元表達式末尾加入新 Day 對應
+5. 把新客戶角色加入 `storyCharacters`（圖片路徑 `../images/xxx.png`）
+6. （若沿用既有表情變體 PNG）確認該 PNG 已在 git 內，若未 commit 則一併 `git add images/xxx.png`
+
+### 新增乙女 Day（Day 6 架構，2026-06-04 新增）
+乙女 Day 的資料結構與一般 Day 不同：
+- `type: 'otome'` 標記此 Day 為乙女模式
+- `routes` 物件：4 個路線（key: `tsundere`/`gentle`/`cunning`/`junior`），每個路線含：
+  - `character`（角色名）、`label`（路線名稱）、`subtitle`（說明）
+  - `avatarNormal`/`avatarHappy`（圖片路徑）、`color`（名牌底色）
+  - `introLine`（開場台詞）、`luckyMsg`（連對3題幸運事件）
+  - `endings.good`/`.normal`/`.bad`（三種結局文字）
+- 每道題目的 `correctR`/`wrongR` 為**物件**（key 為路線 key），而非陣列
+- 每道題目有 `routeLine` 物件（key 為路線 key），取代 `clientLine`
+- 不需在 `storyCharacters` 加新角色（路線設定已含圖片路徑）
+- 程式邏輯：`startStoryDay` 偵測 `type==='otome'` 且無路線時 → 呼叫 `showOtomeRouteSelect()`；玩家選路線後呼叫 `selectOtomeRoute()` → 再次 `startStoryDay`
+- 結局判定：好感度（hearts）≥4 → Good End，2-3 → Normal End，≤1 → Bad End
+
+### 好感度邏輯
+- 答對：streak++；連對 3 題 → hearts+1（幸運事件）；hearts < 3 時答對也 +1
+- 答錯：streak=0；hearts-1
+- 初始值：hearts=3（中立）
+
+---
+
+## 題目新增規則
+
+### `page` 欄位格式（期末考）
+格式為 **`"p.XX 法條"`**，例如 `page: "p.115 衛廣法§24"`。`p.XX` 是 PDF 講義的頁碼，`法條` 是法條名稱（概念地圖 `matchPages` 以此部分比對）。
+- 如法條**不在 PDF** 中（如 `衛廣法施行細則§11`、`廣告插播辦法§3`、`警告函處理原則§3/§5` 等），則維持純法條名稱格式（不加 `p.XX`）
+- 詳細頁碼對照表見下方「已確認的 page 欄位頁碼對照」
+
+### 是非題格式
+```javascript
+{ q: "題目文字", ans: "O", exp: "解析 HTML", page: "p.115 衛廣法§24", hidden: true }
+```
+
+### 選擇題格式
+```javascript
+{ q: "題目文字",
+  options: ["選項A","選項B","選項C","選項D"],
+  ans: 0,  // 0=A, 1=B, 2=C, 3=D
+  exp: "解析 HTML", page: "p.115 衛廣法§24", hidden: true }
+```
+
+### 填充題格式
+```javascript
+{ q: "題目含___空格",
+  blanks: [["正確答案","另一種寫法","..."]],
+  answers: ["顯示用答案"],
+  exp: "解析 HTML", page: "p.115 衛廣法§24", hidden: true }
+```
+
+### 新增位置
+- **是非題**：加在 `const questions = [...]` 陣列最後
+- **選擇題**：加在 `const mcQuestions = [...]` 陣列最後
+- **填充題**：加在 `const fillQuestions = [...]` 陣列最後
+
+---
+
+## 題庫匯出腳本（供 NotebookLM）
+
+```
+advertising-law/
+├── quiz_export/
+│   ├── export_all.py              ← 題型匯出腳本（三種題型：TF/MC/Fill）
+│   └── export_map.py              ← 概念地圖索引＋劇情模式段落匯出腳本（2026-06-03 擴充）
+├── midterm-exam/
+│   └── 題庫完整內容_NotebookLM確認用.txt  ← 期中考匯出結果
+└── final-exam/
+    └── 期末題庫完整內容_NotebookLM確認用.txt  ← 期末考匯出結果（含概念地圖索引＋劇情模式題目）
+```
+
+**執行方式（期中考）**：
+```bash
+# export_all.py 預設指向 ../index.html（即期中 index.html）
+python quiz_export/export_all.py
+# 輸出至 midterm-exam/題庫完整內容_NotebookLM確認用.txt
+```
+
+**執行方式（期末考，含概念地圖索引＋劇情模式段落）**：
+```bash
+# 步驟一：匯出三種題型
+python -c "
+import sys; sys.path.insert(0,'quiz_export')
+import export_all as e; from pathlib import Path
+e.HTML_FILE = Path('final/index.html')
+e.OUT_TXT   = Path('final-exam/期末題庫完整內容_NotebookLM確認用.txt')
+src = e.HTML_FILE.read_text(encoding='utf-8')
+tf=e.parse_tf(src); mc=e.parse_mc(src); fill=e.parse_fill(src)
+e.OUT_TXT.write_text(e.build_txt(tf,mc,fill), encoding='utf-8')
+print('done', len(tf), len(mc), len(fill))
+"
+
+# 步驟二：附加概念地圖索引＋劇情模式段落
+PYTHONIOENCODING=utf-8 python quiz_export/export_map.py
+# 兩步合一：export_map.py 會在 TXT 末尾附加：
+#   1. 【概念地圖索引】— 30 子概念對應的題目清單
+#   2. 【劇情模式題目】— Day1~N 共 50 題的法條題幹/答案/詳解
+# 若 TXT 已有舊段落，會自動截斷並重寫
+# Windows 環境必須加 PYTHONIOENCODING=utf-8，否則 print 中文會 crash
+```
+
+> **目前 TXT 規模**（2026-06-03）：159 題正式題庫 + 30 子概念索引 + 50 題劇情模式，約 1,960 行、73 KB。
+
+---
+
+## 已修正的重要題目錯誤
+
+### 期中考（`index.html`）
+
+| 題號/類型 | 錯誤內容 | 修正後 |
+|-----------|---------|--------|
+| 是非第23題（藥事法§4） | 詳解誤稱「醫療器材已從藥事法移除」 | 已修正：§4 仍包含醫療器材；答案維持✕ |
+| 選擇題（藥事法§4定義） | 題目問「不再包含哪項」+ 解析說醫療器材已移除 | 已翻轉：題目改為「仍屬藥物範圍卻常被誤認排除」 |
+| 是非第35題（施行細則§20） | 題目「五日前」但詳解說「十日前」矛盾 | 已確認：五日前正確，詳解已更新 |
+| 是非第37題（有線廣電法§27鎖碼） | 詳解誤稱應為「備查」 | 已確認：正確用語為「核定」 |
+| 是非第25題（藥事法§95傳播業者） | 詳解誤稱金額為「6萬～30萬」 | 已修正：傳播業者初次違反§66第3項為「20萬～500萬」 |
+| 是非第9題（廣電法§27） | 頁碼標示 p.70 | 已修正為 p.65 |
+
+### 期末考（`final/index.html`）—— 2026-05-24 大批修正
+
+| 題號 | 錯誤內容 | 修正後 |
+|------|---------|--------|
+| 是非6（衛廣§39） | 題目「播送前二十日」，答案O | 改為「播送後」，答案✕ |
+| 是非7（衛廣§44） | 「接到要求後二十日內更正」，答案O | 更正期限改為十日，答案✕ |
+| 是非11（衛廣§29） | 「廣告內容以書面報請核備」，答案O | 改為「鎖碼方式報請核定」，答案✕ |
+| 是非12（節目辦法§5） | 「新播比率不得低於40%」，答案O | 衛星頻道新播比率下限為20%，答案✕ |
+| 是非16（公平法§2） | 題目寫「同業工會」，詳解誤說缺「團體」 | 題目改為「同業工會」（陷阱），詳解改為公會 vs 工會 |
+| 是非22（公平法§13） | 答案誤給✕，詳解誤稱「得」不禁止 | 法條明定「不得禁止」，答案改O |
+| 是非25（贈品贈獎§5） | 詳解稱上限「7.5億元」 | 改為六億元 |
+| 是非28（處理原則§6） | 詳解稱「引人錯誤」需與事實不符 | 改為「不論是否與事實相符」均可構成 |
+| 是非30（處理原則§8） | 答案誤給O（舊版條文） | 依考古題原卷改為✕ |
+| 是非32（更正廣告原則§2） | 詳解稱「第一項至第二項」 | 改為「第一項或第四項」 |
+| 是非34（薦證廣告§6媒體業） | 「第四項後段 + 廣告代理業」，答案O | 改為「第五項中段 + 廣告主」，答案✕ |
+| 是非37（薦證廣告§5） | 詳解稱違反公平法§21 | 改為違反§25 |
+| 是非46（比較廣告§6） | 詳解稱違反公平法§25 | 改為違反§24（營業誹謗） |
+| 是非49（移送表零售農產品） | 「主管機關為農委會」，答案O | 零售市場階段主管機關為衛福部，答案✕ |
+| 是非51（移送表批發農產品） | 答案誤給✕，詳解稱有機食品屬衛福部 | 批發市場主管機關確為農業部，答案改O |
+| 是非55（消保§19） | 解除權消滅「三個月」，答案O | 改為四個月，答案✕ |
+| 是非57（消保§21） | 未記載利率「年利率20%」，答案O | 改為5%，答案✕ |
+| 是非58（消保§45-5） | 詳解未指出「推定」應為「視為」 | 詳解補充視為 vs 推定之法律差異 |
+| 是非59（消保§51） | 詳解稱故意上限三倍 | 改為五倍（重大過失三倍、過失一倍） |
+| 選擇5（衛廣§35） | 題幹寫「核定之廣告內容」 | 改為「核准之廣告內容」 |
+| 選擇30（處理原則§8） | 以舊版「廣告主預知」為正確答案，邏輯矛盾 | 刪除舊題，改為「虛偽不實 vs 引人錯誤」認定差異題 |
+| 是非38（薦證廣告§3） | 題幹「其中即應即刻應對違反本規定之虞」（掃描亂碼） | 改為「否則即有違反本法規定之虞」 |
+| 是非41（網路廣告§9） | 題幹「推廣商品護服務者」（錯字） | 改為「推廣商品或服務者」 |
+| 是非47、48（警告函處理原則） | 題幹「警告告函」（贅字） | 改為「警告函」 |
+
+### 期末考（`final/index.html`）—— 2026-05-24 第二批修正
+
+| 題號 | 錯誤內容 | 修正後 |
+|------|---------|--------|
+| 是非2（衛廣§31） | 詳解稱禁止置入之節目為「新聞**節目**」 | 母法用字為「新聞**報導**」，已修正詳解 |
+| 選擇2（衛廣§31） | 正確選項為「新聞節目及兒童節目」 | 改為「新聞**報導**及兒童節目」，詳解同步修正 |
+| 填充2（衛廣§31） | blanks/answers 為「新聞節目」 | 改為「新聞**報導**」，詳解加註「母法用字」 |
+| 是非20（公平法§8） | 題幹為掃描殘字（邏輯顛倒），ans=X | 還原§8正確句型；ans 改**O**；詳解重寫去除「邏輯相反」 |
+| 是非23（公平法§42） | 題幹「主管機關**關**對於」（贅字） | 刪除多餘「關」字 |
+| 是非37（薦證廣告§5） | 題幹「且**以**影響交易秩序者」（漏字） | 補為「且**足以**影響交易秩序者」 |
+| 是非52（移送表第14項） | 題幹稱「主管機關為**勞工局**」，ans=O | 依最新講義 p.175 改為「**勞動部**」，exp 同步 |
+| 選擇52（移送表第14項） | 選項B「勞工局」為正確答案 | 選項B改「**勞動部**」；exp 同步；選項D改「職業訓練局（勞工局）」避免提示 |
+| 選擇61（消保法§7商品安全） | 選項C「企業不得以...主張先前商品不符合安全性」主詞邏輯怪異 | 改為消保法§7-1原意句型：「依法，商品不得僅因事後有較佳之商品問世，即被視為不符合安全性。」 |
+
+### 概念地圖修正（2026-05-24）
+
+| 修正項目 | 內容 |
+|---------|------|
+| `ftc_false_ad` 子概念 matchPages | 補入 `'處理原則§8'`，使是非30/選擇30 等題能出現在「廣告不實」概念下 |
+| `sat_shopping_placement` 故事文字 | 「新聞節目」→「新聞報導」，補註母法用字 |
+| `cross_agencies` 故事文字 | 「職業訓練機構招訓廣告 → 勞工局（地方主管機關）」→「勞動部」|
+
+---
+
+## 重要法條筆記（已確認正確）
+
+### 藥事法罰則（最易混淆）
+| 對象 | 條文 | 情境 | 罰鍰 |
+|------|------|------|------|
+| 藥商 | §92 | 違反§66第1項（初次） | 20萬～500萬 |
+| 傳播業者 | §95第1項 | 違反§66第3項（初次） | 20萬～500萬 |
+| 傳播業者 | §95第1項 | 通知後仍繼續刊播（加重） | 60萬～2500萬 |
+| 傳播業者 | §95第1項 | 違反§66第4項（未保存資料） | 6萬～30萬 |
+| 任何人 | §91第2項 | 違反§69（非藥物宣稱醫療效能） | 60萬～2500萬 |
+
+### 廣播電視法罰則
+| 違規類型 | 初次 | 經警告不改正 |
+|---------|------|------------|
+| 一般違規 | §42 警告 | §43 罰鍰 |
+| §21第2、3款情節重大（電視） | §44 40萬～200萬 + 停播3日～3個月 | — |
+| §21第2、3款情節重大（廣播） | §44 9萬～120萬 + 停播3日～3個月 | — |
+
+### 時間數字整理
+| 規定 | 數字 |
+|------|------|
+| 電視節目廣告區隔辦法§16（贊助揭露，電視） | 20秒 |
+| 廣播節目廣告區隔辦法§16（贊助揭露，廣播） | 45秒 |
+| 廣播節目廣告區隔辦法§11（置入揭露，廣播） | 45秒 |
+| 衛星廣播電視法§36（廣告時間上限） | 節目總時間六分之一 |
+| 衛星廣播電視法§36（單則廣告標示門檻） | 超過3分鐘須標示「廣告」 |
+| 廣播電視法§23（更正期限） | 7日內 |
+| 廣播電視法施行細則§19（資料保存） | 20日 |
+| 廣播電視法施行細則§20（節目時間表） | 播送5日前 |
+| 藥事法§66第4項（資料保存） | 6個月 |
+| 藥事法§66-1（廣告核准有效期間） | 1年；展延每次不超過1年 |
+| 廣播電視法§19（本國自製節目下限） | 70% |
+| 廣播電視法施行細則§22（節目中報台名） | 每半小時一次 |
+
+### 置入 vs 贊助禁止清單（陷阱）
+| 商品 | 禁止置入（§8） | 禁止贊助（§13） |
+|------|--------------|----------------|
+| 菸品 | ✅ | ✅ |
+| 酒類 | ✅ | ❌（可以贊助！） |
+| 跨國境婚姻媒合 | ✅ | ✅ |
+| 須醫師處方藥物 | ✅ | ❌ |
+
+### 衛廣法陷阱（期末常考，極易混淆）
+| 條文 | 正確規定 | 常見錯誤版本 |
+|------|---------|------------|
+| **§29** | 鎖碼方式報請主管機關**核定** | 誤寫廣告內容報請核備 |
+| **§31第2項** | 禁止置入性行銷之節目為**新聞報導**及兒童節目（母法用字） | 誤寫「新聞節目」（下位辦法用字，但母法原文為「新聞報導」） |
+| **§35** | 應先取得目的事業主管機關**核准**之證明文件 | 誤寫核定 |
+| **§39** | 播送**後**二十日內索取資料 | 誤寫播送前 |
+| **§44** | 事業接到要求後**十日**內更正 | 誤寫二十日 |
+| **§24** | 購物頻道數應低於頻道總數 **10%（十分之一）** | 誤寫15%或四分之一 |
+| **§36第2項** | 單則廣告超過**三分鐘**須標示廣告 | 誤寫二分鐘 |
+| 節目辦法§5 | 衛星頻道新播比率下限 **20%** | 誤寫40%（無線電視戲劇才是40%）|
+
+### 公平法陷阱（期末常考）
+| 條文 | 正確規定 | 常見錯誤版本 |
+|------|---------|------------|
+| **§13** | 整體利益 > 限競不利益時，主管機關**不得**禁止 | 誤稱「得不禁止」（裁量） |
+| **§2** | 事業包含**同業公會** | 誤寫同業工會 |
+| 處理原則§6 | **引人錯誤** = 不論是否與事實相符，有引起大眾錯誤認知之虞 | 誤限縮為「與事實不符」 |
+| 處理原則§5 | **虛偽不實** = 與事實不符，有引起大眾錯誤認知之虞 | 兩者常混淆 |
+| 贈品贈獎§5 | 年銷售30億以上，全年贈獎總額上限**六億** | 誤寫5億或7.5億 |
+| 薦證廣告§6 | 廣告媒體業依§21**第五項中段**與**廣告主**連帶 | 誤寫第四項後段 + 廣告代理業 |
+| 薦證廣告§5 | 未揭露利益關係違反公平法**§25** | 誤寫§21 |
+| 比較廣告§6 | 貶損他事業營業信譽違反**§24（營業誹謗）** | 誤寫§25 |
+| 警告函§5 | 未踐行先行程序逕發警告函違反**§25** | 誤寫§21 |
+| 移送表 | **零售市場**農產品標示主管機關為**衛生福利部** | 誤寫農委會 |
+| 移送表 | **批發市場**農產品廣告、有機食品主管機關為**農業部** | 誤寫衛福部 |
+| 移送表第14項 | **職業訓練機構**招訓廣告不實主管機關為**勞動部** | 誤寫勞工局（舊稱地方機關；依最新講義 p.175 已更新為勞動部） |
+
+### 消保法懲罰性賠償（§51，最易混淆）
+| 原因 | 倍數上限 |
+|------|---------|
+| **故意** | **五倍**以下 |
+| **重大過失** | **三倍**以下 |
+| **（一般）過失** | **一倍**以下 |
+
+### 其他重要陷阱
+- **有線廣電法§24**：訂戶數上限 **三分之一**（非四分之一）
+- **有線廣電法§25**：節目頻道上限 **四分之一**
+- **有線廣電法§27**：鎖碼方式報請中央主管機關**核定**（非核准、非備查）
+- **廣電法§27**：節目時間表事前檢送主管機關**核備**（非核定）
+- **藥事法§4**：藥物 = 藥品 + 醫療器材（包含醫療器材！）
+- **藥事法§67**：處方藥廣告只能刊登於學術性醫療刊物，不得向大眾刊播
+- **藥事法施行細則§45**：中藥材廣告效能宣傳以《本草綱目》所載者為限
+- **化粧品**衛生安全管理法（法定用字為「粧」非「妝」）
+- **化粧品§20**：違反§10第1項（虛偽誇大）→ 4萬～20萬；違反第2項（宣稱醫療效能）→ 60萬～500萬
+- **釋字414**（藥物廣告事前審查）→ **合憲**；**釋字744**（化粧品廣告事前審查）→ **違憲**
+- **釋字364**：媒體近用權須兼顧傳播媒體「編輯自由」，不得無條件強制
+- **衛廣法§4**：外國人直接持股應低於 50%
+- **衛廣法§5**：政府、政黨及其捐助財團法人不得直接**或間接**投資衛星廣播電視事業
+- **消保法§19**：通訊交易、訪問交易 → 七日內無條件解除契約；未告知相關資訊時，解除權消滅門檻為自七日起算**逾四個月**
+- **消保法§21第3項**：企業未記載分期付款利率者，按現金交易價格**年利率5%**計算
+- **消保法§45-5**：未異議者應為「**視為**」（非「推定」）已依方案成立調解
+- **NCC組織法§8**：委員離職後 3 年不得任職相關業者；追溯離職前 5 年職務
+- **公平交易法§21**：素人薦證者連帶賠償上限為所受報酬 10 倍
+
+### 期末考新增法規重點
+
+#### 公平交易法罰則
+| 違規類型 | 條文 | 罰鍰 |
+|---------|------|------|
+| 違反§21（虛偽不實廣告） | §42 | 5萬～2500萬 |
+| 違反聯合行為§14 | §35/36 | 100萬～5億（或上年營業額10%） |
+| 多層次傳銷不實廣告 | §29 | 5萬～2500萬 |
+
+#### 贈品贈獎辦法重點
+- **§4**：正當交易行為贈品附送上限：附送贈品價值不得超過主產品售價 **50%**
+- **§5**：競賽型贈品最高金額不得超過 **2000 萬元**
+- **§6**：摸彩型贈品最高金額不得超過 **200 萬元**
+
+#### 薦證廣告規範重點
+- 薦證者需有使用商品或服務之真實體驗
+- 醫師、律師等專業人士薦證須符合其職業倫理及相關法規
+- 廣告主、廣告代理業與廣告媒體業需連帶負責虛偽薦證
+
+#### 消費者保護法重點（擴充版）
+- **§2（企業經營者）**：不限「營利」目的，非營利機構提供商品或服務亦屬之
+- **§7（安全保障責任）**：
+  - 無過失時法院僅得「**減輕**」賠償（非免除）
+  - **舉證責任在企業**，須由企業證明符合當時科技可合理期待之安全性
+  - 商品不得僅因事後有較佳商品問世，即認先前不符安全性
+  - 經銷商對商品進行**改裝、分裝**，法律上**視為**製造商，承擔同等責任
+- **§9（進口商）**：輸入商品之企業**視為**設計、生產、製造者，負§7嚴格責任
+- **§11-1（審閱期）**：30日以內之合理審閱期；契約條款中使消費者拋棄審閱期之約定為**無效**
+- **§15（定型化契約 vs 個別磋商）**：定型化條款牴觸個別磋商條款者，**牴觸部分無效**；個別磋商條款效力優先
+- **§17（應記載事項）**：主管機關公告之「應記載事項」，雖未寫入契約，依法**自動構成契約內容**
+- **§19（通訊 / 訪問交易）**：
+  - 通訊交易要件：消費者「**未能檢視商品或服務**」之情況下訂立契約（網購、電視購物等）
+  - 訪問交易要件：企業「**未經邀約**」主動接觸消費者
+  - 消費者主動前往實體店面購買 → **不屬通訊交易**，不享七日解除權
+  - 未告知解除資訊時，解除權消滅門檻：自七日起算逾**四個月**
+- **§19-2**：企業應於收到書面解除通知次日起 **15 日內**取回商品
+- **§20（天外飛來商品）**：未經要約寄送之商品，消費者**不負保管義務**；逾期未取回者**視為拋棄**
+- **§21第3項**：企業未記載分期付款利率者，按**年利率5%**計算
+  - 分期付款買賣定義：頭期款支付時同時**交付標的物**（預售屋因尚未完工，不適用，應回歸民法）
+- **§45-5**：未於異議期間提出異議者，**視為**（非「推定」）已依方案成立調解
+- **§51（懲罰性賠償）**：故意→**五倍**以下；重大過失→**三倍**以下；（一般）過失→**一倍**以下
+  - ⚠️ 公平法§31故意為**三倍**以下，兩法不同
+
+#### 衛廣法施行細則重點
+- **§11**：廣播電視節目廣告化，認定標準：廣告時間≥ 節目時間 1/2
+- **§12**：衛廣頻道每日本國語言節目播映比例不得低於 **70%**
+
+---
+
+## 已確認的 `page` 欄位頁碼對照（期末考，2026-05-24 補齊）
+
+依 `pdf_text.txt` 確認，格式已更新為 `"p.XX 法條"`：
+
+| page 值（法條） | PDF 頁 | page 值（法條） | PDF 頁 |
+|----------------|--------|----------------|--------|
+| 衛廣法§24 | 115 | 消保法§2 | 129 |
+| 衛廣法§28 | 116 | 消保法§7 | 131 |
+| 衛廣法§29 | 116 | 消保法§9 | 131 |
+| 衛廣法§31 | 116 | 消保法§11-1 | 132 |
+| 衛廣法§35 | 117 | 消保法§15 | 133 |
+| 衛廣法§36 | 117 | 消保法§17 | 133 |
+| 衛廣法§39 | 118 | 消保法§19 | 134 |
+| 衛廣法§44 | 119 | 消保法§19-2 | 135 |
+| 公平法§1 | 149 | 消保法§21 | 135 |
+| 公平法§2 | 149 | 消保法分期付款 | 135 |
+| 公平法§8 | 150 | 消保法§45-5 | 141 |
+| 公平法§11 | 151 | 消保法§51 | 142 |
+| 公平法§13 | 153 | 贈品贈獎辦法§4 | 170 |
+| 公平法§29 | 157 | 贈品贈獎辦法§5 | 170 |
+| 公平法§31 | 157 | 贈品贈獎辦法§6 | 170 |
+| 公平法§32 | 157 | 移送主管機關類型表 | 175 |
+| 公平法§42 | 159 | 更正廣告處理原則 | 178 |
+| 公平法§45 | 159 | 薦證廣告規範§3 | 183 |
+| 處理原則§4 | 172 | 薦證廣告規範§4 | 185 |
+| 處理原則§5§6 | 172 | 薦證廣告規範§5 | 186 |
+| 處理原則§6 | 172 | 薦證廣告規範§6 | 186 |
+| 處理原則§7 | 173 | 比較廣告處理原則§5 | 188 |
+| 處理原則§8 | 173 | 比較廣告處理原則§6 | 188 |
+| | | 網路廣告處理原則§4 | 190 |
+| | | 網路廣告處理原則§9 | 191 |
+| | | 網路廣告處理原則§10 | 192 |
+
+**不在 PDF 中（無頁碼，維持純法條格式）：**
+`衛廣法施行細則§11`、`衛廣法施行細則§12`、`廣告插播辦法§3`、`衛廣法相關辦法§5`、`警告函處理原則§3`、`警告函處理原則§5`
+
+---
+
+## Git 提交習慣
+```bash
+# 期中考修改
+git add index.html
+
+# 期末考修改
+git add final/index.html
+
+# AGENTS.md 更新
+git add AGENTS.md
+
+git commit -m "說明"
+git push origin main
+```
+推送後約 1 分鐘 GitHub Pages 生效。
+**不要 add `.Codex/` 等目錄**（含 worktrees）。
+commit 訊息**不得含有密碼明文**。
+
+---
+
+## 工作流程慣例（本專案適用）
+
+1. **題目修正流程**：
+   - 使用者提供正確法條 → Codex 直接修改對應 `index.html`（期中或 `final/index.html` 期末）→ push
+   - 修正後同步更新 AGENTS.md「已修正的重要題目錯誤」表格
+
+2. **新增題目流程**：
+   - 使用者提供題目內容 → Codex 依格式插入對應陣列末尾 → push
+   - 期中題目加在 `index.html`；期末題目加在 `final/index.html`
+
+3. **NotebookLM 匯出流程（期中）**：
+   - 執行 `python quiz_export/export_all.py`
+   - 上傳 `midterm-exam/題庫完整內容_NotebookLM確認用.txt` 給 NotebookLM
+
+4. **NotebookLM 匯出流程（期末）**：
+   - 步驟一：用 Python 一行指令匯出三種題型（見「題庫匯出腳本」章節）
+   - 步驟二：執行 `python quiz_export/export_map.py` 附加概念地圖索引段落
+   - 上傳 `final-exam/期末題庫完整內容_NotebookLM確認用.txt` 給 NotebookLM
+   - **注意**：每次修改題目或 matchPages 後，兩個步驟都要重跑，TXT 才會同步
+
+5. **題目驗證流程（NotebookLM 回報問題後）**：
+   - 逐一確認題目文字、答案、詳解三者是否一致
+   - 與 AGENTS.md「重要法條筆記」交叉核對
+   - 若與法條衝突，以使用者提供的法條原文為最終依據
+
+6. **期末考追蹤資料識別**：
+   - `final/index.html` 的所有 `trackAnswer` 呼叫已加 `final-` 前綴（`final-learn`、`final-classic`、`final-mc`、`final-fill`、`final-map`）
+   - `final-story` 前綴已恢復使用（劇情模式按鈕重新加回）；Google Sheet 可用 `final-story` 篩選期末劇情模式答題紀錄
+   - Google Sheet 用「模式」欄篩選 `final-*` 即可只看期末資料；`final-map` 為概念地圖模式的答題紀錄
+
+---
+
+## ⚡ 高效工作指令（節省 Token 的方式）
+
+### 讀檔策略
+`index.html` 超過 2000 行，全文讀取非常消耗 token。可以直接告訴 Codex：
+
+> **「不用讀完整檔案，用 grep 找就好」**
+
+Codex 會改用 `Grep` 搜尋函式名稱或關鍵字，再用 `Read + offset/limit` 只讀必要段落，效率提升 5～10 倍。
+
+**常用 grep 目標：**
+| 要找的東西 | 搜尋關鍵字 |
+|-----------|-----------|
+| 劇情題目資料 | `storyDay1` / `storyDay2` |
+| 角色頭像設定 | `storyCharacters` |
+| 場景背景函式 | `getSceneBackground` |
+| VN 舞台 CSS | `story-vn-stage` |
+| 是非題陣列結尾 | `hidden: true` 附近 |
+| 概念地圖資料 | `const concepts` |
+| 概念地圖函式 | `initConceptMap` / `selectConcept` |
+| 概念地圖 CSS | `.cm-layout` / `.cm-sidebar` |
+
+### 開 Agent 平行作業
+
+> **「幫我開一個 agent 寫劇情模式 Day3」**
+
+Codex 會用 Agent 工具在背景啟動一個子代理，讓它：
+- 讀 storyDay2 的格式作為範本
+- 根據指定法規主題（如化粧品法）撰寫 10 題
+- 完成後回報，主對話不被阻擋
+
+這讓你可以同時進行：「agent 寫 Day3 題目」＋「主對話繼續改其他 bug」。
+
+**觸發範例：**
+```
+「幫我開 agent 寫 Day3，主題是化粧品法，
+ 比照 storyDay2 格式，不用push，先給我看題目」
+```
+
+---
+
+## 匯出錯題＋猜題功能（2026-06-03 完成，僅限期末考，解鎖限定）
+
+### 功能概述
+學習／傳統／選擇／填空／概念地圖五種模式答完後，若有錯題或標記為「🎲 猜的」題目，結算區會出現 `📋 匯出錯題＋猜題（共 N 題）` 按鈕。點擊跳出 modal，提供：
+- 純文字格式（已預先選好），可一鍵複製到剪貼簿，貼至 Google Docs / Word
+- `💾 下載 .txt` 按鈕另存成檔案（檔名格式 `期末錯題_<mode>_<時間戳>.txt`）
+- 模態框支援 ESC、點背景、× 鈕關閉
+
+### 三種題目狀態（標頭分類）
+- `❌ 答錯` — 純答錯
+- `❌ 答錯　🎲 猜的` — 答錯且事先標記為猜的
+- `🎲 猜對（不確定）` — 答對但事先標記為猜的（需複習）
+
+### 概念地圖也支援
+2026-06-03 起，概念地圖每題卡片右上角加入 `🎲 猜的` 按鈕（TF/MC 卡片；填空題沿用無猜的設定）。5 題答完後若有錯題或猜題，結算卡下方出現 `📋 匯出錯題＋猜題` 按鈕（解鎖限定）。匯出標頭額外含「分類 / 概念」名稱。
+
+### 程式架構
+- 狀態：`fillUserInputs[]`（主題庫）、`cmGuessFlags[]` / `cmUserAnswers[]` / `cmFillInputs[]`（概念地圖）
+- 核心函式：
+  - `htmlToPlainText(html)` — 將 HTML 詳解轉純文字（替換 `<br>`、`<div/p/li>`→換行）
+  - `statusTag(wrong, guessed)` — 產生狀態標籤
+  - `collectWrongItems()` / `cmCollectWrongItems()` — 收集需匯出的題目陣列
+  - `buildWrongExportText()` / `cmBuildExportText()` — 組成完整純文字
+  - `exportWrongAnswers()` / `cmExportWrongAnswers()` — 開啟 modal
+  - `copyExportText()` / `downloadExportText()` — 複製／下載
+- HTML：modal `#export-modal-mask` 與按鈕 `#btn-export-wrong` 已加入 `final-box`
+
+### 重點實作細節
+- MC 模式必須處理選項洗牌：`mcOptionOrders[i]` + `mcMappedAns[i]` 還原使用者實際選的選項文字
+- 填空題需把使用者輸入存到 `fillUserInputs[i]`，因為 `fillUserAnswers[i]` 只是 boolean
+- 概念地圖題型混合，`cmUserAnswers[i]` 統一存（tf 存 `'O'/'X'`、mc 存 pos、fill 存 string[]）
+- 按鈕顯示條件：`isUnlocked && (有錯題 || 有猜的)`
+
+---
+
+## 概念地圖模式（`map`，2026-05-24 完成，僅限期末考）
+
+### 設計目標
+幫助學生把破碎的題目串成系統法規知識：**選法規分類 → 選核心概念 → 看白話故事 → 作隨堂 5 題**。
+
+### 介面結構
+```
+┌─────────────────────────────────────────────────────┐
+│  #concept-map-panel                                  │
+│  .cm-layout (280px sidebar + 1fr content)            │
+├─────────────────┬───────────────────────────────────┤
+│  .cm-sidebar    │  .cm-content                       │
+│  (sticky)       │                                    │
+│  [accordion]    │  .cm-tip-card（琥珀色漸層）         │
+│  ▼ 法規大類      │  白話故事（pre-line, innerHTML）    │
+│    ● 子概念      │                                    │
+│    ○ 子概念      │  .cm-qcard × 5（白底+左邊框）      │
+│  ▶ 法規大類      │  答對→綠邊框，答錯→紅邊框          │
+│                 │  題型自動混搭（TF / MC / Fill）     │
+└─────────────────┴───────────────────────────────────┘
+```
+響應式：820px 以下改為單欄垂直排列（sidebar 在上，content 在下）。
+
+### 資料結構 (`const concepts`)
+
+```javascript
+const concepts = [
+  {
+    mainTopic: '公平交易法',      // 分類標題（顯示於 accordion 標頭）
+    subTopics: [
+      {
+        id: 'ftc_basics',        // 唯一 ID，供 selectConcept() 查找
+        name: '立法目的與「事業」定義',
+        matchPages: ['公平法§1', '公平法§2', '公平法§42', '公平法§45'],
+        // matchPages = 篩選題目用的 page 欄位值（完全相符）
+        story: '🥸 想像公平會就是「商業界的裁判」...\n<b>重點</b>：...'
+        // story 支援 \n（pre-line 換行）與 <b> HTML tag（innerHTML 渲染）
+      },
+      // ...
+    ]
+  },
+  // ...
+];
+```
+
+### 7 大分類（30 子概念）
+
+| # | mainTopic | 子概念數 |
+|---|-----------|---------|
+| 1 | 公平交易法 | 7 |
+| 2 | 衛星廣播電視法 | 7 |
+| 3 | 薦證廣告、比較廣告、警告函 | 4 |
+| 4 | 贈品贈獎辦法 | 3 |
+| 5 | 消費者保護法 | 5 |
+| 6 | 廣播電視法（含有線廣電法） | 3 |
+| 7 | 跨法規：主管機關與行政救濟 | 1 |
+
+### 核心函式
+
+| 函式 | 說明 |
+|------|------|
+| `initConceptMap()` | 初始化面板，預設展開第 0 個分類，呼叫 `renderCMSidebar()` |
+| `renderCMSidebar()` | 依 `cmOpenCat` 狀態渲染整個 accordion |
+| `toggleCMCat(ci)` | 展開/收合第 ci 個分類（`cmOpenCat = ci` or -1） |
+| `selectConcept(subId)` | 查找子概念，呼叫 `getQuestionsForConcept()`，隨機選 5 題，渲染右側內容 |
+| `renderCMContent(sub, poolSize)` | 渲染 Tip Card（故事）+ 5 題卡片 |
+| `cmCardTF/MC/Fill(q, i)` | 渲染各題型卡片 HTML |
+| `cmAnswerTF/MC/Fill(i, ...)` | 答題邏輯，呼叫 `cmFinishQuestion()` |
+| `cmFinishQuestion(i, correct, ans)` | 標記卡片邊框色、呼叫 `trackAnswer('final-map', ...)` |
+| `getQuestionsForConcept(subId)` | 回傳 `{tf, mc, fill, subTopic}` — 用 `matchPages` + `q.page.includes(p)` 部分比對篩選三種題型 |
+| `pickRandomN(arr, n)` | Fisher-Yates 洗牌取前 n 題 |
+
+### 狀態變數（模組層級）
+
+```javascript
+let cmCurrentSubId = null;   // 目前選中的子概念 ID
+let cmCurrentQs = [];        // 已選 5 題（含 type 欄位：'tf'|'mc'|'fill'）
+let cmAnswered = [];         // 各題是否已作答
+let cmCorrectFlags = [];     // 各題是否答對
+let cmMCOrders = [];         // 各 MC 題的洗牌選項順序（與主 quiz 獨立）
+let cmOpenCat = 0;           // 目前展開的分類 index（-1=全收）
+```
+
+### matchPages 設計原則
+- 每道題目有 `page` 欄位，**格式為 `"p.XX 法條"`**（如 `page: "p.115 衛廣法§24"`）；`matchPages` 存法條名稱（如 `"衛廣法§24"`），兩者之間用 **`q.page.includes(p)`** 部分比對，因此格式有 `p.XX 前綴也能正確篩到`
+- 子概念的 `matchPages` 陣列列出希望納入的法條名稱，`getQuestionsForConcept()` 用 `pages.some(p => q.page.includes(p))` 篩選
+- 若某法條的題目很少（如移送表），可讓多個 page 值共用同一子概念
+- 若新增題目後想讓其出現在概念地圖，只需在對應子概念的 `matchPages` 加入法條名稱（不含 `p.XX`）
+- **6 個 page 值無法從 PDF 取得頁碼**（施行細則 / 子辦法不在 PDF 內，維持純法條格式）：
+  `衛廣法施行細則§11`、`衛廣法施行細則§12`、`廣告插播辦法§3`、`衛廣法相關辦法§5`、`警告函處理原則§3`、`警告函處理原則§5`
+
+### Bug 修正紀錄（2026-05-24）
+開發時修正了 4 個會導致「概念地圖點不開 / 進度顯示 0/0」的 bug：
+
+| 位置 | 修正前 | 修正後 | 原因 |
+|------|--------|--------|------|
+| 初始化 | `let currentMode = 'learn'` | `let currentMode = ''` | 避免 `switchMode('learn')` 因 mode 相同直接 return，導致題目不載入 |
+| `buildQuiz()` | 無 map guard | 加 `if (currentMode === 'map') return;` | 避免地圖模式下誤建是非題 HTML |
+| `resetAll()` | 無 map guard | 加 `if (currentMode === 'map') { initConceptMap(); return; }` | 避免地圖模式觸發傳統答題初始化 |
+| `updateBar()` | 無 map guard | 加 `if (currentMode === 'map') return;` | 避免地圖模式下讀取無效的答題狀態 |
+
+### matchPages 補正（2026-05-24）
+運行題目覆蓋率檢查後，發現 1 個 page 值未被任何子概念涵蓋：
+
+| 子概念 ID | 補入的 matchPages 值 | 影響題目 |
+|----------|-------------------|---------|
+| `ftc_false_ad`（廣告不實） | `'處理原則§8'` | 是非30（答案✕）、選擇30（虛偽不實 vs 引人錯誤）等 |
+
+**驗證方式**：執行以下 Python 片段可列出所有未覆蓋的 page 值
+```python
+import re
+src = open('final/index.html', encoding='utf-8').read()
+all_pages = set(re.findall(r'page:\s*"([^"]+)"', src))
+cblock = re.search(r'const concepts = \[(.*?)\];\s*/\* 概念地圖', src, re.DOTALL).group(1)
+match_strs = set(s for mp in re.findall(r"matchPages:\s*\[([^\]]+)\]", cblock) for s in re.findall(r"'([^']+)'", mp))
+uncovered = [p for p in all_pages if not any(m in p for m in match_strs)]
+print(uncovered)  # 應輸出 []
+```
+
+### HTML 元素
+```html
+<!-- 模式按鈕（加在 fill 按鈕之後） -->
+<button class="mode-btn" id="btn-mode-map" onclick="switchMode('map')">🗺️ 概念地圖</button>
+
+<!-- 面板容器（加在 #story-panel 之後） -->
+<div id="concept-map-panel"></div>
+```
+
+### CSS 主要類別
+
+| CSS 類別 | 說明 |
+|---------|------|
+| `.cm-layout` | 280px + 1fr grid 兩欄佈局 |
+| `.cm-sidebar` | sticky 左側欄，overflow-y: auto |
+| `.cm-cat` | 分類標頭（點擊展開/收合） |
+| `.cm-cat.open` | 展開狀態（標頭樣式不同） |
+| `.cm-subitem` | 子概念條目 |
+| `.cm-subitem.active` | 當前選中子概念（高亮） |
+| `.cm-tip-card` | 琥珀色漸層故事卡 |
+| `.cm-qcard` | 白底題目卡，左側 4px 邊框 |
+| `.cm-qcard.cm-correct` | 答對→綠色邊框 |
+| `.cm-qcard.cm-wrong` | 答錯→紅色邊框 |
+| `.cm-cbtn` | TF 題 O/X 按鈕 |
+| `.cm-mc-opt` | 選擇題選項按鈕 |
+| `.cm-fill-input` | 填空輸入框 |
+| `.cm-fill-btn` | 填空確認按鈕 |
+| `.cm-final-summary` | 5 題全答完後的得分摘要 |
+
+---
+
+## 劇情模式 UI 重設計（2026-04-19 完成）
+
+### 已完成關卡（更新）
+
+| 關卡 | 常數 | 主題 | 題數 | 客戶角色 |
+|------|------|------|------|---------||
+| Day 1 | `storyDay1` | 藥事法・藥物廣告・釋字414/744 | 10 | 藥廠業務陳經理、電視台業務小陳 |
+| Day 2 | `storyDay2` | 廣播電視法・有線廣電法・衛星廣電法 | 10 | 全台電視林法務 |
+| Day 3 | `storyDay3` | 化粧品衛生安全管理法・釋字744 | 10 | 美妝直播主圈圈 |
+| Day 4 | `storyDay4` | 衛星廣電法・消保法・NCC組織法・公平交易法 | 10 | 購物頻道副理何副理 |
+
+### VN 視覺小說舞台（RPG 風格，已重設計）
+
+```
+┌──────────────────────────────────────────────┐
+│  [左側大氣遮罩 ::before，z-index:4]            │
+│                     ┌──────────────────────┐  │
+│                     │ 【場景說明 - 右上角】  │  │
+│                     │ .story-vn-setup      │  │
+│                     │ 金色頂線 + 毛玻璃背景  │  │
+│                     └──────────────────────┘  │
+│  ✨ .story-vn-particles（12個飄動光點）         │
+│                                               │
+│  [角色立繪 - 左側底部對齊]                      │
+│  .story-vn-sprite                             │
+│  ├── 固定寬 260px、高 340px                   │
+│  └── mask-image 底部漸隱，融入對話框           │
+│                                               │
+├──────── .story-vn-dbox（底部對話框） ──────────┤
+│  深藍黑多層漸層 + 金色頂線 + backdrop-blur     │
+│  ┌────────┐  ┌──────────────────────────┐    │
+│  │ 小頭像  │  │ 角色名牌（方形 RPG 風格）  │    │
+│  │ 方形卡  │  │ 名稱 + 職稱（淡金色）     │    │
+│  └────────┘  └──────────────────────────┘    │
+│  對話文字（padding-left:58px）                 │
+│                                    ▼（跳動）  │
+└──────────────────────────────────────────────┘
+```
+
+### 角色頭像系統（已更新為本地 PNG）
+
+```javascript
+// storyCharacters 物件使用本地 AI 生成圖片
+// ⚠️ 期中 index.html 路徑為 ./images/，期末 final/index.html 路徑為 ../images/
+const storyCharacters = {
+  '王鐵嘴主任':    { avatar: '../images/boss.png',              color: '#c0392b', ... },
+  '林酸酸':        { avatar: '../images/sour.png',              color: '#34495e', ... },
+  '阿肥':          { avatar: '../images/intern.png',            color: '#e67e22', ... },
+  '陳經理':        { avatar: '../images/pharma.png',            color: '#27ae60', ... },
+  '電視台業務小陳': { avatar: '../images/tv_biz.png',           color: '#3498db', ... },
+  '林法務':        { avatar: '../images/legal.png',             color: '#8e44ad', ... },
+  '圈圈':          { avatar: '../images/beauty.png',            color: '#e91e63', ... },
+  '何副理':        { avatar: '../images/shopping.png',          color: '#ff5722', ... },
+  '公平會黃調查官': { avatar: '../images/ftc_normal.png',       color: '#16a085', ... },  // 期末新角色
+  '消保官蘇主任':  { avatar: '../images/consumer_normal.png',   color: '#2980b9', ... },  // 期末新角色
+};
+```
+
+**圖片路徑**：根目錄 `images/*.png`（AI 生成，動漫 RPG 風格半身圖）
+
+> ⚠️ **路徑差異**：期中 `index.html` 位於根目錄，用 `./images/`；期末 `final/index.html` 在子目錄，必須用 `../images/`。搞錯路徑角色立繪全部空白。
+
+> 替換圖片：直接覆蓋同名 PNG，或修改 `avatar` 路徑即可。
+
+### 已建立的表情變體圖（2026-05-29，尚未用於程式碼）
+
+| 檔名 | 角色 | 表情 |
+|------|------|------|
+| `boss_angry.png` | 王鐵嘴主任 | 憤怒 |
+| `boss_happy.png` | 王鐵嘴主任 | 高興 |
+| `sour_smirk.png` | 林酸酸 | 嘲諷 |
+| `sour_surprised.png` | 林酸酸 | 驚訝 |
+| `intern_excited.png` | 阿肥 | 興奮 |
+| `intern_panic.png` | 阿肥 | 慌張 |
+| `pharma_panic.png` | 陳經理 | 慌張 |
+| `tv_biz_selling.png` | 電視台業務小陳 | 推銷 |
+| `legal_smile.png` | 林法務 | 微笑 |
+| `legal_angry.png` | 林法務 | 憤怒 |
+| `beauty_sweet.png` | 圈圈 | 甜美 |
+| `beauty_shock.png` | 圈圈 | 驚嚇 |
+| `shopping_confident.png` | 何副理 | 自信 |
+| `shopping_lookback.png` | 何副理 | 回頭 |
+| `shopping_panic.png` | 何副理 | 慌張 |
+
+> 這些圖片已在 `images/` 資料夾中，但**尚未 commit 至 git**，也**尚未在任何劇情題目中引用**。若要啟用表情切換功能，需在題目 `setup/clientLine` 中指定情緒狀態，並修改 `storyBuildScene()` 函式根據狀態選取對應圖片。
+
+### 重設計的 CSS 元件清單
+
+| CSS 類別 / 選擇器 | 改動重點 |
+|-----------------|---------|
+| `.story-vn-stage` | 高度 480px、金色邊框、多層 box-shadow、`isolation:isolate`（2026-05-29 加）|
+| `.story-vn-stage::before` | **新增**：左側大氣漸暗遮罩，覆蓋立繪白邊 |
+| `.story-vn-particles` | **新增**：粒子容器，內含 12 個 `.sparkle` |
+| `.sparkle` | **新增**：`@keyframes sparkleFloat` 飄動光點 |
+| `.story-vn-setup` | 位置改為右上角、金色頂線邊框、毛玻璃 |
+| `.story-vn-sprite` | **2026-05-29 更新**：水平置中（`left:50%`）、`animation forwards`；`mask-image` 底部漸隱 |
+| `.story-vn-sprite img` | **2026-05-29 新增**：`mix-blend-mode:multiply`（去白底，讓殘留背景融入深色舞台）|
+| `@keyframes storyCharIn` | **2026-05-29 更新**：`translateX(-50%)` 置中入場動畫 |
+| `.story-vn-dbox` | 多層深藍黑漸層、金色頂線、`::before` 發光線 |
+| `.story-vn-dbox-arrow` | **新增**：底部跳動三角箭頭 `@keyframes arrowBounce` |
+| `.story-vn-namebox` | 方形 RPG 名牌（從圓角膠囊改為 `border-radius:4px`）|
+| `.story-vn-mini` | 方形頭像框（從圓形改為 `border-radius:8px`）|
+| `.story-day-header` | 深紫黑四色漸層 + 金色頂部光線 `::after` |
+| `.story-status-bar` | 深夜藍黑漸層、紫色邊框、白色文字 |
+| `.story-cmd-btn` | 深色漸層、金色 hover 發光 |
+| `.story-q-card` | 深紫黑漸層 + 金色左邊框 |
+| `.story-q-label` | 金色文字 |
+| `.story-q-text` | 白色文字 |
+| `.story-tf-btn` | 深色漸層底，O/X 選中各有綠/紅漸層 + 光暈 |
+| `.story-mc-btn` | 深色漸層底，答對深綠、答錯深紅 |
+| `.story-reaction-box.sreact-correct` | 深綠暗色漸層 |
+| `.story-reaction-box.sreact-wrong` | 深紅暗色漸層 |
+| `.story-exp-box` | 半透明深藍黑 + 金色左線 |
+| `.story-next-btn` | 深紫三色漸層、金色邊框 hover |
+| `.story-end-panel` | 深紫黑三色漸層 + 金邊框 |
+| `.story-intro-box` | 深紫漸層 |
+| `.story-extra-box` | 深色漸層、金色文字 |
+| `.story-day-select-btn` | 深色漸層、金色 hover 發光 |
+
+### 本地預覽指令
+
+```bash
+# 所有模式已全面開放，無需密碼
+# 期中考
+http://127.0.0.1:7788/index.html
+# 期末考
+http://127.0.0.1:7788/final/index.html
+# 或用 npx http-server 啟動
+npx http-server . -p 8888
+```
+
+---
+
+## 匿名答題追蹤系統（2026-04-19 已上線）
+
+- **方式**：前端 `fetch` → Google Apps Script → Google Sheets
+- **TRACK_URL**：已填入 `index.html`（`const TRACK_URL = '...'`）
+- **TRACK_TOKEN**：`adlaw2026`（寫死於 `index.html`，Apps Script 端驗證；擋機器人灌水用）
+- **試算表欄位（共 9 欄）**：`時間 | 用戶ID | 模式 | 題型 | 題號 | 題目ID | 題目片段 | 作答 | 正確與否`
+  - `題號`（qIdx）：洗牌後的位置，**不穩定**
+  - `題目ID`（qId）：用題目文字算出的 8 字元 hash，**同一題永遠同一個 ID**（用來做正確率統計）
+  - `題目片段`（qSnippet）：題目前 30 字，方便人工辨識
+  - `正確與否`：✓ / ✗
+  - ~~`解鎖與否`~~：**2026-06-15 已移除**（密碼解鎖系統廢除後不再需要此欄）
+- **session ID**：`crypto.randomUUID()` 存於 `localStorage._sid`，匿名識別
+- **涵蓋範圍**：學習模式（是非）、**傳統模式**（對答案時批次送出）、選擇題模式、填充題模式、劇情模式（是非＋選擇）
+- **注意**：不蒐集個人資訊；傳送失敗靜默忽略，不影響答題體驗
+- **後台查看**：直接開啟 Google Sheet；可用 `COUNTIF(I:I,"✓")` 計算正確次數，或用 `=QUERY(...)` GROUP BY `題目ID` 做每題正確率分析
+
+### Apps Script 最新版本（版本 4，2026-04-29）
+
+```javascript
+const SHEET_ID = '1F7KSmq4hft6c864do6LWUMhstu-6VTcujHeEEopmBWE';
+const TOKEN = 'adlaw2026';
+
+function doPost(e) {
+  try {
+    const d = JSON.parse(e.postData.contents);
+    if (d.token !== TOKEN) return ContentService.createTextOutput('forbidden');
+    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
+    sheet.appendRow([
+      new Date(d.ts),
+      d.sid,
+      d.mode,
+      d.qType,
+      d.qIdx,
+      d.qId || '',
+      d.qSnippet || '',
+      d.userAns,
+      d.correct ? '✓' : '✗'
+    ]); // 注意：unlocked 欄位已於 2026-06-15 移除
+  } catch(err) {}
+  return ContentService.createTextOutput('ok');
+}
+```
+
+### qId 產生邏輯（前端 `index.html`）
+
+```javascript
+function makeQId(text) {
+  let h = 0;
+  for (let i = 0; i < text.length; i++) h = ((h << 5) - h + text.charCodeAt(i)) | 0;
+  return Math.abs(h).toString(36).padStart(7, '0').slice(0, 8);
+}
+```
+所有 `trackAnswer(...)` 呼叫都會帶 `q.q`（題目原文）做為第 6 個參數，由 `trackAnswer` 內部產生 qId 與 qSnippet。
+
+> ⚠️ 修改 Apps Script 後務必：部署 → 管理部署 → 編輯（✏️）→ **版本選「新版本」** → 部署
+
+### 資安說明
+- **html2canvas**：已加 SRI（`integrity` + `crossorigin`），防 CDN 被篡改
+- **題目資料**：所有題目（含 AI 生成題）均暴露於 HTML 原始碼，屬設計預期（開放共學）
+- **TRACK_URL 暴露**：Token 只能擋隨機灌水，無法擋刻意攻擊；若遭汙染可重新部署 Apps Script 換 URL
+
+---
+
+## 期末考題庫現況（2026-05-24 完成）
+
+期末題庫採用**獨立資料夾**方式建置：
+
+```
+advertising-law/
+├── index.html              ← 期中（不再大改）
+├── final/
+│   └── index.html          ← 期末（64 題是非 + 64 題選擇 + 31 題填空，共 159 題）
+├── images/                 ← 共用角色立繪
+├── midterm-exam/           ← 期中考 PDF 及匯出 TXT
+├── final-exam/             ← 期末考 PDF 及匯出 TXT
+└── quiz_export/
+    └── export_all.py       ← 匯出腳本
+```
+
+- **網址**：`https://lml679939-cmyk.github.io/advertising-law/final/`
+- **追蹤資料分離**：`final/index.html` 的 `trackAnswer` 模式均加 `final-` 前綴 ✅
+- **共用元件**：`images/`、追蹤系統（同一個 Apps Script、同一個 Google Sheet）✅
+- **獨立元件**：題庫陣列、頁面標題、劇情模式（Day1~6）、概念地圖 ✅
+
+### 已完成
+- [x] 建立 `final/` 資料夾、複製並改造 `index.html`
+- [x] 是非題（73 考古題 + 40 AI生成 = 113 題）、選擇題（113 題）、填充題（31 考古題 + 35 AI生成 = 66 題）
+- [x] 是非題大批修正（詳見「已修正的重要題目錯誤」§期末考）
+- [x] 所有 `trackAnswer` 加 `final-` 前綴
+- [x] NotebookLM 匯出 TXT（`final-exam/期末題庫完整內容_NotebookLM確認用.txt`，含題庫＋概念地圖索引＋劇情模式題目）
+- [x] 概念地圖模式（`map`）——7大法規分類 × 30 子概念，白話故事 + 隨堂 5 題，`matchPages` 篩題，完整追蹤（`final-map`）
+- [x] 期末劇情模式（6 關卡 60 題，Day6 乙女遊戲模式）
+- [x] **匯出錯題＋猜題功能**（學習／傳統／選擇／填空／概念地圖五種模式均支援，全員開放）
+- [x] **概念地圖加入 🎲 猜的標記**
+- [x] **密碼解鎖系統移除，改為來源篩選（2026-06-15）**：`hidden: true` → `ai: true`，新增三選一篩選按鈕
+
+### 待建置
+- [ ] 概念地圖「故事」內容優化（目前已有白話故事，可依課程反饋持續優化詞句與例子）
+
+---
+
+## 下一步可能的工作
+
+### 期末考
+- **NotebookLM 驗證**：`final-exam/期末題庫完整內容_NotebookLM確認用.txt` 可繼續上傳 NotebookLM 驗證題庫內容
+- **填充題擴充**：可視考試需求繼續新增（AI生成題加 `ai: true`；考古題不加）
+- **AI生成題擴充**：可繼續新增其他法規主題的 AI生成題（加 `ai: true`）
+- **概念地圖白話故事優化**：30 個子概念各有一段白話故事，可依學生反饋持續改寫（grep `const concepts` 找到資料位置）
+- **概念地圖 matchPages 擴充**：若新增題目，確認其 `page` 欄位是否已在某概念的 `matchPages` 中；若題目涉及新條文，可在對應子概念加入新 page tag
+
+### 期中考（維護）
+- 繼續新增 AI生成題（加 `ai: true`）或考古題（不加屬性）
+- NotebookLM 驗證後修正錯誤答案或解析
+
+### 長期優化（低優先）
+- 角色立繪優化（目前 PNG 有白底，以左側大氣遮罩補救；可換用去背 PNG）
+- 劇情模式音效 / 背景音樂（VN 沉浸感升級）
+- 概念地圖加入「知識點完成度」進度條（依每個子概念答對率顯示熟練度）
+- 劇情模式增加 Day6+（可考慮：主管機關綜合題、釋字綜合題、總複習隨機關卡）
+- 表情變體圖片（15 張）目前僅 `shopping_confident.png`、`boss_happy.png` 兩張用於 Day 5 葉小編、陳董；其餘 13 張仍可用於：(a) 加入情緒切換系統 `storyBuildScene()` 依題目情緒動態載入；(b) 用於未來新 Day 的新角色
